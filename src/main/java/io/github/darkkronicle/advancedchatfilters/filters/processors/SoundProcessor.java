@@ -107,7 +107,7 @@ public class SoundProcessor implements IMatchProcessor, IJsonApplier, IScreenSup
             this.setParent(parent);
             this.widgetDropDown = new WidgetDropDownList<>(0, 0, getWidth(), 20, 200, 10, ImmutableList.copyOf(Filter.NotifySound.values()), Filter.NotifySound::getDisplayName);
             this.widgetDropDown.setZLevel(this.getZOffset() + 100);
-            this.setTitle(StringUtils.translate("advancedchatcore.screen.sound"));
+            this.setTitle(StringUtils.translate("advancedchatfilters.screen.sound"));
         }
 
         @Override

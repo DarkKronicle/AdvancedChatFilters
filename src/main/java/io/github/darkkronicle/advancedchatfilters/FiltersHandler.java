@@ -1,7 +1,6 @@
 package io.github.darkkronicle.advancedchatfilters;
 
 import io.github.darkkronicle.advancedchatcore.interfaces.IMessageFilter;
-import io.github.darkkronicle.advancedchatcore.interfaces.IMessageProcessor;
 import io.github.darkkronicle.advancedchatcore.util.ColorUtil;
 import io.github.darkkronicle.advancedchatcore.util.FluidText;
 import io.github.darkkronicle.advancedchatfilters.config.Filter;

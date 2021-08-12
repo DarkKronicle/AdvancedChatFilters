@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "acmoduletemplate",
+  "id": "advancedchatfilters",
   "version": "${version}",
-  "name": "AdvancedChatModuleTemplate",
-  "description": "A template for an AdvancedChat Module",
+  "name": "AdvancedChatFilters",
+  "description": "Filters for AdvancedChat",
   "authors": [
     "DarkKronicle"
   ],
@@ -12,7 +12,7 @@
     "discord": "https://discord.gg/WnaE3uZxDA"
   },
   "license": "MPL-v2",
-  "icon": "assets/acmoduletemplate/icon.png",
+  "icon": "assets/advancedchatfilters/icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [

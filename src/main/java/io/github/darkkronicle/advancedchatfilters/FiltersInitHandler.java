@@ -36,7 +36,7 @@ public class FiltersInitHandler implements IInitializationHandler {
         GuiConfigHandler.getInstance().addGuiSection(new GuiConfigHandler.Tab() {
             @Override
             public String getName() {
-                return StringUtils.translate("advancedchatfilters.config.gui.filters");
+                return StringUtils.translate("advancedchatfilters.config.tab.filters");
             }
 
             @Override

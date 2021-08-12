@@ -76,7 +76,7 @@ public class NarratorProcessor implements IMatchProcessor, IScreenSupplier, IJso
 
         public SenderScreen(Screen parent) {
             this.setParent(parent);
-            this.setTitle(StringUtils.translate("advancedchatcore.screen.narrator"));
+            this.setTitle(StringUtils.translate("advancedchatfilters.screen.narrator"));
         }
 
         @Override
