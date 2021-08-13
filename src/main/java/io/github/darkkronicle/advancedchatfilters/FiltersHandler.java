@@ -61,7 +61,7 @@ public class FiltersHandler implements IMessageFilter {
         if (text.getString().length() != 0) {
             return Optional.of(text);
         }
-        return Optional.empty();
+        return Optional.of(TERMINATE);
     }
 
     public void loadFilters() {

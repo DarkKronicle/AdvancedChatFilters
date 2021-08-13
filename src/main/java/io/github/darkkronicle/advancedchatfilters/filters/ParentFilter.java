@@ -63,10 +63,15 @@ public class ParentFilter {
             Optional<FluidText> newtext = filter.filter(this, text, unfiltered, search);
             if (newtext.isPresent()) {
                 text = newtext.get();
+                if (color != null) {
+                    // Make sure forward filter gets the correct background color
+                    text.setBackgroundColor(color);
+                }
             }
             Optional<ColorUtil.SimpleColor> c = filter.getColor();
             if (c.isPresent() && color == null) {
                 color = c.get();
+                text.setBackgroundColor(color);
             }
         }
         boolean forward = true;

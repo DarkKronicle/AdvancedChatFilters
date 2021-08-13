@@ -147,7 +147,7 @@ public class GuiFilterEditor extends GuiBase {
         y += this.addLabel(x + getWidth() / 2, y, filter.getReplaceTextColor().config) + 1;
         textColor = new WidgetColor(x, y, getWidth() / 2 - 1, 18, filter.getTextColor().config.getSimpleColor(), textRenderer);
         this.addTextField(textColor, null);
-        setTextColor = new WidgetToggle(x + getWidth() / 2 + 1, y, getWidth() / 2 - 1, false, "advancedchat.config.filter.textcoloractive", filter.getReplaceTextColor().config.getBooleanValue());
+        setTextColor = new WidgetToggle(x + getWidth() / 2 + 1, y, getWidth() / 2 - 1, false, "advancedchatfilters.config.filter.textcoloractive", filter.getReplaceTextColor().config.getBooleanValue());
         this.addButton(setTextColor, null);
         y += findType.getHeight() + 2;
 
@@ -159,7 +159,7 @@ public class GuiFilterEditor extends GuiBase {
             y += this.addLabel(x + getWidth() / 2, y, filter.getReplaceBackgroundColor().config) + 1;
         }
         backgroundColor = new WidgetColor(x, y, getWidth() / 2 - 1, 18, filter.getBackgroundColor().config.getSimpleColor(), textRenderer);
-        setBackgroundColor = new WidgetToggle(x + getWidth() / 2 + 1, y, getWidth() / 2 - 1, false, "advancedchat.config.filter.backgroundcoloractive", filter.getReplaceBackgroundColor().config.getBooleanValue());
+        setBackgroundColor = new WidgetToggle(x + getWidth() / 2 + 1, y, getWidth() / 2 - 1, false, "advancedchatfilters.config.filter.backgroundcoloractive", filter.getReplaceBackgroundColor().config.getBooleanValue());
         if (enableBackgroundColor) {
             this.addTextField(backgroundColor, null);
             this.addButton(setBackgroundColor, null);

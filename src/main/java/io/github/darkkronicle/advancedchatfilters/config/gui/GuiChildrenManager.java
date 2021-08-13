@@ -65,6 +65,8 @@ public class GuiChildrenManager extends GuiListBase<Filter, WidgetFilterEntry, W
         this.setListPosition(this.getListX(), 68 + (rows - 1) * 22);
         this.reCreateListWidget();
 
+        this.getListWidget().refreshEntries();
+
         y += 24;
         x = 10;
 

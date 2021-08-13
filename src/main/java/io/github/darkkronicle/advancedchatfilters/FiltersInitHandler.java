@@ -51,21 +51,21 @@ public class FiltersInitHandler implements IInitializationHandler {
 
         // Initiate match types
         MatchReplaceRegistry matchRegistry = MatchReplaceRegistry.getInstance();
-        matchRegistry.register(() -> null, "none", "advancedchat.config.replacetype.none", "advancedchat.config.replacetype.info.none", true, true);
-        matchRegistry.register(ChildrenTextReplace::new, "children", "advancedchat.config.replacetype.children", "advancedchat.config.replacetype.info.children", true, false);
-        matchRegistry.register(FullMessageTextReplace::new, "fullmessage", "advancedchat.config.replacetype.fullmessage", "advancedchat.config.replacetype.info.fullmessage", true, false);
-        matchRegistry.register(OnlyMatchTextReplace::new, "onlymatch", "advancedchat.config.replacetype.onlymatch", "advancedchat.config.replacetype.info.onlymatch", true, false);
-        matchRegistry.register(OwOTextReplace::new, "owo", "advancedchat.config.replacetype.owo", "advancedchat.config.replacetype.info.owo", true, false);
-        matchRegistry.register(RainbowTextReplace::new, "rainbow", "advancedchat.config.replacetype.rainbow", "advancedchat.config.replacetype.info.rainbow", true, false);
-        matchRegistry.register(RomanNumeralTextReplace::new, "romannumeral", "advancedchat.config.replacetype.romannumeral", "advancedchat.config.replacetype.info.romannumeral", true, false);
-        matchRegistry.register(ReverseTextReplace::new, "reverse", "advancedchat.config.replacetype.reverse", "advancedchat.config.replacetype.info.reverse", true, false);
+        matchRegistry.register(() -> null, "none", "advancedchatfilters.config.replacetype.none", "advancedchatfilters.config.replacetype.info.none", true, true);
+        matchRegistry.register(ChildrenTextReplace::new, "children", "advancedchatfilters.config.replacetype.children", "advancedchatfilters.config.replacetype.info.children", true, false);
+        matchRegistry.register(FullMessageTextReplace::new, "fullmessage", "advancedchatfilters.config.replacetype.fullmessage", "advancedchatfilters.config.replacetype.info.fullmessage", true, false);
+        matchRegistry.register(OnlyMatchTextReplace::new, "onlymatch", "advancedchatfilters.config.replacetype.onlymatch", "advancedchatfilters.config.replacetype.info.onlymatch", true, false);
+        matchRegistry.register(OwOTextReplace::new, "owo", "advancedchatfilters.config.replacetype.owo", "advancedchatfilters.config.replacetype.info.owo", true, false);
+        matchRegistry.register(RainbowTextReplace::new, "rainbow", "advancedchatfilters.config.replacetype.rainbow", "advancedchatfilters.config.replacetype.info.rainbow", true, false);
+        matchRegistry.register(RomanNumeralTextReplace::new, "romannumeral", "advancedchatfilters.config.replacetype.romannumeral", "advancedchatfilters.config.replacetype.info.romannumeral", true, false);
+        matchRegistry.register(ReverseTextReplace::new, "reverse", "advancedchatfilters.config.replacetype.reverse", "advancedchatfilters.config.replacetype.info.reverse", true, false);
 
         // Initiate processors
         MatchProcessorRegistry processorRegistry = MatchProcessorRegistry.getInstance();
-        processorRegistry.register(ForwardProcessor::new, "forward", "advancedchat.config.processor.forward", "advancedchat.config.processor.info.forward", true, false);
-        processorRegistry.register(ActionBarProcessor::new, "actionbar", "advancedchat.config.processor.actionbar", "advancedchat.config.processor.info.actionbar", false, false);
-        processorRegistry.register(SoundProcessor::new, "sound", "advancedchat.config.processor.sound", "advancedchat.config.processor.info.sound", false, false);
-        processorRegistry.register(NarratorProcessor::new, "narrator", "advancedchat.config.processor.narrator", "advancedchat.config.processor.info.narrator", false, false);
+        processorRegistry.register(ForwardProcessor::new, "forward", "advancedchatfilters.config.processor.forward", "advancedchatfilters.config.processor.info.forward", true, false);
+        processorRegistry.register(ActionBarProcessor::new, "actionbar", "advancedchatfilters.config.processor.actionbar", "advancedchatfilters.config.processor.info.actionbar", false, false);
+        processorRegistry.register(SoundProcessor::new, "sound", "advancedchatfilters.config.processor.sound", "advancedchatfilters.config.processor.info.sound", false, false);
+        processorRegistry.register(NarratorProcessor::new, "narrator", "advancedchatfilters.config.processor.narrator", "advancedchatfilters.config.processor.info.narrator", false, false);
 
     }
 

@@ -48,6 +48,10 @@ public class ChildrenTextReplace implements IMatchReplace {
                     toReplace.put(match, (current1, match1) -> toAdd);
                     // Replace the match
                     text.replaceStrings(toReplace);
+                    // Set background color
+                    if (filteredText.getColor().isPresent()) {
+                        text.setBackgroundColor(filteredText.getColor().get());
+                    }
                 }
             }
         }
