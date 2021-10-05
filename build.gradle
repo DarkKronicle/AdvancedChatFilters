@@ -1,3 +1,5 @@
+import net.fabricmc.loom.task.RemapJarTask
+
 plugins {
     id 'fabric-loom' version '0.8-SNAPSHOT'
     id 'maven-publish'
@@ -40,6 +42,31 @@ dependencies {
 
     shadow 'com.google.code.gson:gson:2.8.6'
 }
+
+shadowJar {
+    duplicatesStrategy = 'include'
+    destinationDir = file("${buildDir}/tmp/allJar")
+    configurations = [project.configurations.shadow]
+    relocate 'com.github.maowcraft', 'io.github.darkkronicle.inscribe.shadow.com.github.maowcraft'
+    relocate 'com.google.code', 'io.github.darkkronicle.inscribe.shadow.com.google.code'
+
+    from('.') {
+        include 'LICENSE.txt'
+    }
+    minimize()
+}
+
+task remapShadowJar(type: RemapJarTask) {
+    dependsOn shadowJar
+    addNestedDependencies = false
+    input = shadowJar.archivePath
+}
+
+
+build {
+    dependsOn remapShadowJar
+}
+
 processResources {
     inputs.property "version", project.version
 
