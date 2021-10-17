@@ -1,6 +1,8 @@
 package io.github.darkkronicle.advancedchatfilters.filters;
 
 import io.github.darkkronicle.advancedchatcore.util.FindType;
+import io.github.darkkronicle.advancedchatcore.util.RawText;
+import io.github.darkkronicle.advancedchatcore.util.StringMatch;
 import io.github.darkkronicle.advancedchatfilters.FiltersHandler;
 import io.github.darkkronicle.advancedchatfilters.interfaces.IFilter;
 import io.github.darkkronicle.advancedchatcore.util.ColorUtil;
@@ -10,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Value;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.text.Style;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +34,14 @@ public class ParentFilter {
     private List<ForwardFilter> forwardFilters;
     private final FindType findType;
     private final String findString;
+    private final boolean stripColors;
 
-    public ParentFilter(FindType findType, String findString) {
+    public ParentFilter(FindType findType, String findString, boolean stripColors) {
         filters = new ArrayList<>();
         forwardFilters = new ArrayList<>();
         this.findString = findString;
         this.findType = findType;
+        this.stripColors = stripColors;
     }
 
     public List<IFilter> getFilters() {
@@ -53,8 +58,44 @@ public class ParentFilter {
         forwardFilters.add(forwardFilter);
     }
 
+    private static String getWithColors(FluidText text) {
+        StringBuilder builder = new StringBuilder();
+        Style previous = Style.EMPTY;
+        for (RawText t : text.getRawTexts()) {
+            if (t.getStyle().getColor() != null && !t.getStyle().getColor().equals(previous.getColor())) {
+                previous = t.getStyle();
+                String hex = Integer.toHexString(previous.getColor().getRgb());
+                builder.append(hex);
+            }
+            builder.append(t.getMessage());
+        }
+        return builder.toString();
+    }
+
+    private static String getWithoutColors(String input) {
+        SearchResult hex = SearchResult.searchOf(input, "§\\[[a-fA-F0-9]{6}\\]", FindType.REGEX);
+        int last = -1;
+        StringBuilder builder = new StringBuilder();
+        for (StringMatch match : hex.getMatches()) {
+            if (last <= -1) {
+                last = match.end;
+                continue;
+            }
+            builder.append(input, last, match.start);
+            last = match.end;
+        }
+        builder.append(input, last, input.length());
+        return builder.toString();
+    }
+
     public FilterResult filter(FluidText text, FluidText unfiltered) {
-        SearchResult search = SearchResult.searchOf(text.getString(), findString, findType);
+        String searchString;
+        if (stripColors) {
+            searchString = getWithColors(text);
+        } else {
+            searchString = text.getString();
+        }
+        SearchResult search = SearchResult.searchOf(searchString, findString, findType);
         if (search.size() == 0) {
             return FilterResult.EMPTY;
         }

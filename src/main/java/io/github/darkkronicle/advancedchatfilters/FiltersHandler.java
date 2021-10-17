@@ -80,7 +80,7 @@ public class FiltersHandler implements IMessageFilter {
         if (!filter.getActive().config.getBooleanValue()) {
             return null;
         }
-        ParentFilter filt = new ParentFilter(filter.getFind(), filter.getFindString().config.getStringValue());
+        ParentFilter filt = new ParentFilter(filter.getFind(), filter.getFindString().config.getStringValue(), filter.getStripColors().config.getBooleanValue());
         if (filter.getReplace() != null) {
             if (filter.getReplace().useChildren()) {
                 ReplaceFilter f = new ReplaceFilter(filter.getReplaceTo().config.getStringValue().replaceAll("&", "§"), filter.getReplace(), null);

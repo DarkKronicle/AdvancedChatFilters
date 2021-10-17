@@ -63,6 +63,12 @@ public class Filter implements Comparable<Filter> {
             new ConfigBoolean(translate("active"), false, translate("info.active")));
 
     /**
+     * Whether or not it should be used to filter chat messages currently.
+     */
+    private ConfigStorage.SaveableConfig<ConfigBoolean> stripColors = ConfigStorage.SaveableConfig.fromConfig("stripColors",
+            new ConfigBoolean(translate("stripcolors"), true, translate("info.stripcolors")));
+
+    /**
      * The Expression to find a match. The way it is interpreted is defined by findType.
      */
     private ConfigStorage.SaveableConfig<ConfigString> findString = ConfigStorage.SaveableConfig.fromConfig("findString",
@@ -117,6 +123,7 @@ public class Filter implements Comparable<Filter> {
     private final ImmutableList<ConfigStorage.SaveableConfig<?>> options = ImmutableList.of(
             name,
             active,
+            stripColors,
             findString,
             findType,
             replaceType,
