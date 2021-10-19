@@ -4,6 +4,7 @@ import fi.dy.masa.malilib.gui.GuiTextFieldGeneric;
 import fi.dy.masa.malilib.gui.interfaces.ISelectionListener;
 import fi.dy.masa.malilib.gui.widgets.WidgetListBase;
 import fi.dy.masa.malilib.gui.wrappers.TextFieldWrapper;
+import io.github.darkkronicle.advancedchatfilters.config.AdvancedFilter;
 import io.github.darkkronicle.advancedchatfilters.config.Filter;
 import io.github.darkkronicle.advancedchatfilters.config.FiltersConfigStorage;
 import net.minecraft.client.gui.screen.Screen;
@@ -14,9 +15,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class WidgetListFilters extends WidgetListBase<Filter, WidgetFilterEntry> {
+public class WidgetListAdvancedFilters extends WidgetListBase<AdvancedFilter, WidgetAdvancedFilterEntry> {
 
-    public Filter filter;
     protected final List<TextFieldWrapper<? extends GuiTextFieldGeneric>> textFields = new ArrayList<>();
 
     @Override
@@ -25,10 +25,9 @@ public class WidgetListFilters extends WidgetListBase<Filter, WidgetFilterEntry>
         super.reCreateListEntryWidgets();
     }
 
-    public WidgetListFilters(int x, int y, int width, int height, @Nullable ISelectionListener<Filter> selectionListener, Filter filter, Screen parent) {
+    public WidgetListAdvancedFilters(int x, int y, int width, int height, @Nullable ISelectionListener<AdvancedFilter> selectionListener, Screen parent) {
         super(x, y, width, height, selectionListener);
         this.browserEntryHeight = 22;
-        this.filter = filter;
         this.setParent(parent);
     }
 
@@ -60,7 +59,7 @@ public class WidgetListFilters extends WidgetListBase<Filter, WidgetFilterEntry>
 
     @Override
     public boolean onKeyTyped(int keyCode, int scanCode, int modifiers) {
-        for (WidgetFilterEntry widget : this.listWidgets) {
+        for (WidgetAdvancedFilterEntry widget : this.listWidgets) {
             if (widget.onKeyTyped(keyCode, scanCode, modifiers)) {
                 return true;
             }
@@ -69,12 +68,12 @@ public class WidgetListFilters extends WidgetListBase<Filter, WidgetFilterEntry>
     }
 
     @Override
-    protected WidgetFilterEntry createListEntryWidget(int x, int y, int listIndex, boolean isOdd, Filter entry) {
-        return new WidgetFilterEntry(x, y, this.browserEntryWidth, this.getBrowserEntryHeightFor(entry), isOdd, entry, listIndex, this);
+    protected WidgetAdvancedFilterEntry createListEntryWidget(int x, int y, int listIndex, boolean isOdd, AdvancedFilter entry) {
+        return new WidgetAdvancedFilterEntry(x, y, this.browserEntryWidth, this.getBrowserEntryHeightFor(entry), isOdd, entry, listIndex, this);
     }
 
     @Override
-    protected Collection<Filter> getAllEntries() {
-        return FiltersConfigStorage.FILTERS;
+    protected Collection<AdvancedFilter> getAllEntries() {
+        return FiltersConfigStorage.ADVANCED_FILTERS.values();
     }
 }

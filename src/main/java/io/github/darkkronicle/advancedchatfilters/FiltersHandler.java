@@ -80,20 +80,9 @@ public class FiltersHandler implements IMessageFilter {
         if (!filter.getActive().config.getBooleanValue()) {
             return null;
         }
-        ParentFilter filt = new ParentFilter(filter.getFind(), filter.getFindString().config.getStringValue(), filter.getStripColors().config.getBooleanValue());
+        ParentFilter filt = new ParentFilter(filter.getFind(), filter.getFindString().config.getStringValue().replace("&", "§"), filter.getStripColors().config.getBooleanValue());
         if (filter.getReplace() != null) {
-            if (filter.getReplace().useChildren()) {
-                ReplaceFilter f = new ReplaceFilter(filter.getReplaceTo().config.getStringValue().replaceAll("&", "§"), filter.getReplace(), null);
-                if (filter.getChildren() != null) {
-                    for (Filter child : filter.getChildren()) {
-                        ParentFilter childf = createFilter(child);
-                        if (childf != null) {
-                            f.addChild(childf);
-                        }
-                    }
-                }
-                filt.addFilter(f);
-            } else if (filter.getReplaceTextColor().config.getBooleanValue()) {
+            if (filter.getReplaceTextColor().config.getBooleanValue()) {
                 filt.addFilter(new ReplaceFilter(filter.getReplaceTo().config.getStringValue().replaceAll("&", "§"), filter.getReplace(), filter.getTextColor().config.getSimpleColor()));
             } else {
                 filt.addFilter(new ReplaceFilter(filter.getReplaceTo().config.getStringValue().replaceAll("&", "§"), filter.getReplace(), null));

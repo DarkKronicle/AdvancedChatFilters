@@ -5,6 +5,8 @@
   "advancedchatfilters.screen.narrator": "§bNarrator",
   "advancedchatfilters.gui.button.addtab": "New Chat Tab",
   "advancedchatfilters.gui.button.addfilter": "New Filter",
+  "advancedchatfilters.gui.button.advanced": "Advanced Filters",
+  "advancedchatfilters.gui.button.openfolder": "Open Directory",
   "advancedchatfilters.gui.button.back": "Back",
   "advancedchatfilters.gui.button.import": "Import Filters",
   "advancedchatfilters.gui.button.export": "Export",
@@ -29,6 +31,8 @@
   "advancedchatfilters.config.filter.info.findstring": "The string that will be §6searached§r and §6filtered§r ",
   "advancedchatfilters.config.filter.findtype": "Filter Type",
   "advancedchatfilters.config.filter.info.findtype": "How matches will be found\n§6Literal §r- Matches §6exactly §rthe string\n§eUpper-Lower §r- Like §6Literal, §rbut not §6case-sensitive\n§bRegEx §r - Parses the string as a §6regular expression\n§dAll §r- Passes §6all §rtext through the filter, regardless of the string to find. This option is mainly used if you want to use a parent filter soley for grouping several child filters",
+  "advancedchatfilters.config.filter.stripcolors": "Ignore Colors",
+  "advancedchatfilters.config.filter.info.stripcolors": "Whether or not this filter with account for the color the §6matched string§r. \n With this value set to §atrue§r, the string \"§bHello\" will be interpreted as \"Hello\"",
   "advancedchatfilters.config.filter.replaceto": "Replace to",
   "advancedchatfilters.config.filter.info.replaceto": "The string that §6replaces §rwhat is set for §6replace type §r\n§b%MATCH%§r is replaced by whatever §6triggered§r the filter",
   "advancedchatfilters.config.filter.replacetype": "Replace Type",
@@ -81,5 +85,10 @@
   "advancedchatfilters.config.notifysound.bell_use": "button_use",
   "advancedchatfilters.config.notifysound.button_click": "button_click",
   "advancedchatfilters.config.notifysound.husk_to_zombie": "husk_to_zombie",
-  "advancedchatfilters.config.notifysound.glass_break": "glass_break"
+  "advancedchatfilters.config.notifysound.glass_break": "glass_break",
+
+  "advancedchat.config.findtype.literal": "§6Literal",
+  "advancedchat.config.findtype.upperlower": "§eUpper-Lower",
+  "advancedchat.config.findtype.regex": "§bRegEx",
+  "advancedchat.config.findtype.all": "§dAll"
 }

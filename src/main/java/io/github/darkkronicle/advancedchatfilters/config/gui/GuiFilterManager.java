@@ -7,7 +7,6 @@ import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.button.IButtonActionListener;
 import fi.dy.masa.malilib.gui.interfaces.ISelectionListener;
 import fi.dy.masa.malilib.util.StringUtils;
-import io.github.darkkronicle.advancedchatcore.config.gui.GuiConfig;
 import io.github.darkkronicle.advancedchatcore.config.gui.GuiConfigHandler;
 import io.github.darkkronicle.advancedchatfilters.config.Filter;
 import io.github.darkkronicle.advancedchatfilters.config.FiltersConfigStorage;
@@ -62,7 +61,8 @@ public class GuiFilterManager extends GuiListBase<Filter, WidgetFilterEntry, Wid
         y += 24;
         x = this.width - 10;
         x -= this.addButton(x, y, ButtonListener.Type.ADD_FILTER) + 2;
-        this.addButton(x, y, ButtonListener.Type.IMPORT);
+        x -= this.addButton(x, y, ButtonListener.Type.ADVANCED) + 2;
+        x -= this.addButton(x, y, ButtonListener.Type.IMPORT) + 2;
     }
 
     private int createButton(GuiConfigHandler.TabButton button, int y) {
@@ -95,12 +95,15 @@ public class GuiFilterManager extends GuiListBase<Filter, WidgetFilterEntry, Wid
                 this.gui.getListWidget().refreshEntries();
             } else if (this.type == Type.IMPORT) {
                 GuiBase.openGui(new SharingScreen(null, gui));
+            } else if (this.type == Type.ADVANCED) {
+                GuiBase.openGui(new GuiAdvancedFilterManager(gui));
             }
         }
 
         public enum Type {
             ADD_FILTER("addfilter"),
-            IMPORT("import")
+            IMPORT("import"),
+            ADVANCED("advanced")
             ;
 
             private static String translate(String key) {

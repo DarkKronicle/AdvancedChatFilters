@@ -58,46 +58,79 @@ public class ParentFilter {
         forwardFilters.add(forwardFilter);
     }
 
-    private static String getWithColors(FluidText text) {
-        StringBuilder builder = new StringBuilder();
+    public static String getWithColors(FluidText text) {
+        StringBuilder builder = new StringBuilder("§[ffffff]");
         Style previous = Style.EMPTY;
         for (RawText t : text.getRawTexts()) {
-            if (t.getStyle().getColor() != null && !t.getStyle().getColor().equals(previous.getColor())) {
+            if ((previous.getColor() != null && !previous.equals(Style.EMPTY) && t.getStyle().equals(Style.EMPTY)) || (t.getStyle().getColor() != null && !t.getStyle().getColor().equals(previous.getColor()))) {
                 previous = t.getStyle();
-                String hex = Integer.toHexString(previous.getColor().getRgb());
-                builder.append(hex);
+                int iColor;
+                if (previous.getColor() != null) {
+                    iColor = previous.getColor().getRgb();
+                } else {
+                    iColor = ColorUtil.WHITE.color();
+                }
+                ColorUtil.SimpleColor color = new ColorUtil.SimpleColor(iColor);
+                String hex = String.format("%02x%02x%02x", color.red(), color.green(), color.blue());
+                builder.append("§[").append(hex).append(']');
             }
             builder.append(t.getMessage());
         }
+        builder.append("§[ffffff]");
         return builder.toString();
     }
 
-    private static String getWithoutColors(String input) {
-        SearchResult hex = SearchResult.searchOf(input, "§\\[[a-fA-F0-9]{6}\\]", FindType.REGEX);
-        int last = -1;
-        StringBuilder builder = new StringBuilder();
-        for (StringMatch match : hex.getMatches()) {
-            if (last <= -1) {
-                last = match.end;
-                continue;
+    public static SearchResult getOffsetMatch(SearchResult result, String original) {
+        SearchResult hex = SearchResult.searchOf(result.getInput(), "§\\[[a-fA-F0-9]{6}\\]", FindType.REGEX);
+        List<StringMatch> matches = new ArrayList<>();
+        for (StringMatch match : result.getMatches()) {
+            int depth = 0;
+            boolean started = false;
+            boolean ended = false;
+            int start = -1;
+            int end = original.length();
+            for (StringMatch hexMatch : hex.getMatches()) {
+                if (started && ended) {
+                    break;
+                }
+                if (!started && match.start <= hexMatch.start) {
+                    start = match.start - depth;
+                    started = true;
+                }
+                if (match.end <= hexMatch.start) {
+                    ended = true;
+                    end = match.end - depth;
+                } else if (match.end <= hexMatch.end) {
+                    ended = true;
+                    end = match.end - depth - 9;
+                } else {
+                    end = match.end - depth - 9;
+                }
+                depth += 9;
             }
-            builder.append(input, last, match.start);
-            last = match.end;
+            if (start == -1) {
+                start = match.start - depth;
+            }
+            matches.add(new StringMatch(original.substring(start, end), start, end));
         }
-        builder.append(input, last, input.length());
-        return builder.toString();
+        return new SearchResult(original, result.getSearch(), result.getMatcher(), matches);
     }
 
     public FilterResult filter(FluidText text, FluidText unfiltered) {
         String searchString;
-        if (stripColors) {
+        String original = text.getString();
+        if (!stripColors) {
             searchString = getWithColors(text);
         } else {
-            searchString = text.getString();
+            searchString = original;
         }
         SearchResult search = SearchResult.searchOf(searchString, findString, findType);
         if (search.size() == 0) {
             return FilterResult.EMPTY;
+        }
+        if (!stripColors) {
+            // Offset the search results based off of colors
+            search = getOffsetMatch(search, original);
         }
         ColorUtil.SimpleColor color = null;
         for (IFilter filter : filters) {

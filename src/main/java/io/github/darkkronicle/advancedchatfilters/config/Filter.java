@@ -1,7 +1,6 @@
 package io.github.darkkronicle.advancedchatfilters.config;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fi.dy.masa.malilib.config.ConfigType;
@@ -116,8 +115,6 @@ public class Filter implements Comparable<Filter> {
     private ConfigStorage.SaveableConfig<ConfigSimpleColor> backgroundColor = ConfigStorage.SaveableConfig.fromConfig("backgroundColor",
             new ConfigSimpleColor(translate("backgroundcolor"), ColorUtil.WHITE, translate("info.backgroundcolor")));
 
-    private ArrayList<Filter> children = new ArrayList<>();
-
     private MatchProcessorRegistry processors = MatchProcessorRegistry.getInstance().clone();
 
     private final ImmutableList<ConfigStorage.SaveableConfig<?>> options = ImmutableList.of(
@@ -173,22 +170,11 @@ public class Filter implements Comparable<Filter> {
                 }
             }
 
-            JsonElement children = obj.get("children");
-            if (children != null && children.isJsonArray()) {
-                ArrayList<Filter> child = new ArrayList<>();
-                for (JsonElement o : children.getAsJsonArray()) {
-                    if (o.isJsonObject()) {
-                        child.add(load(o.getAsJsonObject()));
-                    }
-                }
-                f.setChildren(child);
-            }
             return f;
         }
 
         @Override
         public JsonObject save(Filter filter) {
-            JsonArray children = new JsonArray();
             JsonObject obj = new JsonObject();
             for (ConfigStorage.SaveableConfig<?> option : filter.getOptions()) {
                 obj.add(option.key, option.config.getAsJsonElement());
@@ -200,10 +186,6 @@ public class Filter implements Comparable<Filter> {
             }
             obj.add("processors", processors);
 
-            for (Filter c : filter.getChildren()) {
-                children.add(save(c));
-            }
-            obj.add("children", children);
             obj.addProperty("order", filter.getOrder());
             return obj;
         }

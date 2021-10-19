@@ -16,7 +16,7 @@ import fi.dy.masa.malilib.util.StringUtils;
 import io.github.darkkronicle.advancedchatcore.config.gui.widgets.WidgetIntBox;
 import io.github.darkkronicle.advancedchatcore.util.ColorUtil;
 import io.github.darkkronicle.advancedchatfilters.FiltersHandler;
-import io.github.darkkronicle.advancedchatfilters.config.Filter;
+import io.github.darkkronicle.advancedchatfilters.config.AdvancedFilter;
 import io.github.darkkronicle.advancedchatfilters.config.FiltersConfigStorage;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -24,28 +24,20 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
 
 import java.util.Collections;
-import java.util.List;
-import java.util.function.Consumer;
 
-/*
-    This class is based heavily off of https://github.com/maruohon/minihud/blob/d565d39c68bdcd3ed1e1cf2007491e03d9659f34/src/main/java/fi/dy/masa/minihud/gui/widgets/WidgetShapeEntry.java#L19 which is off the GNU LGPL
-
- */
 @Environment(EnvType.CLIENT)
-public class WidgetFilterEntry extends WidgetListEntryBase<Filter> {
+public class WidgetAdvancedFilterEntry extends WidgetListEntryBase<AdvancedFilter> {
 
-    private final WidgetListFilters parent;
+    private final WidgetListAdvancedFilters parent;
     private final boolean isOdd;
-    private final List<String> hoverLines;
     private final int buttonStartX;
-    private final Filter filter;
+    private final AdvancedFilter filter;
     private final TextFieldWrapper<WidgetIntBox> num;
 
-    public WidgetFilterEntry(int x, int y, int width, int height, boolean isOdd, Filter filter, int listIndex, WidgetListFilters parent) {
+    public WidgetAdvancedFilterEntry(int x, int y, int width, int height, boolean isOdd, AdvancedFilter filter, int listIndex, WidgetListAdvancedFilters parent) {
         super(x, y, width, height, filter, listIndex);
         this.parent = parent;
         this.isOdd = isOdd;
-        this.hoverLines = filter.getWidgetHoverLines();
         this.filter = filter;
 
         y += 1;
@@ -59,9 +51,7 @@ public class WidgetFilterEntry extends WidgetListEntryBase<Filter> {
                 order = 0;
             }
             this.filter.setOrder(order);
-            if (parent.filter == null) {
-                Collections.sort(FiltersConfigStorage.FILTERS);
-            }
+            Collections.sort(FiltersConfigStorage.FILTERS);
             FiltersHandler.getInstance().loadFilters();
             this.parent.refreshEntries();
         });
@@ -84,18 +74,9 @@ public class WidgetFilterEntry extends WidgetListEntryBase<Filter> {
         });
         this.parent.addTextField(this.num);
         pos -= num.getWidth() + 2;
-        pos -= addButton(pos, y, ButtonListener.Type.REMOVE, FiltersConfigStorage.FILTERS::remove);
         pos -= addOnOffButton(pos, y, ButtonListener.Type.ACTIVE, filter.getActive().config.getBooleanValue());
-        pos -= addButton(pos, y, ButtonListener.Type.CONFIGURE, null);
 
         buttonStartX = pos;
-    }
-
-    protected int addButton(int x, int y, ButtonListener.Type type, Consumer<Filter> remove) {
-        ButtonGeneric button = new ButtonGeneric(x, y, -1, true, type.getDisplayName());
-        this.addButton(button, new ButtonListener(type, this, remove));
-
-        return button.getWidth() + 1;
     }
 
     private int addOnOffButton(int xRight, int y, ButtonListener.Type type, boolean isCurrentlyOn) {
@@ -130,53 +111,27 @@ public class WidgetFilterEntry extends WidgetListEntryBase<Filter> {
         RenderUtils.disableDiffuseLighting();
     }
 
-    @Override
-    public void postRenderHovered(int mouseX, int mouseY, boolean selected, MatrixStack matrixStack) {
-        super.postRenderHovered(mouseX, mouseY, selected, matrixStack);
-
-        if (mouseX >= this.x && mouseX < this.buttonStartX && mouseY >= this.y && mouseY <= this.y + this.height) {
-            RenderUtils.drawHoverText(mouseX, mouseY, this.hoverLines, matrixStack);
-        }
-    }
-
     private static class ButtonListener implements IButtonActionListener {
 
         private final Type type;
-        private final WidgetFilterEntry parent;
-        private final Consumer<Filter> remove;
+        private final WidgetAdvancedFilterEntry parent;
 
-        public ButtonListener(Type type, WidgetFilterEntry parent) {
-            this(type, parent, null);
-        }
-
-        public ButtonListener(Type type, WidgetFilterEntry parent, Consumer<Filter> remove) {
+        public ButtonListener(Type type, WidgetAdvancedFilterEntry parent) {
             this.parent = parent;
             this.type = type;
-            this.remove = remove;
         }
 
         @Override
         public void actionPerformedWithButton(ButtonBase button, int mouseButton) {
-            if (type == Type.REMOVE) {
-                if (remove != null) {
-                    remove.accept(parent.filter);
-                }
-                parent.parent.refreshEntries();
-                FiltersHandler.getInstance().loadFilters();
-            } else if (type == Type.ACTIVE) {
+            if (type == Type.ACTIVE) {
                 this.parent.filter.getActive().config.setBooleanValue(!this.parent.filter.getActive().config.getBooleanValue());
                 FiltersHandler.getInstance().loadFilters();
                 parent.parent.refreshEntries();
-            } else if (type == Type.CONFIGURE) {
-                GuiBase.openGui(new GuiFilterEditor(parent.filter, parent.parent.getParent()));
             }
         }
 
         public enum Type {
-            CONFIGURE("configure"),
-            REMOVE("remove"),
-            ACTIVE("active")
-            ;
+            ACTIVE("active");
 
             private final String translate;
 
@@ -227,8 +182,7 @@ public class WidgetFilterEntry extends WidgetListEntryBase<Filter> {
 
         boolean ret = false;
 
-        if (this.num != null)
-        {
+        if (this.num != null) {
             ret = this.num.getTextField().mouseClicked(mouseX, mouseY, mouseButton);
         }
 

@@ -9,7 +9,6 @@ import lombok.Getter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 /**
@@ -21,13 +20,6 @@ public class ReplaceFilter implements IFilter {
     public final String replaceTo;
     public final IMatchReplace type;
     public final ColorUtil.SimpleColor color;
-
-    @Getter
-    private ArrayList<ParentFilter> children = new ArrayList<>();
-
-    public void addChild(ParentFilter filter) {
-        children.add(filter);
-    }
 
     public ReplaceFilter(String replaceTo, IMatchReplace type, ColorUtil.SimpleColor color) {
         this.replaceTo = replaceTo;

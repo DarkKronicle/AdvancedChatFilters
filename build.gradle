@@ -38,9 +38,7 @@ dependencies {
     implementation "com.github.maowcraft:owo:${project.owo_version}"
     shadow "com.github.maowcraft:owo:${project.owo_version}"
 
-    shadow 'com.google.code.findbugs:jsr305:3.0.0'
-
-    shadow 'com.google.code.gson:gson:2.8.6'
+    implementation 'org.openjdk.nashorn:nashorn-core:15.3'
 }
 
 shadowJar {

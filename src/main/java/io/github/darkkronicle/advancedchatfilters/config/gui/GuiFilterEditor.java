@@ -1,5 +1,6 @@
 package io.github.darkkronicle.advancedchatfilters.config.gui;
 
+import com.google.common.collect.ImmutableList;
 import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.options.ConfigString;
 import fi.dy.masa.malilib.gui.GuiBase;
@@ -8,6 +9,7 @@ import fi.dy.masa.malilib.gui.button.ButtonBase;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.button.ConfigButtonOptionList;
 import fi.dy.masa.malilib.gui.button.IButtonActionListener;
+import fi.dy.masa.malilib.gui.widgets.WidgetDropDownList;
 import fi.dy.masa.malilib.util.StringUtils;
 import io.github.darkkronicle.advancedchatcore.ModuleHandler;
 import io.github.darkkronicle.advancedchatcore.config.gui.widgets.WidgetColor;
@@ -16,6 +18,7 @@ import io.github.darkkronicle.advancedchatcore.config.gui.widgets.WidgetToggle;
 import io.github.darkkronicle.advancedchatcore.util.ColorUtil;
 import io.github.darkkronicle.advancedchatfilters.FiltersHandler;
 import io.github.darkkronicle.advancedchatfilters.config.Filter;
+import io.github.darkkronicle.advancedchatfilters.registry.MatchReplaceRegistry;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 
@@ -27,10 +30,12 @@ public class GuiFilterEditor extends GuiBase {
     private GuiTextFieldGeneric name;
     private GuiTextFieldGeneric findString;
     private GuiTextFieldGeneric replaceString;
+    private WidgetDropDownList<MatchReplaceRegistry.MatchReplaceOption> replaceTypeWidget;
     private WidgetToggle setTextColor;
     private WidgetColor textColor;
     private WidgetToggle setBackgroundColor;
     private WidgetColor backgroundColor;
+    private WidgetToggle stripColors;
 
     public FilterTab tab = FilterTab.CONFIG;
 
@@ -100,8 +105,10 @@ public class GuiFilterEditor extends GuiBase {
         filter.getReplaceTo().config.setValueFromString(replaceString.getText());
         filter.getTextColor().config.setIntegerValue(textColor.getAndRefreshColor().color());
         filter.getReplaceTextColor().config.setBooleanValue(setTextColor.isCurrentlyOn());
+        filter.getReplaceType().config.setOptionListValue(replaceTypeWidget.getSelectedEntry());
         filter.getBackgroundColor().config.setIntegerValue(backgroundColor.getAndRefreshColor().color());
         filter.getReplaceBackgroundColor().config.setBooleanValue(setBackgroundColor.isCurrentlyOn());
+        filter.getStripColors().config.setBooleanValue(stripColors.isCurrentlyOn());
         FiltersHandler.getInstance().loadFilters();
     }
 
@@ -122,6 +129,12 @@ public class GuiFilterEditor extends GuiBase {
         name = this.addStringConfigButton(x, y, getWidth(), 10, filter.getName().config);
         y += name.getHeight() + 4;
 
+        // Strip colors
+        y += this.addLabel(x, y, filter.getStripColors().config);
+        stripColors = new WidgetToggle(x, y, getWidth(), false, "advancedchatfilters.config.filter.textcoloractive", filter.getStripColors().config.getBooleanValue());
+        this.addButton(stripColors, null);
+        y += stripColors.getHeight() + 2;
+
         // Find
         this.addLabel(x + getWidth() / 2, y, filter.getFindType().config);
         y += this.addLabel(x, y, filter.getFindString().config) + 1;
@@ -132,15 +145,7 @@ public class GuiFilterEditor extends GuiBase {
         this.addButton(findType, null);
         y += findType.getHeight() + 2;
 
-        // Replace
-        this.addLabel(x + getWidth() / 2, y, filter.getReplaceType().config);
-        y += this.addLabel(x, y, filter.getReplaceTo().config) + 1;
-        replaceString = this.addStringConfigButton(x, y, getWidth() / 2 - 1, 18, filter.getReplaceTo().config);
-        replaceString.setMaxLength(64000);
-        replaceString.setText(filter.getReplaceTo().config.getStringValue());
-        ConfigButtonOptionList replaceType = new ConfigButtonOptionList(x + getWidth() / 2 + 1, y, getWidth() / 2 - 1, 20, filter.getReplaceType().config);
-        this.addButton(replaceType, null);
-        y += findType.getHeight() + 2;
+
 
         // Text color
         this.addLabel(x, y, filter.getTextColor().config);
@@ -163,7 +168,20 @@ public class GuiFilterEditor extends GuiBase {
         if (enableBackgroundColor) {
             this.addTextField(backgroundColor, null);
             this.addButton(setBackgroundColor, null);
+            y += findType.getHeight() + 2;
         }
+
+        // Add at the end so that it get renders last
+        // Replace
+        this.addLabel(x + getWidth() / 2, y, filter.getReplaceType().config);
+        y += this.addLabel(x, y, filter.getReplaceTo().config) + 1;
+        replaceString = this.addStringConfigButton(x, y, getWidth() / 2 - 1, 18, filter.getReplaceTo().config);
+        replaceString.setMaxLength(64000);
+        replaceString.setText(filter.getReplaceTo().config.getStringValue());
+        replaceTypeWidget = new WidgetDropDownList<>(x + getWidth() / 2 + 1, y, getWidth() / 2 - 1, 20, 200, 10, ImmutableList.copyOf(MatchReplaceRegistry.getInstance().getAll()), MatchReplaceRegistry.MatchReplaceOption::getDisplayName);
+        replaceTypeWidget.setZLevel(getZOffset() + 100);
+        replaceTypeWidget.setSelectedEntry((MatchReplaceRegistry.MatchReplaceOption) filter.getReplaceType().config.getOptionListValue());
+        this.addWidget(replaceTypeWidget);
         y += findType.getHeight() + 2;
     }
 
@@ -240,8 +258,7 @@ public class GuiFilterEditor extends GuiBase {
 
     public enum FilterTab {
         CONFIG("config"),
-        PROCESSORS("processors"),
-        CHILDREN("children")
+        PROCESSORS("processors")
         ;
 
         private final String translation;
@@ -274,8 +291,6 @@ public class GuiFilterEditor extends GuiBase {
             parent.tab = tab;
             if (tab == FilterTab.CONFIG) {
                 GuiBase.openGui(new GuiFilterEditor(parent.filter, parent.getParent()));
-            } else if (tab == FilterTab.CHILDREN) {
-                GuiBase.openGui(new GuiChildrenManager(this.parent));
             } else if (tab == FilterTab.PROCESSORS) {
                 GuiBase.openGui(new GuiFilterProcessors(this.parent));
             }

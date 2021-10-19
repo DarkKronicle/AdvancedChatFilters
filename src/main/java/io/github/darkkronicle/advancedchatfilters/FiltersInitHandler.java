@@ -5,10 +5,8 @@ import fi.dy.masa.malilib.interfaces.IInitializationHandler;
 import fi.dy.masa.malilib.util.StringUtils;
 import io.github.darkkronicle.advancedchatcore.chat.MessageDispatcher;
 import io.github.darkkronicle.advancedchatfilters.config.FiltersConfigStorage;
-import io.github.darkkronicle.advancedchatcore.chat.ChatHistory;
 import io.github.darkkronicle.advancedchatcore.config.gui.GuiConfigHandler;
 import io.github.darkkronicle.advancedchatfilters.config.gui.GuiFilterManager;
-import io.github.darkkronicle.advancedchatfilters.filters.matchreplace.ChildrenTextReplace;
 import io.github.darkkronicle.advancedchatfilters.filters.matchreplace.FullMessageTextReplace;
 import io.github.darkkronicle.advancedchatfilters.filters.matchreplace.OnlyMatchTextReplace;
 import io.github.darkkronicle.advancedchatfilters.filters.matchreplace.OwOTextReplace;
@@ -21,6 +19,7 @@ import io.github.darkkronicle.advancedchatfilters.filters.processors.NarratorPro
 import io.github.darkkronicle.advancedchatfilters.filters.processors.SoundProcessor;
 import io.github.darkkronicle.advancedchatfilters.registry.MatchProcessorRegistry;
 import io.github.darkkronicle.advancedchatfilters.registry.MatchReplaceRegistry;
+import io.github.darkkronicle.advancedchatfilters.scripting.ScriptManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
@@ -48,11 +47,12 @@ public class FiltersInitHandler implements IInitializationHandler {
 
         // Make it so filters do stuff
         MessageDispatcher.getInstance().registerPreFilter(FiltersHandler.getInstance(), -1);
+        ScriptManager.getInstance().init();
+        MessageDispatcher.getInstance().registerPreFilter(ScriptManager.getInstance(), -1);
 
         // Initiate match types
         MatchReplaceRegistry matchRegistry = MatchReplaceRegistry.getInstance();
         matchRegistry.register(() -> null, "none", "advancedchatfilters.config.replacetype.none", "advancedchatfilters.config.replacetype.info.none", true, true);
-        matchRegistry.register(ChildrenTextReplace::new, "children", "advancedchatfilters.config.replacetype.children", "advancedchatfilters.config.replacetype.info.children", true, false);
         matchRegistry.register(FullMessageTextReplace::new, "fullmessage", "advancedchatfilters.config.replacetype.fullmessage", "advancedchatfilters.config.replacetype.info.fullmessage", true, false);
         matchRegistry.register(OnlyMatchTextReplace::new, "onlymatch", "advancedchatfilters.config.replacetype.onlymatch", "advancedchatfilters.config.replacetype.info.onlymatch", true, false);
         matchRegistry.register(OwOTextReplace::new, "owo", "advancedchatfilters.config.replacetype.owo", "advancedchatfilters.config.replacetype.info.owo", true, false);
