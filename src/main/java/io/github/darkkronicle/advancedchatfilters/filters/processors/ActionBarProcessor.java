@@ -12,13 +12,20 @@ import net.minecraft.network.MessageType;
 public class ActionBarProcessor implements IMatchProcessor {
 
     @Override
-    public Result processMatches(FluidText text, FluidText unfiltered, SearchResult matches) {
+    public Result processMatches(
+        FluidText text,
+        FluidText unfiltered,
+        SearchResult matches
+    ) {
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null) {
             return Result.PROCESSED;
         }
-        client.inGameHud.addChatMessage(MessageType.GAME_INFO, text, client.player.getUuid());
+        client.inGameHud.addChatMessage(
+            MessageType.GAME_INFO,
+            text,
+            client.player.getUuid()
+        );
         return Result.PROCESSED;
     }
-
 }

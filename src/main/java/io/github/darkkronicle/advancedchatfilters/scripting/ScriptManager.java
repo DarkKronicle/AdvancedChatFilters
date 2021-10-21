@@ -10,22 +10,21 @@ import io.github.darkkronicle.advancedchatcore.interfaces.IMessageFilter;
 import io.github.darkkronicle.advancedchatcore.util.FluidText;
 import io.github.darkkronicle.advancedchatcore.util.RawText;
 import io.github.darkkronicle.advancedchatfilters.config.FiltersConfigStorage;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.Executors;
 import lombok.Getter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.Executors;
-
 @Environment(EnvType.CLIENT)
 public class ScriptManager implements IMessageFilter {
 
-    private final static ScriptManager INSTANCE = new ScriptManager();
+    private static final ScriptManager INSTANCE = new ScriptManager();
 
     private NashornSandbox nashornEngine;
 
@@ -41,9 +40,7 @@ public class ScriptManager implements IMessageFilter {
 
     public JsonArray jsonData = new JsonArray();
 
-    private ScriptManager() {
-
-    }
+    private ScriptManager() {}
 
     public void init() {
         if (!FiltersConfigStorage.ADVANCED_ON.config.getBooleanValue()) {
@@ -64,14 +61,24 @@ public class ScriptManager implements IMessageFilter {
         nashornEngine.setExecutor(Executors.newSingleThreadExecutor());
         unimportedFilters = new ArrayList<>();
         filters = new ArrayList<>();
-        File directory = FileUtils.getConfigDirectory().toPath().resolve("advancedchat").resolve("filters").toFile();
+        File directory = FileUtils
+            .getConfigDirectory()
+            .toPath()
+            .resolve("advancedchat")
+            .resolve("filters")
+            .toFile();
         if (!directory.exists()) {
             directory.mkdirs();
         }
-        for (File f : directory.listFiles((dir, name) -> name.endsWith(".js"))) {
+        for (File f : directory.listFiles((dir, name) -> name.endsWith(".js")
+        )) {
             ScriptFilter filter = ScriptFilter.fromFile(f);
             if (filter != null) {
-                if (FiltersConfigStorage.IMPORTED_FILTERS.contains(filter.getId())) {
+                if (
+                    FiltersConfigStorage.IMPORTED_FILTERS.contains(
+                        filter.getId()
+                    )
+                ) {
                     if (filter.runInit(nashornEngine)) {
                         filters.add(filter);
                     }
@@ -132,5 +139,4 @@ public class ScriptManager implements IMessageFilter {
         }
         return Optional.empty();
     }
-
 }

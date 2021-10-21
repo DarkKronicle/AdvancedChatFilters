@@ -9,6 +9,8 @@ import io.github.darkkronicle.advancedchatcore.util.ColorUtil;
 import io.github.darkkronicle.advancedchatcore.util.FluidText;
 import io.github.darkkronicle.advancedchatcore.util.RawText;
 import io.github.darkkronicle.advancedchatcore.util.StyleFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
@@ -16,20 +18,28 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class GuiAdvancedFilterDisabled extends GuiBase {
 
     private final List<OrderedText> warning;
 
     public GuiAdvancedFilterDisabled(Screen parent) {
         setParent(parent);
-        FluidText text = new FluidText(RawText.withStyle(StringUtils.translate("advancedchatfilters.warning.advancedfilters"), Style.EMPTY));
+        FluidText text = new FluidText(
+            RawText.withStyle(
+                StringUtils.translate(
+                    "advancedchatfilters.warning.advancedfilters"
+                ),
+                Style.EMPTY
+            )
+        );
         warning = new ArrayList<>();
         MinecraftClient client = MinecraftClient.getInstance();
         int width = client.getWindow().getScaledWidth();
-        for (Text t : StyleFormatter.wrapText(client.textRenderer, width - 100, StyleFormatter.formatText(text))) {
+        for (Text t : StyleFormatter.wrapText(
+            client.textRenderer,
+            width - 100,
+            StyleFormatter.formatText(text)
+        )) {
             warning.add(t.asOrderedText());
         }
     }
@@ -42,8 +52,20 @@ public class GuiAdvancedFilterDisabled extends GuiBase {
 
         String backText = ButtonListener.Type.BACK.getDisplayName();
         int backWidth = StringUtils.getStringWidth(backText) + 10;
-        ButtonGeneric back = new ButtonGeneric(x + backWidth, y, backWidth, true, backText);
-        this.addButton(back, new GuiAdvancedFilterDisabled.ButtonListener(ButtonListener.Type.BACK, this));
+        ButtonGeneric back = new ButtonGeneric(
+            x + backWidth,
+            y,
+            backWidth,
+            true,
+            backText
+        );
+        this.addButton(
+                back,
+                new GuiAdvancedFilterDisabled.ButtonListener(
+                    ButtonListener.Type.BACK,
+                    this
+                )
+            );
         x += back.getWidth() + 2;
     }
 
@@ -52,12 +74,24 @@ public class GuiAdvancedFilterDisabled extends GuiBase {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(
+        MatrixStack matrixStack,
+        int mouseX,
+        int mouseY,
+        float partialTicks
+    ) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         int width = client.getWindow().getScaledWidth();
         int y = 100;
         for (OrderedText warn : warning) {
-            drawCenteredTextWithShadow(matrixStack, client.textRenderer, warn, width / 2, y, ColorUtil.WHITE.color());
+            drawCenteredTextWithShadow(
+                matrixStack,
+                client.textRenderer,
+                warn,
+                width / 2,
+                y,
+                ColorUtil.WHITE.color()
+            );
             y += client.textRenderer.fontHeight + 2;
         }
     }
@@ -67,21 +101,27 @@ public class GuiAdvancedFilterDisabled extends GuiBase {
         private final GuiAdvancedFilterDisabled parent;
         private final ButtonListener.Type type;
 
-        public ButtonListener(ButtonListener.Type type, GuiAdvancedFilterDisabled parent) {
+        public ButtonListener(
+            ButtonListener.Type type,
+            GuiAdvancedFilterDisabled parent
+        ) {
             this.type = type;
             this.parent = parent;
         }
 
         @Override
-        public void actionPerformedWithButton(ButtonBase button, int mouseButton) {
+        public void actionPerformedWithButton(
+            ButtonBase button,
+            int mouseButton
+        ) {
             if (this.type == ButtonListener.Type.BACK) {
                 parent.back();
             }
         }
 
         public enum Type {
-            BACK("back"),
-            ;
+            BACK("back");
+
             private final String translation;
 
             private static String translate(String key) {
@@ -95,10 +135,6 @@ public class GuiAdvancedFilterDisabled extends GuiBase {
             public String getDisplayName() {
                 return StringUtils.translate(translation);
             }
-
         }
-
     }
-
-
 }

@@ -19,26 +19,36 @@ import io.github.darkkronicle.advancedchatcore.interfaces.IScreenSupplier;
 import io.github.darkkronicle.advancedchatcore.util.ColorUtil;
 import io.github.darkkronicle.advancedchatcore.util.FluidText;
 import io.github.darkkronicle.advancedchatcore.util.SearchResult;
+import java.util.function.Supplier;
+import javax.annotation.Nullable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 
-import javax.annotation.Nullable;
-import java.util.function.Supplier;
-
 @Environment(EnvType.CLIENT)
-public class NarratorProcessor implements IMatchProcessor, IScreenSupplier, IJsonApplier {
+public class NarratorProcessor
+    implements IMatchProcessor, IScreenSupplier, IJsonApplier {
+
     private static String translate(String key) {
-        return "advancedchatfilters.config.processor.narrator."  + key;
+        return "advancedchatfilters.config.processor.narrator." + key;
     }
 
-    private final ConfigStorage.SaveableConfig<ConfigString> message = ConfigStorage.SaveableConfig.fromConfig("message",
-            new ConfigString(translate("message"), "$1", translate("info.message")));
+    private final ConfigStorage.SaveableConfig<ConfigString> message = ConfigStorage.SaveableConfig.fromConfig(
+        "message",
+        new ConfigString(translate("message"), "$1", translate("info.message"))
+    );
 
     @Override
-    public Result processMatches(FluidText text, @Nullable FluidText unfiltered, @Nullable SearchResult search) {
-        String content = search.getGroupReplacements(message.config.getStringValue(), true);
+    public Result processMatches(
+        FluidText text,
+        @Nullable FluidText unfiltered,
+        @Nullable SearchResult search
+    ) {
+        String content = search.getGroupReplacements(
+            message.config.getStringValue(),
+            true
+        );
         Narrator.getNarrator().say(content, false);
         return Result.getFromBool(true);
     }
@@ -76,7 +86,9 @@ public class NarratorProcessor implements IMatchProcessor, IScreenSupplier, IJso
 
         public SenderScreen(Screen parent) {
             this.setParent(parent);
-            this.setTitle(StringUtils.translate("advancedchatfilters.screen.narrator"));
+            this.setTitle(
+                    StringUtils.translate("advancedchatfilters.screen.narrator")
+                );
         }
 
         @Override
@@ -102,19 +114,37 @@ public class NarratorProcessor implements IMatchProcessor, IScreenSupplier, IJso
             String name = SoundProcessor.ButtonListener.Type.BACK.getDisplayName();
             int nameW = StringUtils.getStringWidth(name) + 10;
             ButtonGeneric button = new ButtonGeneric(x, y, nameW, 20, name);
-            this.addButton(button, new ButtonListener(ButtonListener.Type.BACK, this));
+            this.addButton(
+                    button,
+                    new ButtonListener(ButtonListener.Type.BACK, this)
+                );
             y += 30;
             y += this.addLabel(x, y, message.config) + 1;
-            textField = new GuiTextFieldGeneric(x, y, getWidth(), 20, MinecraftClient.getInstance().textRenderer);
+            textField =
+                new GuiTextFieldGeneric(
+                    x,
+                    y,
+                    getWidth(),
+                    20,
+                    MinecraftClient.getInstance().textRenderer
+                );
             textField.setMaxLength(64000);
             textField.setText(message.config.getStringValue());
             this.addTextField(textField, null);
         }
 
-
         private int addLabel(int x, int y, IConfigBase config) {
-            int width = StringUtils.getStringWidth(config.getConfigGuiDisplayName());
-            WidgetLabelHoverable label = new WidgetLabelHoverable(x, y, width, 8, ColorUtil.WHITE.color(), config.getConfigGuiDisplayName());
+            int width = StringUtils.getStringWidth(
+                config.getConfigGuiDisplayName()
+            );
+            WidgetLabelHoverable label = new WidgetLabelHoverable(
+                x,
+                y,
+                width,
+                8,
+                ColorUtil.WHITE.color(),
+                config.getConfigGuiDisplayName()
+            );
             label.setHoverLines(StringUtils.translate(config.getComment()));
             this.addWidget(label);
             return 8;
@@ -123,7 +153,6 @@ public class NarratorProcessor implements IMatchProcessor, IScreenSupplier, IJso
         public void back() {
             this.closeGui(true);
         }
-
     }
 
     public static class ButtonListener implements IButtonActionListener {
@@ -137,15 +166,18 @@ public class NarratorProcessor implements IMatchProcessor, IScreenSupplier, IJso
         }
 
         @Override
-        public void actionPerformedWithButton(ButtonBase button, int mouseButton) {
+        public void actionPerformedWithButton(
+            ButtonBase button,
+            int mouseButton
+        ) {
             if (this.type == Type.BACK) {
                 parent.back();
             }
         }
 
         public enum Type {
-            BACK("back"),
-            ;
+            BACK("back");
+
             private final String translation;
 
             private static String translate(String key) {
@@ -159,8 +191,6 @@ public class NarratorProcessor implements IMatchProcessor, IScreenSupplier, IJso
             public String getDisplayName() {
                 return StringUtils.translate(translation);
             }
-
         }
-
     }
 }

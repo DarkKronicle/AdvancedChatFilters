@@ -1,12 +1,11 @@
 package io.github.darkkronicle.advancedchatfilters.interfaces;
 
-import io.github.darkkronicle.advancedchatfilters.filters.ReplaceFilter;
+import io.github.darkkronicle.advancedchatcore.interfaces.IMessageFilter;
 import io.github.darkkronicle.advancedchatcore.util.FluidText;
 import io.github.darkkronicle.advancedchatcore.util.SearchResult;
-import io.github.darkkronicle.advancedchatcore.interfaces.IMessageFilter;
-
-import javax.annotation.Nullable;
+import io.github.darkkronicle.advancedchatfilters.filters.ReplaceFilter;
 import java.util.Optional;
+import javax.annotation.Nullable;
 
 /**
  * An interface to replace message content from a {@link ReplaceFilter}
@@ -14,7 +13,6 @@ import java.util.Optional;
  * Similar to {@link IMessageFilter} but supports {@link SearchResult}.
  */
 public interface IMatchReplace extends IMessageFilter {
-
     default boolean matchesOnly() {
         return true;
     }
@@ -27,7 +25,11 @@ public interface IMatchReplace extends IMessageFilter {
      * @param search Matches
      * @return Optional of new text. If returned empty the text will not be replaced
      */
-    Optional<FluidText> filter(ReplaceFilter filter, FluidText text, @Nullable SearchResult search);
+    Optional<FluidText> filter(
+        ReplaceFilter filter,
+        FluidText text,
+        @Nullable SearchResult search
+    );
 
     @Override
     default Optional<FluidText> filter(FluidText text) {
@@ -41,5 +43,4 @@ public interface IMatchReplace extends IMessageFilter {
     default boolean useChildren() {
         return false;
     }
-
 }

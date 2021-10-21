@@ -9,8 +9,8 @@ import io.github.darkkronicle.advancedchatcore.config.gui.widgets.WidgetListRegi
 import io.github.darkkronicle.advancedchatcore.config.gui.widgets.WidgetRegistryOptionEntry;
 import io.github.darkkronicle.advancedchatfilters.registry.MatchProcessorRegistry;
 
-
-public class GuiFilterProcessors extends GuiListBase<MatchProcessorRegistry.MatchProcessorOption, WidgetRegistryOptionEntry<MatchProcessorRegistry.MatchProcessorOption>, WidgetListRegistryOption<MatchProcessorRegistry.MatchProcessorOption>> {
+public class GuiFilterProcessors
+    extends GuiListBase<MatchProcessorRegistry.MatchProcessorOption, WidgetRegistryOptionEntry<MatchProcessorRegistry.MatchProcessorOption>, WidgetListRegistryOption<MatchProcessorRegistry.MatchProcessorOption>> {
 
     private final GuiFilterEditor parent;
 
@@ -33,8 +33,7 @@ public class GuiFilterProcessors extends GuiListBase<MatchProcessorRegistry.Matc
         for (GuiFilterEditor.FilterTab tab : GuiFilterEditor.FilterTab.values()) {
             int width = this.getStringWidth(tab.getDisplayName()) + 10;
 
-            if (x >= this.width - width - 10)
-            {
+            if (x >= this.width - width - 10) {
                 x = 10;
                 y += 22;
                 rows++;
@@ -53,17 +52,42 @@ public class GuiFilterProcessors extends GuiListBase<MatchProcessorRegistry.Matc
         this.getListWidget().refreshEntries();
     }
 
-    protected int addButton(int x, int y, ButtonListener.Type type, boolean rightAlign) {
-        ButtonGeneric button = new ButtonGeneric(x, y, -1, rightAlign, type.getDisplayName());
+    protected int addButton(
+        int x,
+        int y,
+        ButtonListener.Type type,
+        boolean rightAlign
+    ) {
+        ButtonGeneric button = new ButtonGeneric(
+            x,
+            y,
+            -1,
+            rightAlign,
+            type.getDisplayName()
+        );
         this.addButton(button, new ButtonListener(type, this));
 
         return button.getWidth();
     }
 
-    private int createTabButton(int x, int y, int width, GuiFilterEditor.FilterTab tab) {
-        ButtonGeneric button = new ButtonGeneric(x, y, width, 20, tab.getDisplayName());
+    private int createTabButton(
+        int x,
+        int y,
+        int width,
+        GuiFilterEditor.FilterTab tab
+    ) {
+        ButtonGeneric button = new ButtonGeneric(
+            x,
+            y,
+            width,
+            20,
+            tab.getDisplayName()
+        );
         button.setEnabled(this.parent.tab != tab);
-        this.addButton(button, new GuiFilterEditor.ButtonListenerFilterTabs(tab, this.parent));
+        this.addButton(
+                button,
+                new GuiFilterEditor.ButtonListenerFilterTabs(tab, this.parent)
+            );
 
         return button.getWidth() + 2;
     }
@@ -73,8 +97,19 @@ public class GuiFilterProcessors extends GuiListBase<MatchProcessorRegistry.Matc
     }
 
     @Override
-    protected WidgetListRegistryOption<MatchProcessorRegistry.MatchProcessorOption> createListWidget(int listX, int listY) {
-        return new WidgetListRegistryOption<>(listX, listY, this.getBrowserWidth(), this.getBrowserHeight(), null, parent.filter.getProcessors(), this);
+    protected WidgetListRegistryOption<MatchProcessorRegistry.MatchProcessorOption> createListWidget(
+        int listX,
+        int listY
+    ) {
+        return new WidgetListRegistryOption<>(
+            listX,
+            listY,
+            this.getBrowserWidth(),
+            this.getBrowserHeight(),
+            null,
+            parent.filter.getProcessors(),
+            this
+        );
     }
 
     @Override
@@ -98,15 +133,17 @@ public class GuiFilterProcessors extends GuiListBase<MatchProcessorRegistry.Matc
         }
 
         @Override
-        public void actionPerformedWithButton(ButtonBase button, int mouseButton) {
+        public void actionPerformedWithButton(
+            ButtonBase button,
+            int mouseButton
+        ) {
             if (this.type == Type.BACK) {
                 this.gui.back();
             }
         }
 
         public enum Type {
-            BACK("back")
-            ;
+            BACK("back");
 
             private static String translate(String key) {
                 return "advancedchatfilters.gui.button." + key;
@@ -123,5 +160,4 @@ public class GuiFilterProcessors extends GuiListBase<MatchProcessorRegistry.Matc
             }
         }
     }
-
 }

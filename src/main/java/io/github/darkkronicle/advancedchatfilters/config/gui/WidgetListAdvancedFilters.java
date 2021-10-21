@@ -7,15 +7,15 @@ import fi.dy.masa.malilib.gui.wrappers.TextFieldWrapper;
 import io.github.darkkronicle.advancedchatfilters.config.FiltersConfigStorage;
 import io.github.darkkronicle.advancedchatfilters.scripting.ScriptFilter;
 import io.github.darkkronicle.advancedchatfilters.scripting.ScriptManager;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.math.MatrixStack;
-
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import javax.annotation.Nullable;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.util.math.MatrixStack;
 
-public class WidgetListAdvancedFilters extends WidgetListBase<ScriptFilter, WidgetAdvancedFilterEntry> {
+public class WidgetListAdvancedFilters
+    extends WidgetListBase<ScriptFilter, WidgetAdvancedFilterEntry> {
 
     protected final List<TextFieldWrapper<? extends GuiTextFieldGeneric>> textFields = new ArrayList<>();
 
@@ -25,18 +25,32 @@ public class WidgetListAdvancedFilters extends WidgetListBase<ScriptFilter, Widg
         super.reCreateListEntryWidgets();
     }
 
-    public WidgetListAdvancedFilters(int x, int y, int width, int height, @Nullable ISelectionListener<ScriptFilter> selectionListener, Screen parent) {
+    public WidgetListAdvancedFilters(
+        int x,
+        int y,
+        int width,
+        int height,
+        @Nullable ISelectionListener<ScriptFilter> selectionListener,
+        Screen parent
+    ) {
         super(x, y, width, height, selectionListener);
         this.browserEntryHeight = 22;
         this.setParent(parent);
     }
 
-    public void addTextField(TextFieldWrapper<? extends GuiTextFieldGeneric> text) {
+    public void addTextField(
+        TextFieldWrapper<? extends GuiTextFieldGeneric> text
+    ) {
         textFields.add(text);
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(
+        MatrixStack matrixStack,
+        int mouseX,
+        int mouseY,
+        float partialTicks
+    ) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
@@ -68,13 +82,30 @@ public class WidgetListAdvancedFilters extends WidgetListBase<ScriptFilter, Widg
     }
 
     @Override
-    protected WidgetAdvancedFilterEntry createListEntryWidget(int x, int y, int listIndex, boolean isOdd, ScriptFilter entry) {
-        return new WidgetAdvancedFilterEntry(x, y, this.browserEntryWidth, this.getBrowserEntryHeightFor(entry), isOdd, entry, listIndex, this);
+    protected WidgetAdvancedFilterEntry createListEntryWidget(
+        int x,
+        int y,
+        int listIndex,
+        boolean isOdd,
+        ScriptFilter entry
+    ) {
+        return new WidgetAdvancedFilterEntry(
+            x,
+            y,
+            this.browserEntryWidth,
+            this.getBrowserEntryHeightFor(entry),
+            isOdd,
+            entry,
+            listIndex,
+            this
+        );
     }
 
     @Override
     protected Collection<ScriptFilter> getAllEntries() {
-        List<ScriptFilter> filters = new ArrayList<>(ScriptManager.getInstance().getFilters());
+        List<ScriptFilter> filters = new ArrayList<>(
+            ScriptManager.getInstance().getFilters()
+        );
         filters.addAll(ScriptManager.getInstance().getUnimportedFilters());
         return filters;
     }

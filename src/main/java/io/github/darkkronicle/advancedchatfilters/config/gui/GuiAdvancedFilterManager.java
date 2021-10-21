@@ -10,12 +10,13 @@ import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.StringUtils;
 import io.github.darkkronicle.advancedchatfilters.config.FiltersConfigStorage;
 import io.github.darkkronicle.advancedchatfilters.scripting.ScriptFilter;
+import javax.annotation.Nullable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.Util;
 
-import javax.annotation.Nullable;
-
-public class GuiAdvancedFilterManager extends GuiListBase<ScriptFilter, WidgetAdvancedFilterEntry, WidgetListAdvancedFilters> implements ISelectionListener<ScriptFilter> {
+public class GuiAdvancedFilterManager
+    extends GuiListBase<ScriptFilter, WidgetAdvancedFilterEntry, WidgetListAdvancedFilters>
+    implements ISelectionListener<ScriptFilter> {
 
     public GuiAdvancedFilterManager(Screen parent) {
         super(10, 60);
@@ -25,7 +26,14 @@ public class GuiAdvancedFilterManager extends GuiListBase<ScriptFilter, WidgetAd
 
     @Override
     protected WidgetListAdvancedFilters createListWidget(int listX, int listY) {
-        return new WidgetListAdvancedFilters(listX, listY, this.getBrowserWidth(), this.getBrowserHeight(), this, this);
+        return new WidgetListAdvancedFilters(
+            listX,
+            listY,
+            this.getBrowserWidth(),
+            this.getBrowserHeight(),
+            this,
+            this
+        );
     }
 
     @Override
@@ -46,14 +54,32 @@ public class GuiAdvancedFilterManager extends GuiListBase<ScriptFilter, WidgetAd
 
         String backText = ButtonListener.Type.BACK.getDisplayName();
         int backWidth = StringUtils.getStringWidth(backText) + 10;
-        ButtonGeneric back = new ButtonGeneric(x + backWidth, y, backWidth, true, backText);
-        this.addButton(back, new ButtonListener(ButtonListener.Type.BACK, this));
+        ButtonGeneric back = new ButtonGeneric(
+            x + backWidth,
+            y,
+            backWidth,
+            true,
+            backText
+        );
+        this.addButton(
+                back,
+                new ButtonListener(ButtonListener.Type.BACK, this)
+            );
         x += back.getWidth() + 2;
 
         String folderText = ButtonListener.Type.OPEN_FOLDER.getDisplayName();
         int folderWidth = StringUtils.getStringWidth(folderText) + 10;
-        ButtonGeneric folder = new ButtonGeneric(x + folderWidth, y, folderWidth, true, folderText);
-        this.addButton(folder, new ButtonListener(ButtonListener.Type.OPEN_FOLDER, this));
+        ButtonGeneric folder = new ButtonGeneric(
+            x + folderWidth,
+            y,
+            folderWidth,
+            true,
+            folderText
+        );
+        this.addButton(
+                folder,
+                new ButtonListener(ButtonListener.Type.OPEN_FOLDER, this)
+            );
 
         this.setListPosition(this.getListX(), 68);
         this.reCreateListWidget();
@@ -70,9 +96,7 @@ public class GuiAdvancedFilterManager extends GuiListBase<ScriptFilter, WidgetAd
     }
 
     @Override
-    public void onSelectionChange(@Nullable ScriptFilter entry) {
-
-    }
+    public void onSelectionChange(@Nullable ScriptFilter entry) {}
 
     public void save() {
         FiltersConfigStorage.saveFromFile();
@@ -100,24 +124,39 @@ public class GuiAdvancedFilterManager extends GuiListBase<ScriptFilter, WidgetAd
         private final GuiAdvancedFilterManager parent;
         private final ButtonListener.Type type;
 
-        public ButtonListener(ButtonListener.Type type, GuiAdvancedFilterManager parent) {
+        public ButtonListener(
+            ButtonListener.Type type,
+            GuiAdvancedFilterManager parent
+        ) {
             this.type = type;
             this.parent = parent;
         }
 
         @Override
-        public void actionPerformedWithButton(ButtonBase button, int mouseButton) {
+        public void actionPerformedWithButton(
+            ButtonBase button,
+            int mouseButton
+        ) {
             if (this.type == ButtonListener.Type.BACK) {
                 parent.back();
             } else if (this.type == Type.OPEN_FOLDER) {
-                Util.getOperatingSystem().open(FileUtils.getConfigDirectory().toPath().resolve("advancedchat").resolve("filters").toFile());
+                Util
+                    .getOperatingSystem()
+                    .open(
+                        FileUtils
+                            .getConfigDirectory()
+                            .toPath()
+                            .resolve("advancedchat")
+                            .resolve("filters")
+                            .toFile()
+                    );
             }
         }
 
         public enum Type {
             BACK("back"),
-            OPEN_FOLDER("openfolder")
-            ;
+            OPEN_FOLDER("openfolder");
+
             private final String translation;
 
             private static String translate(String key) {
@@ -131,10 +170,6 @@ public class GuiAdvancedFilterManager extends GuiListBase<ScriptFilter, WidgetAd
             public String getDisplayName() {
                 return StringUtils.translate(translation);
             }
-
         }
-
     }
-
 }
-

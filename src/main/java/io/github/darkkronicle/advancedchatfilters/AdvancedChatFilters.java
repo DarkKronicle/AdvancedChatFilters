@@ -13,7 +13,8 @@ public class AdvancedChatFilters implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         // This will run after AdvancedChatCore's because of load order
-        InitializationHandler.getInstance().registerInitializationHandler(new FiltersInitHandler());
+        InitializationHandler
+            .getInstance()
+            .registerInitializationHandler(new FiltersInitHandler());
     }
-
 }

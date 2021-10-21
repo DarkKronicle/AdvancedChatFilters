@@ -10,12 +10,13 @@ import fi.dy.masa.malilib.util.StringUtils;
 import io.github.darkkronicle.advancedchatcore.config.gui.GuiConfigHandler;
 import io.github.darkkronicle.advancedchatfilters.config.Filter;
 import io.github.darkkronicle.advancedchatfilters.config.FiltersConfigStorage;
-
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
+import javax.annotation.Nullable;
 
-public class GuiFilterManager extends GuiListBase<Filter, WidgetFilterEntry, WidgetListFilters> implements ISelectionListener<Filter> {
+public class GuiFilterManager
+    extends GuiListBase<Filter, WidgetFilterEntry, WidgetListFilters>
+    implements ISelectionListener<Filter> {
 
     private List<GuiConfigHandler.TabButton> tabButtons;
 
@@ -27,7 +28,15 @@ public class GuiFilterManager extends GuiListBase<Filter, WidgetFilterEntry, Wid
 
     @Override
     protected WidgetListFilters createListWidget(int listX, int listY) {
-        return new WidgetListFilters(listX, listY, this.getBrowserWidth(), this.getBrowserHeight(), this, null, this);
+        return new WidgetListFilters(
+            listX,
+            listY,
+            this.getBrowserWidth(),
+            this.getBrowserHeight(),
+            this,
+            null,
+            this
+        );
     }
 
     @Override
@@ -52,7 +61,6 @@ public class GuiFilterManager extends GuiListBase<Filter, WidgetFilterEntry, Wid
             }
         }
 
-
         this.setListPosition(this.getListX(), 68 + (rows - 1) * 22);
         this.reCreateListWidget();
 
@@ -66,12 +74,21 @@ public class GuiFilterManager extends GuiListBase<Filter, WidgetFilterEntry, Wid
     }
 
     private int createButton(GuiConfigHandler.TabButton button, int y) {
-        this.addButton(button.getButton(), new ButtonListenerConfigTabs(button));
+        this.addButton(
+                button.getButton(),
+                new ButtonListenerConfigTabs(button)
+            );
         return button.getButton().getY();
     }
 
     protected int addButton(int x, int y, ButtonListener.Type type) {
-        ButtonGeneric button = new ButtonGeneric(x, y, -1, true, type.getDisplayName());
+        ButtonGeneric button = new ButtonGeneric(
+            x,
+            y,
+            -1,
+            true,
+            type.getDisplayName()
+        );
         this.addButton(button, new ButtonListener(type, this));
 
         return button.getWidth();
@@ -88,7 +105,10 @@ public class GuiFilterManager extends GuiListBase<Filter, WidgetFilterEntry, Wid
         }
 
         @Override
-        public void actionPerformedWithButton(ButtonBase button, int mouseButton) {
+        public void actionPerformedWithButton(
+            ButtonBase button,
+            int mouseButton
+        ) {
             if (this.type == Type.ADD_FILTER) {
                 FiltersConfigStorage.FILTERS.add(Filter.getRandomFilter());
                 Collections.sort(FiltersConfigStorage.FILTERS);
@@ -103,8 +123,7 @@ public class GuiFilterManager extends GuiListBase<Filter, WidgetFilterEntry, Wid
         public enum Type {
             ADD_FILTER("addfilter"),
             IMPORT("import"),
-            ADVANCED("advanced")
-            ;
+            ADVANCED("advanced");
 
             private static String translate(String key) {
                 return "advancedchatfilters.gui.button." + key;
@@ -128,11 +147,11 @@ public class GuiFilterManager extends GuiListBase<Filter, WidgetFilterEntry, Wid
     }
 
     @Override
-    public void onSelectionChange(@Nullable Filter entry) {
+    public void onSelectionChange(@Nullable Filter entry) {}
 
-    }
+    private static class ButtonListenerConfigTabs
+        implements IButtonActionListener {
 
-    private static class ButtonListenerConfigTabs implements IButtonActionListener {
         private final GuiConfigHandler.TabButton tabButton;
 
         public ButtonListenerConfigTabs(GuiConfigHandler.TabButton tabButton) {
@@ -140,10 +159,16 @@ public class GuiFilterManager extends GuiListBase<Filter, WidgetFilterEntry, Wid
         }
 
         @Override
-        public void actionPerformedWithButton(ButtonBase button, int mouseButton) {
-            GuiConfigHandler.getInstance().activeTab = this.tabButton.getTab().getName();
-            GuiBase.openGui(this.tabButton.getTab().getScreen(GuiConfigHandler.getInstance().getButtons()));
-
+        public void actionPerformedWithButton(
+            ButtonBase button,
+            int mouseButton
+        ) {
+            GuiConfigHandler.getInstance().activeTab =
+                this.tabButton.getTab().getName();
+            GuiBase.openGui(
+                this.tabButton.getTab()
+                    .getScreen(GuiConfigHandler.getInstance().getButtons())
+            );
         }
     }
 }

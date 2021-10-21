@@ -9,12 +9,11 @@ import io.github.darkkronicle.advancedchatfilters.filters.ColorFilter;
 import io.github.darkkronicle.advancedchatfilters.filters.ForwardFilter;
 import io.github.darkkronicle.advancedchatfilters.filters.ParentFilter;
 import io.github.darkkronicle.advancedchatfilters.filters.ReplaceFilter;
+import java.util.ArrayList;
+import java.util.Optional;
 import lombok.Getter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-
-import java.util.ArrayList;
-import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 public class FiltersHandler implements IMessageFilter {
@@ -25,11 +24,9 @@ public class FiltersHandler implements IMessageFilter {
      * The "Terminate" text. It has a length of zero and is non-null so it will stop the process if
      * returned by the main filter.
      */
-    public final static FluidText TERMINATE = new FluidText();
+    public static final FluidText TERMINATE = new FluidText();
 
-    private FiltersHandler() {
-
-    }
+    private FiltersHandler() {}
 
     public static FiltersHandler getInstance() {
         return INSTANCE;
@@ -39,7 +36,6 @@ public class FiltersHandler implements IMessageFilter {
     private ArrayList<ColorFilter> colorFilters = new ArrayList<>();
 
     private ArrayList<ParentFilter> filters = new ArrayList<>();
-
 
     @Override
     public Optional<FluidText> filter(FluidText text) {
@@ -80,16 +76,42 @@ public class FiltersHandler implements IMessageFilter {
         if (!filter.getActive().config.getBooleanValue()) {
             return null;
         }
-        ParentFilter filt = new ParentFilter(filter.getFind(), filter.getFindString().config.getStringValue().replace("&", "§"), filter.getStripColors().config.getBooleanValue());
+        ParentFilter filt = new ParentFilter(
+            filter.getFind(),
+            filter.getFindString().config.getStringValue().replace("&", "§"),
+            filter.getStripColors().config.getBooleanValue()
+        );
         if (filter.getReplace() != null) {
             if (filter.getReplaceTextColor().config.getBooleanValue()) {
-                filt.addFilter(new ReplaceFilter(filter.getReplaceTo().config.getStringValue().replaceAll("&", "§"), filter.getReplace(), filter.getTextColor().config.getSimpleColor()));
+                filt.addFilter(
+                    new ReplaceFilter(
+                        filter
+                            .getReplaceTo()
+                            .config.getStringValue()
+                            .replaceAll("&", "§"),
+                        filter.getReplace(),
+                        filter.getTextColor().config.getSimpleColor()
+                    )
+                );
             } else {
-                filt.addFilter(new ReplaceFilter(filter.getReplaceTo().config.getStringValue().replaceAll("&", "§"), filter.getReplace(), null));
+                filt.addFilter(
+                    new ReplaceFilter(
+                        filter
+                            .getReplaceTo()
+                            .config.getStringValue()
+                            .replaceAll("&", "§"),
+                        filter.getReplace(),
+                        null
+                    )
+                );
             }
         }
         if (filter.getReplaceBackgroundColor().config.getBooleanValue()) {
-            filt.addFilter(new ColorFilter(filter.getBackgroundColor().config.getSimpleColor()));
+            filt.addFilter(
+                new ColorFilter(
+                    filter.getBackgroundColor().config.getSimpleColor()
+                )
+            );
         }
         if (filter.getProcessors().activeAmount() > 0) {
             if (filter.getProcessors().activeAmount() == 1) {
@@ -98,7 +120,9 @@ public class FiltersHandler implements IMessageFilter {
                     filt.addFilter(new ForwardFilter(filter.getProcessors()));
                 }
             } else {
-                filt.addForwardFilter(new ForwardFilter(filter.getProcessors()));
+                filt.addForwardFilter(
+                    new ForwardFilter(filter.getProcessors())
+                );
             }
         }
         return filt;

@@ -4,17 +4,17 @@ import io.github.darkkronicle.advancedchatcore.util.ColorUtil;
 import io.github.darkkronicle.advancedchatcore.util.FluidText;
 import io.github.darkkronicle.advancedchatcore.util.SearchResult;
 import io.github.darkkronicle.advancedchatfilters.interfaces.IFilter;
+import java.util.Optional;
 import lombok.NonNull;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-
-import java.util.Optional;
 
 /**
  * Filter used to change the background color of a message.
  */
 @Environment(EnvType.CLIENT)
 public class ColorFilter implements IFilter {
+
     /**
      * {@link ColorUtil.SimpleColor} that will change the background color.
      */
@@ -25,7 +25,12 @@ public class ColorFilter implements IFilter {
     }
 
     @Override
-    public Optional<FluidText> filter(ParentFilter filter, FluidText text, FluidText unfiltered, SearchResult search) {
+    public Optional<FluidText> filter(
+        ParentFilter filter,
+        FluidText text,
+        FluidText unfiltered,
+        SearchResult search
+    ) {
         return Optional.empty();
     }
 

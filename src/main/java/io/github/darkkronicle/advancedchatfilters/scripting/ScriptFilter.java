@@ -21,7 +21,6 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 import javax.script.SimpleScriptContext;
-
 import lombok.Getter;
 import lombok.Setter;
 import net.fabricmc.api.EnvType;
