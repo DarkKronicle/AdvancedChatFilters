@@ -1,14 +1,14 @@
 package io.github.darkkronicle.advancedchatfilters.interfaces;
 
+import delight.nashornsandbox.NashornSandbox;
+
 import javax.script.Bindings;
-import javax.script.ScriptEngine;
+import javax.script.ScriptContext;
 
 public interface IScript<T> {
 
-    T execute(ScriptEngine engine, T input) throws Exception;
+    T execute(NashornSandbox engine, T input) throws Exception;
 
-    Bindings getBindings();
-
-    void setBindings(Bindings bindings);
+    ScriptContext getContext();
 
 }

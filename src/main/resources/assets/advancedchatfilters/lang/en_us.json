@@ -13,9 +13,11 @@
   "advancedchatfilters.gui.button.importfilter": "Import Filter",
   "advancedchatfilters.gui.button.importtab": "Import Tab",
   "advancedchatfilters.gui.menu.import": "Import/Export Filters and Chat Tabs",
+  "advancedchatfilters.config.filtermenu.import": "Import",
   "advancedchatfilters.gui.message.successful": "Successfully imported!",
   "advancedchatfilters.gui.message.error": "Could not import",
   "advancedchatfilters.config.tab.filters": "§cChat Filters",
+  "advancedchatfilters.warning.advancedfilters": "AdvancedFilters are currently §cdisabled§r\n§lOnly enable if you know what you're doing and always check code before adding. \n§c§lMalicious code could be run§r\n\nTo enable close the game and open up the §7advancedchatfilters.json§r \nin §7~/minecraft/config/advancedchat/§r and set §7advanced_filters_on§r to §7true§r.",
 
   "advancedchatfilters.config.filterdescription": "§7Name§r: <name> \n§aFind String§r: <find>\n§eFind Type§r: <findtype>",
   "advancedchatfilters.config.filtermenu.configure": "§bConfigure",

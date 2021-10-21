@@ -8,14 +8,14 @@ import fi.dy.masa.malilib.gui.button.IButtonActionListener;
 import fi.dy.masa.malilib.gui.interfaces.ISelectionListener;
 import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.StringUtils;
-import io.github.darkkronicle.advancedchatcore.config.gui.GuiConfigHandler;
-import io.github.darkkronicle.advancedchatfilters.config.AdvancedFilter;
+import io.github.darkkronicle.advancedchatfilters.config.FiltersConfigStorage;
+import io.github.darkkronicle.advancedchatfilters.scripting.ScriptFilter;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.Util;
 
 import javax.annotation.Nullable;
 
-public class GuiAdvancedFilterManager extends GuiListBase<AdvancedFilter, WidgetAdvancedFilterEntry, WidgetListAdvancedFilters> implements ISelectionListener<AdvancedFilter> {
+public class GuiAdvancedFilterManager extends GuiListBase<ScriptFilter, WidgetAdvancedFilterEntry, WidgetListAdvancedFilters> implements ISelectionListener<ScriptFilter> {
 
     public GuiAdvancedFilterManager(Screen parent) {
         super(10, 60);
@@ -35,6 +35,10 @@ public class GuiAdvancedFilterManager extends GuiListBase<AdvancedFilter, Widget
 
     @Override
     public void initGui() {
+        if (!FiltersConfigStorage.ADVANCED_ON.config.getBooleanValue()) {
+            GuiBase.openGui(new GuiAdvancedFilterDisabled(getParent()));
+            return;
+        }
         super.initGui();
 
         int x = 10;
@@ -60,19 +64,31 @@ public class GuiAdvancedFilterManager extends GuiListBase<AdvancedFilter, Widget
         x = this.width - 10;
     }
 
-    private int createButton(GuiConfigHandler.TabButton button, int y) {
-        this.addButton(button.getButton(), new ButtonListenerConfigTabs(button));
-        return button.getButton().getY();
-    }
-
     @Override
     protected int getBrowserHeight() {
         return this.height - 6 - this.getListY();
     }
 
     @Override
-    public void onSelectionChange(@Nullable AdvancedFilter entry) {
+    public void onSelectionChange(@Nullable ScriptFilter entry) {
 
+    }
+
+    public void save() {
+        FiltersConfigStorage.saveFromFile();
+        FiltersConfigStorage.loadFromFile();
+    }
+
+    @Override
+    public void onClose() {
+        save();
+        super.onClose();
+    }
+
+    @Override
+    protected void closeGui(boolean showParent) {
+        save();
+        super.closeGui(showParent);
     }
 
     public void back() {
@@ -120,18 +136,5 @@ public class GuiAdvancedFilterManager extends GuiListBase<AdvancedFilter, Widget
 
     }
 
-    private static class ButtonListenerConfigTabs implements IButtonActionListener {
-        private final GuiConfigHandler.TabButton tabButton;
-
-        public ButtonListenerConfigTabs(GuiConfigHandler.TabButton tabButton) {
-            this.tabButton = tabButton;
-        }
-
-        @Override
-        public void actionPerformedWithButton(ButtonBase button, int mouseButton) {
-            GuiConfigHandler.getInstance().activeTab = this.tabButton.getTab().getName();
-            GuiBase.openGui(this.tabButton.getTab().getScreen(GuiConfigHandler.getInstance().getButtons()));
-        }
-    }
 }
 
