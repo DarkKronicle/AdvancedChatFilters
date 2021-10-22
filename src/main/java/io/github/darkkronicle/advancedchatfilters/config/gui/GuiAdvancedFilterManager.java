@@ -21,7 +21,8 @@ public class GuiAdvancedFilterManager
     public GuiAdvancedFilterManager(Screen parent) {
         super(10, 60);
         this.setParent(parent);
-        this.title = StringUtils.translate("advancedchat.screen.main");
+        this.title =
+            StringUtils.translate("advancedchatfilters.screen.advancedfilters");
     }
 
     @Override

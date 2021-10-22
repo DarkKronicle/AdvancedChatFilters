@@ -3,6 +3,8 @@
 
   "advancedchatfilters.screen.sound": "§dSound",
   "advancedchatfilters.screen.narrator": "§bNarrator",
+  "advancedchatfilters.screen.warning": "§c§lWarning",
+  "advancedchatfilters.screen.advancedfilters": "Advanced Filters",
   "advancedchatfilters.gui.button.addtab": "New Chat Tab",
   "advancedchatfilters.gui.button.addfilter": "New Filter",
   "advancedchatfilters.gui.button.advanced": "Advanced Filters",
@@ -13,7 +15,8 @@
   "advancedchatfilters.gui.button.importfilter": "Import Filter",
   "advancedchatfilters.gui.button.importtab": "Import Tab",
   "advancedchatfilters.gui.menu.import": "Import/Export Filters and Chat Tabs",
-  "advancedchatfilters.config.filtermenu.import": "Import",
+  "advancedchatfilters.config.filtermenu.import": "Install",
+  "advancedchatfilters.config.filtermenu.info.import": "This filter needs to be installed. Installing it will allow the code to run.\n§lEnsure there is no malicious code before installing this.",
   "advancedchatfilters.gui.message.successful": "Successfully imported!",
   "advancedchatfilters.gui.message.error": "Could not import",
   "advancedchatfilters.config.tab.filters": "§cChat Filters",

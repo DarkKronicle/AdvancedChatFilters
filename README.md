@@ -20,12 +20,17 @@ Please submit bugs to the [issue tracker](https://github.com/DarkKronicle/Advanc
 - Send a chat message to the Action Bar
 - Narrate a message
 - Play a sound when a match is found
+- **Full JavaScript scripting for advanced filters**
 - Many complex options for in complex matching and replacing
+
+## Scripting
+
+Scripting is super powerful for text manipulation. By default, these are disabled and extra precautions have been taken to try to provide as much safety. The scope that these filters can touch are relatively small and can only access a select few Java classes. Still, checking code before running is important.
+
+To learn more about how to make them you can check out the `example_filters` directory and the wiki.
 
 ## Credits n' more
 
 Code & Mastermind: DarkKronicle
-
-Update to 1.16.3: lmichaelis
 
 Language & Proofreading: Chronos22

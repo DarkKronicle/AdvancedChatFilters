@@ -23,6 +23,8 @@ public class GuiAdvancedFilterDisabled extends GuiBase {
     private final List<OrderedText> warning;
 
     public GuiAdvancedFilterDisabled(Screen parent) {
+        this.title =
+            StringUtils.translate("advancedchatfilters.screen.warning");
         setParent(parent);
         FluidText text = new FluidText(
             RawText.withStyle(

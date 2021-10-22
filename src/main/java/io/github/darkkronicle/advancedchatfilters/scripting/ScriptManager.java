@@ -12,6 +12,7 @@ import io.github.darkkronicle.advancedchatcore.util.RawText;
 import io.github.darkkronicle.advancedchatfilters.config.FiltersConfigStorage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executors;
@@ -26,7 +27,7 @@ public class ScriptManager implements IMessageFilter {
 
     private static final ScriptManager INSTANCE = new ScriptManager();
 
-    private NashornSandbox nashornEngine;
+    private NashornSandbox engine;
 
     @Getter
     private List<ScriptFilter> filters = new ArrayList<>();
@@ -42,25 +43,39 @@ public class ScriptManager implements IMessageFilter {
 
     private ScriptManager() {}
 
+    private void setupEngine() {
+        engine = NashornSandboxes.create();
+        // Restrict classes. Text is used for filters.
+        engine.allow(Text.class);
+        engine.allow(FluidText.class);
+        engine.allow(RawText.class);
+        engine.allow(Style.class);
+
+        // Ensure no massive memory leaks. Stuff really shouldn't take over a second to happen
+        engine.allowNoBraces(false);
+        engine.setMaxMemory(1024 * 1024);
+        engine.setMaxCPUTime(1000);
+        engine.allowExitFunctions(false);
+        engine.allowReadFunctions(false);
+        engine.allowPrintFunctions(true);
+        engine.setMaxPreparedStatements(30);
+        engine.setExecutor(Executors.newSingleThreadExecutor());
+    }
+
+    /**
+     * Setup all advanced filters
+     */
     public void init() {
         if (!FiltersConfigStorage.ADVANCED_ON.config.getBooleanValue()) {
             // Do ***not*** evaluate any code unless this is turned on.
             return;
         }
-        nashornEngine = NashornSandboxes.create();
-        nashornEngine.allow(Text.class);
-        nashornEngine.allow(FluidText.class);
-        nashornEngine.allow(RawText.class);
-        nashornEngine.allow(Style.class);
-        nashornEngine.allowNoBraces(false);
-        nashornEngine.setMaxMemory(1024 * 1024);
-        nashornEngine.setMaxCPUTime(1000);
-        nashornEngine.allowExitFunctions(false);
-        nashornEngine.allowReadFunctions(false);
-        nashornEngine.setMaxPreparedStatements(30);
-        nashornEngine.setExecutor(Executors.newSingleThreadExecutor());
+        // Setup sandbox settings as safety measures.
+        setupEngine();
         unimportedFilters = new ArrayList<>();
         filters = new ArrayList<>();
+
+        // Grab all *.js files
         File directory = FileUtils
             .getConfigDirectory()
             .toPath()
@@ -74,12 +89,15 @@ public class ScriptManager implements IMessageFilter {
         )) {
             ScriptFilter filter = ScriptFilter.fromFile(f);
             if (filter != null) {
+                // If it's imported it's ok to be loaded. To import it requires an extra step from the user.
+                // This is to prevent code evaluating before manually confirmed.
                 if (
                     FiltersConfigStorage.IMPORTED_FILTERS.contains(
                         filter.getId()
                     )
                 ) {
-                    if (filter.runInit(nashornEngine)) {
+                    // Run the init
+                    if (filter.runInit(engine)) {
                         filters.add(filter);
                     }
                 } else {
@@ -90,6 +108,10 @@ public class ScriptManager implements IMessageFilter {
         applyJson(null);
     }
 
+    /**
+     * Applies JSON to Advanced Filters.
+     * @param array Array of stored {@link ScriptFilter}
+     */
     public void applyJson(JsonArray array) {
         if (array == null) {
             array = jsonData;
@@ -111,8 +133,13 @@ public class ScriptManager implements IMessageFilter {
                 }
             }
         }
+        Collections.sort(filters);
     }
 
+    /**
+     * Retrieves JSON data for the {@link ScriptFilter}'s
+     * @return Array of serialized data
+     */
     public JsonArray getJson() {
         JsonArray array = new JsonArray();
         for (ScriptFilter filter : filters) {
@@ -128,15 +155,17 @@ public class ScriptManager implements IMessageFilter {
             return Optional.empty();
         }
         for (ScriptFilter filter : filters) {
+            // Check if it should be run. Toggleable on/off
             if (!filter.getActive().getBooleanValue()) {
                 continue;
             }
             try {
-                text = filter.execute(nashornEngine, text);
+                text = filter.execute(engine, text);
             } catch (Exception e) {
+                // TODO better error handling
                 e.printStackTrace();
             }
         }
-        return Optional.empty();
+        return Optional.of(text);
     }
 }

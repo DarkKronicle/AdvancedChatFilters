@@ -18,7 +18,9 @@ import io.github.darkkronicle.advancedchatfilters.FiltersHandler;
 import io.github.darkkronicle.advancedchatfilters.config.FiltersConfigStorage;
 import io.github.darkkronicle.advancedchatfilters.scripting.ScriptFilter;
 import io.github.darkkronicle.advancedchatfilters.scripting.ScriptManager;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -67,7 +69,7 @@ public class WidgetAdvancedFilterEntry
                 order = 0;
             }
             this.filter.setOrder(order);
-            Collections.sort(FiltersConfigStorage.FILTERS);
+            Collections.sort(ScriptManager.getInstance().getFilters());
             FiltersHandler.getInstance().loadFilters();
             this.parent.refreshEntries();
         });
@@ -87,7 +89,9 @@ public class WidgetAdvancedFilterEntry
                             order = 0;
                         }
                         filter.setOrder(order);
-                        Collections.sort(FiltersConfigStorage.FILTERS);
+                        Collections.sort(
+                            ScriptManager.getInstance().getFilters()
+                        );
                         return false;
                     }
                 }
@@ -116,6 +120,7 @@ public class WidgetAdvancedFilterEntry
                     new ButtonListener(ButtonListener.Type.IMPORT, this)
                 );
             active.setEnabled(false);
+            num.setEditable(false);
             pos -= importButton.getWidth() + 1;
         }
 
@@ -222,7 +227,7 @@ public class WidgetAdvancedFilterEntry
                     parent.filter.getId()
                 );
                 ScriptManager.getInstance().init();
-                parent.parent.reCreateListEntryWidgets();
+                parent.parent.refreshEntries();
             }
         }
 
@@ -317,7 +322,22 @@ public class WidgetAdvancedFilterEntry
     ) {
         super.postRenderHovered(mouseX, mouseY, selected, matrixStack);
 
-        if (this.filter.getHoverLines().size() > 0) {
+        List<String> hoverLines;
+
+        if (filter.isImported()) {
+            hoverLines = this.filter.getHoverLines();
+        } else {
+            hoverLines =
+                Arrays.asList(
+                    StringUtils
+                        .translate(
+                            "advancedchatfilters.config.filtermenu.info.import"
+                        )
+                        .split("\n")
+                );
+        }
+
+        if (hoverLines != null && hoverLines.size() > 0) {
             if (
                 mouseX >= this.x &&
                 mouseX < this.buttonStartX &&
@@ -327,7 +347,7 @@ public class WidgetAdvancedFilterEntry
                 RenderUtils.drawHoverText(
                     mouseX,
                     mouseY,
-                    this.filter.getHoverLines(),
+                    hoverLines,
                     matrixStack
                 );
             }
