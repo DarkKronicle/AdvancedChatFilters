@@ -16,7 +16,6 @@ Please submit bugs to the [issue tracker](https://github.com/DarkKronicle/Advanc
 - Rainbow specific text
 - Convert specific text to OwO
 - Convert numbers into Roman Numerals
-- Child filters for complex actions
 - Send a chat message to the Action Bar
 - Narrate a message
 - Play a sound when a match is found
@@ -25,9 +24,11 @@ Please submit bugs to the [issue tracker](https://github.com/DarkKronicle/Advanc
 
 ## Scripting
 
-Scripting is super powerful for text manipulation. By default, these are disabled and extra precautions have been taken to try to provide as much safety. The scope that these filters can touch are relatively small and can only access a select few Java classes. Still, checking code before running is important.
+Scripting is a super powerful tool for text manipulation. This feature is disabled by default, due to the complexity of these filters, as well as the additional resources that they may take up. 
 
-To learn more about how to make them you can check out the `example_filters` directory and the wiki.
+While the scope of these scripts are extremely limited, and several measures are put in place to ensure security and stability, these scripts are still very powerful, and you should **never** run code that you don't trust
+
+To learn more about these filters, you can view the [example filters](https://github.com/DarkKronicle/AdvancedChatFilters/tree/main/example_filters) in this repository, or view [the wiki](https://github.com/DarkKronicle/AdvancedChatFilters/wiki)
 
 ## Credits n' more
 
