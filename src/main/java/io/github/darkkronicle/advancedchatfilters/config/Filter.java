@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2021 DarkKronicle
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 package io.github.darkkronicle.advancedchatfilters.config;
 
 import com.google.common.collect.ImmutableList;
@@ -32,195 +39,154 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import org.jetbrains.annotations.NotNull;
 
-/** Filter Storage
- * This class is used to store data for filters. Each filter is based off of this class. These are stored in an ArrayList for later usage.
+/**
+ * Filter Storage This class is used to store data for filters. Each filter is based off of this
+ * class. These are stored in an ArrayList for later usage.
  *
- * Note: this class has a natural ordering that is inconsistent with equals for ordering.
+ * <p>Note: this class has a natural ordering that is inconsistent with equals for ordering.
  */
-
 @Environment(EnvType.CLIENT)
 @Data
 public class Filter implements Comparable<Filter> {
 
     private static String translate(String key) {
-        return StringUtils.translate(
-            "advancedchatfilters.config.filter." + key
-        );
+        return StringUtils.translate("advancedchatfilters.config.filter." + key);
     }
 
     private Integer order = 0;
 
     /**
-     * Name is only cosmetic. Shows up when editing filters. Way to distinguish filters for the player.
+     * Name is only cosmetic. Shows up when editing filters. Way to distinguish filters for the
+     * player.
      */
-    private ConfigStorage.SaveableConfig<ConfigString> name = ConfigStorage.SaveableConfig.fromConfig(
-        "name",
-        new ConfigString(translate("name"), "Default", translate("info.name"))
-    );
+    private ConfigStorage.SaveableConfig<ConfigString> name =
+            ConfigStorage.SaveableConfig.fromConfig(
+                    "name", new ConfigString(translate("name"), "Default", translate("info.name")));
+
+    /** Whether or not it should be used to filter chat messages currently. */
+    private ConfigStorage.SaveableConfig<ConfigBoolean> active =
+            ConfigStorage.SaveableConfig.fromConfig(
+                    "active",
+                    new ConfigBoolean(translate("active"), false, translate("info.active")));
+
+    /** Whether or not it should be used to filter chat messages currently. */
+    private ConfigStorage.SaveableConfig<ConfigBoolean> stripColors =
+            ConfigStorage.SaveableConfig.fromConfig(
+                    "stripColors",
+                    new ConfigBoolean(
+                            translate("stripcolors"), true, translate("info.stripcolors")));
+
+    /** The Expression to find a match. The way it is interpreted is defined by findType. */
+    private ConfigStorage.SaveableConfig<ConfigString> findString =
+            ConfigStorage.SaveableConfig.fromConfig(
+                    "findString",
+                    new ConfigString(
+                            translate("findstring"), "Hello", translate("info.findstring")));
 
     /**
-     * Whether or not it should be used to filter chat messages currently.
+     * How findString is used. LITERAL checks just for a match character to character. UPPERLOWER is
+     * like literal, but ignore case. REGEX interprets findString as a regular expression.
      */
-    private ConfigStorage.SaveableConfig<ConfigBoolean> active = ConfigStorage.SaveableConfig.fromConfig(
-        "active",
-        new ConfigBoolean(translate("active"), false, translate("info.active"))
-    );
-
-    /**
-     * Whether or not it should be used to filter chat messages currently.
-     */
-    private ConfigStorage.SaveableConfig<ConfigBoolean> stripColors = ConfigStorage.SaveableConfig.fromConfig(
-        "stripColors",
-        new ConfigBoolean(
-            translate("stripcolors"),
-            true,
-            translate("info.stripcolors")
-        )
-    );
-
-    /**
-     * The Expression to find a match. The way it is interpreted is defined by findType.
-     */
-    private ConfigStorage.SaveableConfig<ConfigString> findString = ConfigStorage.SaveableConfig.fromConfig(
-        "findString",
-        new ConfigString(
-            translate("findstring"),
-            "Hello",
-            translate("info.findstring")
-        )
-    );
-
-    /** How findString is used.
-     * LITERAL checks just for a match character to character.
-     * UPPERLOWER is like literal, but ignore case.
-     * REGEX interprets findString as a regular expression.
-     */
-    private ConfigStorage.SaveableConfig<ConfigOptionList> findType = ConfigStorage.SaveableConfig.fromConfig(
-        "findType",
-        new ConfigOptionList(
-            translate("findtype"),
-            FindType.LITERAL,
-            translate("info.findtype")
-        )
-    );
+    private ConfigStorage.SaveableConfig<ConfigOptionList> findType =
+            ConfigStorage.SaveableConfig.fromConfig(
+                    "findType",
+                    new ConfigOptionList(
+                            translate("findtype"), FindType.LITERAL, translate("info.findtype")));
 
     public FindType getFind() {
         return FindType.fromFindType(findType.config.getStringValue());
     }
 
     /**
-     * How the found string is modified.
-     * ONLYMATCH replaces only what was matched.
-     * FULLLINE replaces the full message.
+     * How the found string is modified. ONLYMATCH replaces only what was matched. FULLLINE replaces
+     * the full message.
      */
-    private ConfigStorage.SaveableConfig<ConfigOptionList> replaceType = ConfigStorage.SaveableConfig.fromConfig(
-        "replaceType",
-        new ConfigOptionList(
-            translate("replacetype"),
-            MatchReplaceRegistry.getInstance().getDefaultOption(),
-            translate("info.replacetype")
-        )
-    );
+    private ConfigStorage.SaveableConfig<ConfigOptionList> replaceType =
+            ConfigStorage.SaveableConfig.fromConfig(
+                    "replaceType",
+                    new ConfigOptionList(
+                            translate("replacetype"),
+                            MatchReplaceRegistry.getInstance().getDefaultOption(),
+                            translate("info.replacetype")));
 
     public IMatchReplace getReplace() {
-        return (
-            (MatchReplaceRegistry.MatchReplaceOption) replaceType.config.getOptionListValue()
-        ).getOption();
+        return ((MatchReplaceRegistry.MatchReplaceOption) replaceType.config.getOptionListValue())
+                .getOption();
     }
 
     /**
-     * What the found string replaces to. (ex. If replaceType is FULLLINE this will replace the message with this)
+     * What the found string replaces to. (ex. If replaceType is FULLLINE this will replace the
+     * message with this)
      */
-    private ConfigStorage.SaveableConfig<ConfigString> replaceTo = ConfigStorage.SaveableConfig.fromConfig(
-        "replaceTo",
-        new ConfigString(
-            translate("replaceto"),
-            "Welcome",
-            translate("info.replaceto")
-        )
-    );
+    private ConfigStorage.SaveableConfig<ConfigString> replaceTo =
+            ConfigStorage.SaveableConfig.fromConfig(
+                    "replaceTo",
+                    new ConfigString(
+                            translate("replaceto"), "Welcome", translate("info.replaceto")));
 
-    private ConfigStorage.SaveableConfig<ConfigBoolean> replaceTextColor = ConfigStorage.SaveableConfig.fromConfig(
-        "replaceTextColor",
-        new ConfigBoolean(
-            translate("replacetextcolor"),
-            false,
-            translate("info.replacetextcolor")
-        )
-    );
+    private ConfigStorage.SaveableConfig<ConfigBoolean> replaceTextColor =
+            ConfigStorage.SaveableConfig.fromConfig(
+                    "replaceTextColor",
+                    new ConfigBoolean(
+                            translate("replacetextcolor"),
+                            false,
+                            translate("info.replacetextcolor")));
 
-    private ConfigStorage.SaveableConfig<ConfigSimpleColor> textColor = ConfigStorage.SaveableConfig.fromConfig(
-        "textColor",
-        new ConfigSimpleColor(
-            translate("textcolor"),
-            ColorUtil.WHITE,
-            translate("info.textcolor")
-        )
-    );
+    private ConfigStorage.SaveableConfig<ConfigSimpleColor> textColor =
+            ConfigStorage.SaveableConfig.fromConfig(
+                    "textColor",
+                    new ConfigSimpleColor(
+                            translate("textcolor"), ColorUtil.WHITE, translate("info.textcolor")));
 
-    private ConfigStorage.SaveableConfig<ConfigBoolean> replaceBackgroundColor = ConfigStorage.SaveableConfig.fromConfig(
-        "replaceBackgroundColor",
-        new ConfigBoolean(
-            translate("replacebackgroundcolor"),
-            false,
-            translate("info.replacebackgroundcolor")
-        )
-    );
+    private ConfigStorage.SaveableConfig<ConfigBoolean> replaceBackgroundColor =
+            ConfigStorage.SaveableConfig.fromConfig(
+                    "replaceBackgroundColor",
+                    new ConfigBoolean(
+                            translate("replacebackgroundcolor"),
+                            false,
+                            translate("info.replacebackgroundcolor")));
 
-    private ConfigStorage.SaveableConfig<ConfigSimpleColor> backgroundColor = ConfigStorage.SaveableConfig.fromConfig(
-        "backgroundColor",
-        new ConfigSimpleColor(
-            translate("backgroundcolor"),
-            ColorUtil.WHITE,
-            translate("info.backgroundcolor")
-        )
-    );
+    private ConfigStorage.SaveableConfig<ConfigSimpleColor> backgroundColor =
+            ConfigStorage.SaveableConfig.fromConfig(
+                    "backgroundColor",
+                    new ConfigSimpleColor(
+                            translate("backgroundcolor"),
+                            ColorUtil.WHITE,
+                            translate("info.backgroundcolor")));
 
-    private MatchProcessorRegistry processors = MatchProcessorRegistry
-        .getInstance()
-        .clone();
+    private MatchProcessorRegistry processors = MatchProcessorRegistry.getInstance().clone();
 
-    private final ImmutableList<ConfigStorage.SaveableConfig<?>> options = ImmutableList.of(
-        name,
-        active,
-        stripColors,
-        findString,
-        findType,
-        replaceType,
-        replaceTo,
-        replaceTextColor,
-        textColor,
-        replaceBackgroundColor,
-        backgroundColor
-    );
+    private final ImmutableList<ConfigStorage.SaveableConfig<?>> options =
+            ImmutableList.of(
+                    name,
+                    active,
+                    stripColors,
+                    findString,
+                    findType,
+                    replaceType,
+                    replaceTo,
+                    replaceTextColor,
+                    textColor,
+                    replaceBackgroundColor,
+                    backgroundColor);
 
     public List<String> getWidgetHoverLines() {
-        String translated = StringUtils.translate(
-            "advancedchatfilters.config.filterdescription"
-        );
+        String translated = StringUtils.translate("advancedchatfilters.config.filterdescription");
         ArrayList<String> hover = new ArrayList<>();
         for (String s : translated.split("\n")) {
             hover.add(
-                s
-                    .replaceAll(
-                        Pattern.quote("<name>"),
-                        Matcher.quoteReplacement(name.config.getStringValue())
-                    )
-                    .replaceAll(
-                        Pattern.quote("<active>"),
-                        Matcher.quoteReplacement(active.config.getStringValue())
-                    )
-                    .replaceAll(
-                        Pattern.quote("<find>"),
-                        Matcher.quoteReplacement(
-                            findString.config.getStringValue()
-                        )
-                    )
-                    .replaceAll(
-                        Pattern.quote("<findtype>"),
-                        Matcher.quoteReplacement(getFind().getDisplayName())
-                    )
-            );
+                    s.replaceAll(
+                                    Pattern.quote("<name>"),
+                                    Matcher.quoteReplacement(name.config.getStringValue()))
+                            .replaceAll(
+                                    Pattern.quote("<active>"),
+                                    Matcher.quoteReplacement(active.config.getStringValue()))
+                            .replaceAll(
+                                    Pattern.quote("<find>"),
+                                    Matcher.quoteReplacement(findString.config.getStringValue()))
+                            .replaceAll(
+                                    Pattern.quote("<findtype>"),
+                                    Matcher.quoteReplacement(getFind().getDisplayName())));
         }
         return hover;
     }
@@ -280,36 +246,22 @@ public class Filter implements Comparable<Filter> {
 
     public enum NotifySound implements IConfigOptionListEntry {
         NONE("none", null),
-        ARROW_HIT_PLAYER(
-            "arrow_hit_player",
-            SoundEvents.ENTITY_ARROW_HIT_PLAYER
-        ),
+        ARROW_HIT_PLAYER("arrow_hit_player", SoundEvents.ENTITY_ARROW_HIT_PLAYER),
         ANVIL_BREAK("anvil_break", SoundEvents.BLOCK_ANVIL_BREAK),
         BEACON_ACTIVATE("beacon_activate", SoundEvents.BLOCK_BEACON_ACTIVATE),
-        ELDER_GUARDIAN_CURSE(
-            "elder_guardian_curse",
-            SoundEvents.ENTITY_ELDER_GUARDIAN_CURSE
-        ),
-        ENDERMAN_TELEPORT(
-            "enderman_teleport",
-            SoundEvents.ENTITY_ENDERMAN_TELEPORT
-        ),
+        ELDER_GUARDIAN_CURSE("elder_guardian_curse", SoundEvents.ENTITY_ELDER_GUARDIAN_CURSE),
+        ENDERMAN_TELEPORT("enderman_teleport", SoundEvents.ENTITY_ENDERMAN_TELEPORT),
         WOLOLO("wololo", SoundEvents.ENTITY_EVOKER_PREPARE_WOLOLO),
         BELL("bell_use", SoundEvents.BLOCK_BELL_USE),
         CLICK("button_click", SoundEvents.UI_BUTTON_CLICK),
-        HUSK_TO_ZOMBIE(
-            "husk_to_zombie",
-            SoundEvents.ENTITY_HUSK_CONVERTED_TO_ZOMBIE
-        ),
+        HUSK_TO_ZOMBIE("husk_to_zombie", SoundEvents.ENTITY_HUSK_CONVERTED_TO_ZOMBIE),
         GLASS_BREAK("glass_break", SoundEvents.BLOCK_GLASS_BREAK);
 
         public final String configString;
         public final SoundEvent event;
 
         private static String translate(String key) {
-            return StringUtils.translate(
-                "advancedchatfilters.config.notifysound." + key
-            );
+            return StringUtils.translate("advancedchatfilters.config.notifysound." + key);
         }
 
         NotifySound(String configString, SoundEvent sound) {
@@ -353,14 +305,12 @@ public class Filter implements Comparable<Filter> {
                 if (r.event == null) {
                     continue;
                 }
-                if (
-                    r.event
+                if (r.event
                         .getId()
                         .getPath()
                         .replaceAll("\\.", "_")
                         .toLowerCase()
-                        .equalsIgnoreCase(notifysound)
-                ) {
+                        .equalsIgnoreCase(notifysound)) {
                     return r;
                 }
             }
@@ -381,9 +331,7 @@ public class Filter implements Comparable<Filter> {
         Filter filter = new Filter();
         for (ConfigStorage.SaveableConfig<?> c : filter.getOptions()) {
             if (c.config.getType() == ConfigType.STRING) {
-                ((ConfigString) c.config).setValueFromString(
-                        AdvancedChatCore.getRandomString()
-                    );
+                ((ConfigString) c.config).setValueFromString(AdvancedChatCore.getRandomString());
             }
         }
         return filter;

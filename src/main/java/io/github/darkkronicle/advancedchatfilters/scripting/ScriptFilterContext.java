@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2021 DarkKronicle
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 package io.github.darkkronicle.advancedchatfilters.scripting;
 
 import io.github.darkkronicle.advancedchatcore.util.ColorUtil;
@@ -21,9 +28,7 @@ import net.minecraft.text.Style;
 @Environment(EnvType.CLIENT)
 public class ScriptFilterContext {
 
-    @Getter
-    @Setter
-    private FluidText text;
+    @Getter @Setter private FluidText text;
 
     private final FluidText unfiltered;
 
@@ -44,15 +49,12 @@ public class ScriptFilterContext {
      * @return If there is a match
      */
     public boolean isMatch(String findType, String matchString) {
-        return SearchUtils.isMatch(
-            text.getString(),
-            matchString,
-            toFindType(findType)
-        );
+        return SearchUtils.isMatch(text.getString(), matchString, toFindType(findType));
     }
 
     /**
      * Get's the string content of the text
+     *
      * @return String content of the text
      */
     public String getString() {
@@ -61,35 +63,31 @@ public class ScriptFilterContext {
 
     /**
      * Get's matches based off of a {@link FindType} and match from the text
+     *
      * @param findType Name of the {@link FindType}
      * @param matchString String to match
      * @return List of {@link StringMatch}'s that matched in the text's string
      */
     public List<StringMatch> getMatches(String findType, String matchString) {
-        SearchResult result = SearchResult.searchOf(
-            text.getString(),
-            matchString,
-            toFindType(findType)
-        );
+        SearchResult result =
+                SearchResult.searchOf(text.getString(), matchString, toFindType(findType));
         return result.getMatches();
     }
 
     /**
      * Get's a full {@link SearchResult} from a findtype and input string from the text.
+     *
      * @param findType Name of the {@link FindType}
      * @param matchString String to match
      * @return {@link SearchResult} containing all match data
      */
     public SearchResult getSearchResult(String findType, String matchString) {
-        return SearchResult.searchOf(
-            text.getString(),
-            matchString,
-            toFindType(findType)
-        );
+        return SearchResult.searchOf(text.getString(), matchString, toFindType(findType));
     }
 
     /**
      * Set's the text. No formatting, just raw string data.
+     *
      * @param text Text to set it to.
      */
     public void setTextPlain(String text) {
@@ -98,49 +96,40 @@ public class ScriptFilterContext {
 
     /**
      * Replace's text based on specific string replace.
+     *
      * @param start Start position to replace
      * @param end End position to replace
      * @param replace What to replace to
      */
     public void replaceTextWithString(int start, int end, String replace) {
         HashMap<StringMatch, FluidText.StringInsert> toReplace = new HashMap<>();
-        StringMatch match = new StringMatch(
-            getString().substring(start, end),
-            start,
-            end
-        );
-        toReplace.put(
-            match,
-            (current, match1) -> new FluidText(current.withMessage(replace))
-        );
+        StringMatch match = new StringMatch(getString().substring(start, end), start, end);
+        toReplace.put(match, (current, match1) -> new FluidText(current.withMessage(replace)));
         text.replaceStrings(toReplace);
     }
 
     /**
      * Replace's text based on specific string replace.
+     *
      * @param start Start position to replace
      * @param end End position to replace
      * @param replace What to replace to. {@link FluidText}
      */
     public void replaceTextWithText(int start, int end, FluidText replace) {
         HashMap<StringMatch, FluidText.StringInsert> toReplace = new HashMap<>();
-        StringMatch match = new StringMatch(
-            getString().substring(start, end),
-            start,
-            end
-        );
+        StringMatch match = new StringMatch(getString().substring(start, end), start, end);
         toReplace.put(match, (current, match1) -> replace);
         text.replaceStrings(toReplace);
     }
 
     /**
      * Send text to specific processor
+     *
      * @param processor Processor name in {@link MatchProcessorRegistry}
      */
     public void sendToProcessor(String processor, FluidText text) {
-        for (MatchProcessorRegistry.MatchProcessorOption option : MatchProcessorRegistry
-            .getInstance()
-            .getAll()) {
+        for (MatchProcessorRegistry.MatchProcessorOption option :
+                MatchProcessorRegistry.getInstance().getAll()) {
             if (option.getSaveString().equals(processor)) {
                 option.getOption().process(text, unfiltered);
                 return;
@@ -150,6 +139,7 @@ public class ScriptFilterContext {
 
     /**
      * Instantiates a new {@link TextBuilder}
+     *
      * @return New text builder
      */
     public TextBuilder getNewTextBuilder() {
@@ -158,6 +148,7 @@ public class ScriptFilterContext {
 
     /**
      * Instantiates a new {@link TextBuilder} with a value
+     *
      * @return New text builder
      */
     public TextBuilder getNewTextBuilder(String string) {
@@ -166,6 +157,7 @@ public class ScriptFilterContext {
 
     /**
      * Instantiates a new {@link ReplaceBuilder}
+     *
      * @return New replace builder
      */
     public ReplaceBuilder getNewReplaceBuilder() {
@@ -174,6 +166,7 @@ public class ScriptFilterContext {
 
     /**
      * Get's style at specific character position.
+     *
      * @param pos Position to get the style
      * @return The style found
      */
@@ -190,7 +183,9 @@ public class ScriptFilterContext {
     }
 
     /**
-     * Get's the {@link io.github.darkkronicle.advancedchatcore.util.ColorUtil.SimpleColor} of a color
+     * Get's the {@link io.github.darkkronicle.advancedchatcore.util.ColorUtil.SimpleColor} of a
+     * color
+     *
      * @param style Style to grab color from
      * @return Color if it exists, null if there is no color
      */

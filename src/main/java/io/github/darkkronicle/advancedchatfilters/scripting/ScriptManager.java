@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2021 DarkKronicle
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 package io.github.darkkronicle.advancedchatfilters.scripting;
 
 import com.google.gson.JsonArray;
@@ -29,11 +36,9 @@ public class ScriptManager implements IMessageFilter {
 
     private NashornSandbox engine;
 
-    @Getter
-    private List<ScriptFilter> filters = new ArrayList<>();
+    @Getter private List<ScriptFilter> filters = new ArrayList<>();
 
-    @Getter
-    private List<ScriptFilter> unimportedFilters = new ArrayList<>();
+    @Getter private List<ScriptFilter> unimportedFilters = new ArrayList<>();
 
     public static ScriptManager getInstance() {
         return INSTANCE;
@@ -62,9 +67,7 @@ public class ScriptManager implements IMessageFilter {
         engine.setExecutor(Executors.newSingleThreadExecutor());
     }
 
-    /**
-     * Setup all advanced filters
-     */
+    /** Setup all advanced filters */
     public void init() {
         if (!FiltersConfigStorage.ADVANCED_ON.config.getBooleanValue()) {
             // Do ***not*** evaluate any code unless this is turned on.
@@ -76,26 +79,22 @@ public class ScriptManager implements IMessageFilter {
         filters = new ArrayList<>();
 
         // Grab all *.js files
-        File directory = FileUtils
-            .getConfigDirectory()
-            .toPath()
-            .resolve("advancedchat")
-            .resolve("filters")
-            .toFile();
+        File directory =
+                FileUtils.getConfigDirectory()
+                        .toPath()
+                        .resolve("advancedchat")
+                        .resolve("filters")
+                        .toFile();
         if (!directory.exists()) {
             directory.mkdirs();
         }
-        for (File f : directory.listFiles((dir, name) -> name.endsWith(".js")
-        )) {
+        for (File f : directory.listFiles((dir, name) -> name.endsWith(".js"))) {
             ScriptFilter filter = ScriptFilter.fromFile(f);
             if (filter != null) {
-                // If it's imported it's ok to be loaded. To import it requires an extra step from the user.
+                // If it's imported it's ok to be loaded. To import it requires an extra step from
+                // the user.
                 // This is to prevent code evaluating before manually confirmed.
-                if (
-                    FiltersConfigStorage.IMPORTED_FILTERS.contains(
-                        filter.getId()
-                    )
-                ) {
+                if (FiltersConfigStorage.IMPORTED_FILTERS.contains(filter.getId())) {
                     // Run the init
                     if (filter.runInit(engine)) {
                         filters.add(filter);
@@ -110,6 +109,7 @@ public class ScriptManager implements IMessageFilter {
 
     /**
      * Applies JSON to Advanced Filters.
+     *
      * @param array Array of stored {@link ScriptFilter}
      */
     public void applyJson(JsonArray array) {
@@ -138,6 +138,7 @@ public class ScriptManager implements IMessageFilter {
 
     /**
      * Retrieves JSON data for the {@link ScriptFilter}'s
+     *
      * @return Array of serialized data
      */
     public JsonArray getJson() {

@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2021 DarkKronicle
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 package io.github.darkkronicle.advancedchatfilters.scripting.util;
 
 import io.github.darkkronicle.advancedchatcore.util.FluidText;
@@ -16,6 +23,7 @@ public class ReplaceBuilder {
 
     /**
      * Applies replacements to a {@link FluidText}
+     *
      * @param filter Text to apply it to
      * @return Filtered {@link FluidText}
      */
@@ -28,23 +36,20 @@ public class ReplaceBuilder {
     /**
      * Add's a replacement to trigger on build.
      *
-     * Replacement will inherit the style of whatever it is replacing
+     * <p>Replacement will inherit the style of whatever it is replacing
+     *
      * @param match {@link StringMatch} match data
      * @param replacement String to replace to
      */
-    public ReplaceBuilder addReplacement(
-        StringMatch match,
-        String replacement
-    ) {
+    public ReplaceBuilder addReplacement(StringMatch match, String replacement) {
         replacements.put(
-            match,
-            (current, match1) -> new FluidText(current.withMessage(replacement))
-        );
+                match, (current, match1) -> new FluidText(current.withMessage(replacement)));
         return this;
     }
 
     /**
      * Add's a replacement to trigger on build.
+     *
      * @param match {@link StringMatch} match data
      * @param text Text to replace to
      */

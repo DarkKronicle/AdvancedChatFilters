@@ -1,10 +1,16 @@
+/*
+ * Copyright (C) 2021 DarkKronicle
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 package io.github.darkkronicle.advancedchatfilters.config.gui;
 
 import fi.dy.masa.malilib.gui.GuiTextFieldGeneric;
 import fi.dy.masa.malilib.gui.interfaces.ISelectionListener;
 import fi.dy.masa.malilib.gui.widgets.WidgetListBase;
 import fi.dy.masa.malilib.gui.wrappers.TextFieldWrapper;
-import io.github.darkkronicle.advancedchatfilters.config.FiltersConfigStorage;
 import io.github.darkkronicle.advancedchatfilters.scripting.ScriptFilter;
 import io.github.darkkronicle.advancedchatfilters.scripting.ScriptManager;
 import java.util.ArrayList;
@@ -15,9 +21,10 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 
 public class WidgetListAdvancedFilters
-    extends WidgetListBase<ScriptFilter, WidgetAdvancedFilterEntry> {
+        extends WidgetListBase<ScriptFilter, WidgetAdvancedFilterEntry> {
 
-    protected final List<TextFieldWrapper<? extends GuiTextFieldGeneric>> textFields = new ArrayList<>();
+    protected final List<TextFieldWrapper<? extends GuiTextFieldGeneric>> textFields =
+            new ArrayList<>();
 
     @Override
     protected void reCreateListEntryWidgets() {
@@ -26,31 +33,23 @@ public class WidgetListAdvancedFilters
     }
 
     public WidgetListAdvancedFilters(
-        int x,
-        int y,
-        int width,
-        int height,
-        @Nullable ISelectionListener<ScriptFilter> selectionListener,
-        Screen parent
-    ) {
+            int x,
+            int y,
+            int width,
+            int height,
+            @Nullable ISelectionListener<ScriptFilter> selectionListener,
+            Screen parent) {
         super(x, y, width, height, selectionListener);
         this.browserEntryHeight = 22;
         this.setParent(parent);
     }
 
-    public void addTextField(
-        TextFieldWrapper<? extends GuiTextFieldGeneric> text
-    ) {
+    public void addTextField(TextFieldWrapper<? extends GuiTextFieldGeneric> text) {
         textFields.add(text);
     }
 
     @Override
-    public void render(
-        MatrixStack matrixStack,
-        int mouseX,
-        int mouseY,
-        float partialTicks
-    ) {
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
@@ -83,29 +82,21 @@ public class WidgetListAdvancedFilters
 
     @Override
     protected WidgetAdvancedFilterEntry createListEntryWidget(
-        int x,
-        int y,
-        int listIndex,
-        boolean isOdd,
-        ScriptFilter entry
-    ) {
+            int x, int y, int listIndex, boolean isOdd, ScriptFilter entry) {
         return new WidgetAdvancedFilterEntry(
-            x,
-            y,
-            this.browserEntryWidth,
-            this.getBrowserEntryHeightFor(entry),
-            isOdd,
-            entry,
-            listIndex,
-            this
-        );
+                x,
+                y,
+                this.browserEntryWidth,
+                this.getBrowserEntryHeightFor(entry),
+                isOdd,
+                entry,
+                listIndex,
+                this);
     }
 
     @Override
     protected Collection<ScriptFilter> getAllEntries() {
-        List<ScriptFilter> filters = new ArrayList<>(
-            ScriptManager.getInstance().getFilters()
-        );
+        List<ScriptFilter> filters = new ArrayList<>(ScriptManager.getInstance().getFilters());
         filters.addAll(ScriptManager.getInstance().getUnimportedFilters());
         return filters;
     }

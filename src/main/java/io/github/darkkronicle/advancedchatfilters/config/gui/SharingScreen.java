@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2021 DarkKronicle
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 package io.github.darkkronicle.advancedchatfilters.config.gui;
 
 import com.google.gson.Gson;
@@ -15,9 +22,7 @@ import io.github.darkkronicle.advancedchatfilters.config.Filter;
 import io.github.darkkronicle.advancedchatfilters.config.FiltersConfigStorage;
 import net.minecraft.client.gui.screen.Screen;
 
-/**
- * Screen for importing and exporting {@link Filter}
- */
+/** Screen for importing and exporting {@link Filter} */
 public class SharingScreen extends GuiBase {
 
     private final String starting;
@@ -26,21 +31,14 @@ public class SharingScreen extends GuiBase {
 
     public SharingScreen(String starting, Screen parent) {
         this.setParent(parent);
-        this.setTitle(
-                StringUtils.translate("advancedchatfilters.gui.menu.import")
-            );
+        this.setTitle(StringUtils.translate("advancedchatfilters.gui.menu.import"));
         this.starting = starting;
     }
 
-    /**
-     * Creates a SharingScreen from a filter
-     */
+    /** Creates a SharingScreen from a filter */
     public static SharingScreen fromFilter(Filter filter, Screen parent) {
         Filter.FilterJsonSave filterJsonSave = new Filter.FilterJsonSave();
-        return new SharingScreen(
-            GSON.toJson(filterJsonSave.save(filter)),
-            parent
-        );
+        return new SharingScreen(GSON.toJson(filterJsonSave.save(filter)), parent);
     }
 
     @Override
@@ -63,8 +61,7 @@ public class SharingScreen extends GuiBase {
         int filterWidth = StringUtils.getStringWidth(filterName) + 10;
         this.addButton(
                 new ButtonGeneric(x, y, filterWidth, 20, filterName),
-                new ButtonListener(ButtonListener.Type.IMPORT_FILTER, this)
-            );
+                new ButtonListener(ButtonListener.Type.IMPORT_FILTER, this));
     }
 
     private static class ButtonListener implements IButtonActionListener {
@@ -96,10 +93,7 @@ public class SharingScreen extends GuiBase {
         }
 
         @Override
-        public void actionPerformedWithButton(
-            ButtonBase button,
-            int mouseButton
-        ) {
+        public void actionPerformedWithButton(ButtonBase button, int mouseButton) {
             try {
                 if (parent.text.getText().equals("")) {
                     throw new NullPointerException("Message can't be blank!");
@@ -107,32 +101,28 @@ public class SharingScreen extends GuiBase {
                 if (type == Type.IMPORT_FILTER) {
                     Filter.FilterJsonSave filterSave = new Filter.FilterJsonSave();
                     // If you don't use deprecated it won't work
-                    Filter filter = filterSave.load(
-                        new JsonParser()
-                            .parse(parent.text.getText())
-                            .getAsJsonObject()
-                    );
+                    Filter filter =
+                            filterSave.load(
+                                    new JsonParser()
+                                            .parse(parent.text.getText())
+                                            .getAsJsonObject());
                     if (filter == null) {
                         throw new NullPointerException("Filter is null!");
                     }
                     FiltersConfigStorage.FILTERS.add(filter);
                     FiltersHandler.getInstance().loadFilters();
                     parent.addGuiMessage(
-                        Message.MessageType.SUCCESS,
-                        5000,
-                        StringUtils.translate(
-                            "advancedchat.gui.message.successful"
-                        )
-                    );
+                            Message.MessageType.SUCCESS,
+                            5000,
+                            StringUtils.translate("advancedchat.gui.message.successful"));
                 }
             } catch (Exception e) {
                 parent.addGuiMessage(
-                    Message.MessageType.ERROR,
-                    10000,
-                    StringUtils.translate("advancedchat.gui.message.error") +
-                    ": " +
-                    e.getMessage()
-                );
+                        Message.MessageType.ERROR,
+                        10000,
+                        StringUtils.translate("advancedchat.gui.message.error")
+                                + ": "
+                                + e.getMessage());
             }
         }
     }

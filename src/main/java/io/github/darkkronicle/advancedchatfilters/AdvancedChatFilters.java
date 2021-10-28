@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2021 DarkKronicle
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 package io.github.darkkronicle.advancedchatfilters;
 
 import fi.dy.masa.malilib.event.InitializationHandler;
@@ -13,8 +20,6 @@ public class AdvancedChatFilters implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         // This will run after AdvancedChatCore's because of load order
-        InitializationHandler
-            .getInstance()
-            .registerInitializationHandler(new FiltersInitHandler());
+        InitializationHandler.getInstance().registerInitializationHandler(new FiltersInitHandler());
     }
 }

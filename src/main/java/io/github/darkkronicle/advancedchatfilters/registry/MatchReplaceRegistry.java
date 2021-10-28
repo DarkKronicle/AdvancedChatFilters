@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2021 DarkKronicle
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 package io.github.darkkronicle.advancedchatfilters.registry;
 
 import fi.dy.masa.malilib.config.IConfigOptionListEntry;
@@ -13,12 +20,10 @@ import java.util.function.Supplier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-/**
- * Match replace registry
- */
+/** Match replace registry */
 @Environment(EnvType.CLIENT)
 public class MatchReplaceRegistry
-    extends AbstractRegistry<IMatchReplace, MatchReplaceRegistry.MatchReplaceOption> {
+        extends AbstractRegistry<IMatchReplace, MatchReplaceRegistry.MatchReplaceOption> {
 
     public static final String NAME = "matchreplace";
 
@@ -41,27 +46,18 @@ public class MatchReplaceRegistry
 
     @Override
     public MatchReplaceOption constructOption(
-        Supplier<IMatchReplace> iMatchReplace,
-        String saveString,
-        String translation,
-        String infoTranslation,
-        boolean active,
-        boolean hidden,
-        boolean setDefault
-    ) {
+            Supplier<IMatchReplace> iMatchReplace,
+            String saveString,
+            String translation,
+            String infoTranslation,
+            boolean active,
+            boolean hidden,
+            boolean setDefault) {
         return new MatchReplaceOption(
-            iMatchReplace,
-            saveString,
-            translation,
-            infoTranslation,
-            active,
-            hidden,
-            this
-        );
+                iMatchReplace, saveString, translation, infoTranslation, active, hidden, this);
     }
 
-    public static class MatchReplaceOption
-        implements ConfigRegistryOption<IMatchReplace> {
+    public static class MatchReplaceOption implements ConfigRegistryOption<IMatchReplace> {
 
         private IMatchReplace replace;
         private final Supplier<IMatchReplace> repl;
@@ -74,14 +70,13 @@ public class MatchReplaceRegistry
 
         // Only register
         private MatchReplaceOption(
-            Supplier<IMatchReplace> replace,
-            String saveString,
-            String translation,
-            String infoTranslation,
-            boolean active,
-            boolean hidden,
-            MatchReplaceRegistry registry
-        ) {
+                Supplier<IMatchReplace> replace,
+                String saveString,
+                String translation,
+                String infoTranslation,
+                boolean active,
+                boolean hidden,
+                MatchReplaceRegistry registry) {
             this.repl = replace;
             this.replace = repl.get();
             this.saveString = saveString;
@@ -90,17 +85,13 @@ public class MatchReplaceRegistry
             this.infoTranslation = infoTranslation;
             this.hidden = hidden;
             this.active =
-                ConfigStorage.SaveableConfig.fromConfig(
-                    "active",
-                    new ConfigBoolean(translation, active, infoTranslation)
-                );
+                    ConfigStorage.SaveableConfig.fromConfig(
+                            "active", new ConfigBoolean(translation, active, infoTranslation));
         }
 
         @Override
         public List<String> getHoverLines() {
-            return Arrays.asList(
-                StringUtils.translate(infoTranslation).split("\n")
-            );
+            return Arrays.asList(StringUtils.translate(infoTranslation).split("\n"));
         }
 
         @Override
@@ -144,20 +135,15 @@ public class MatchReplaceRegistry
         }
 
         @Override
-        public MatchReplaceOption copy(
-            AbstractRegistry<IMatchReplace, ?> registry
-        ) {
+        public MatchReplaceOption copy(AbstractRegistry<IMatchReplace, ?> registry) {
             return new MatchReplaceOption(
-                repl,
-                saveString,
-                translation,
-                infoTranslation,
-                isActive(),
-                isHidden(),
-                registry == null
-                    ? this.registry
-                    : (MatchReplaceRegistry) registry
-            );
+                    repl,
+                    saveString,
+                    translation,
+                    infoTranslation,
+                    isActive(),
+                    isHidden(),
+                    registry == null ? this.registry : (MatchReplaceRegistry) registry);
         }
     }
 }

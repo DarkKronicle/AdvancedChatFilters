@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2021 DarkKronicle
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 package io.github.darkkronicle.advancedchatfilters.filters.matchreplace;
 
 import io.github.darkkronicle.advancedchatcore.util.FindType;
@@ -21,49 +28,36 @@ import net.minecraft.text.Style;
 public class OwOTextReplace implements IMatchReplace {
 
     @Override
-    public Optional<FluidText> filter(
-        ReplaceFilter filter,
-        FluidText text,
-        SearchResult search
-    ) {
+    public Optional<FluidText> filter(ReplaceFilter filter, FluidText text, SearchResult search) {
         HashMap<StringMatch, FluidText.StringInsert> replaceMatches = new HashMap<>();
         for (StringMatch match : search.getMatches()) {
-            Optional<List<StringMatch>> omatches = SearchUtils.findMatches(
-                match.match,
-                "(?<!§)([A-Za-z]+)",
-                FindType.REGEX
-            );
+            Optional<List<StringMatch>> omatches =
+                    SearchUtils.findMatches(match.match, "(?<!§)([A-Za-z]+)", FindType.REGEX);
             if (!omatches.isPresent()) {
                 continue;
             }
             List<StringMatch> foundMatches = omatches.get();
-            foundMatches.forEach(stringMatch -> {
-                stringMatch.start += match.start;
-                stringMatch.end += match.start;
-            });
+            foundMatches.forEach(
+                    stringMatch -> {
+                        stringMatch.start += match.start;
+                        stringMatch.end += match.start;
+                    });
             for (StringMatch m : foundMatches) {
                 replaceMatches.put(
-                    m,
-                    (current, match1) ->
-                        new FluidText(
-                            current.withMessage(
-                                OwO.INSTANCE.translate(match1.match)
-                            )
-                        )
-                );
+                        m,
+                        (current, match1) ->
+                                new FluidText(
+                                        current.withMessage(OwO.INSTANCE.translate(match1.match))));
             }
         }
         text.replaceStrings(replaceMatches);
         text.append(
-            new RawText(
-                " " +
-                ParsingUtil.parseRandomizedLetters(
-                    ParsingUtil.getRandomElement(OwO.INSTANCE.getSuffixes())
-                ),
-                Style.EMPTY
-            ),
-            true
-        );
+                new RawText(
+                        " "
+                                + ParsingUtil.parseRandomizedLetters(
+                                        ParsingUtil.getRandomElement(OwO.INSTANCE.getSuffixes())),
+                        Style.EMPTY),
+                true);
         return Optional.of(text);
     }
 }

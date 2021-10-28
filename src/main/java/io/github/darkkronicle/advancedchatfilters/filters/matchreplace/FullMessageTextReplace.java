@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2021 DarkKronicle
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 package io.github.darkkronicle.advancedchatfilters.filters.matchreplace;
 
 import io.github.darkkronicle.advancedchatcore.util.ColorUtil;
@@ -17,11 +24,7 @@ import net.minecraft.text.TextColor;
 public class FullMessageTextReplace implements IMatchReplace {
 
     @Override
-    public Optional<FluidText> filter(
-        ReplaceFilter filter,
-        FluidText text,
-        SearchResult search
-    ) {
+    public Optional<FluidText> filter(ReplaceFilter filter, FluidText text, SearchResult search) {
         StringBuilder totalMatch = new StringBuilder();
         for (StringMatch m : search.getMatches()) {
             totalMatch.append(m.match);
@@ -29,20 +32,18 @@ public class FullMessageTextReplace implements IMatchReplace {
         RawText base = new RawText("None", Style.EMPTY);
         ColorUtil.SimpleColor c = filter.color;
         if (c == null) {
-            base =
-                text.truncate(search.getMatches().get(0)).getRawTexts().get(0);
+            base = text.truncate(search.getMatches().get(0)).getRawTexts().get(0);
         } else {
             Style original = Style.EMPTY;
             TextColor textColor = TextColor.fromRgb(c.color());
             original = original.withColor(textColor);
             base = base.withStyle(original);
         }
-        RawText toReplace = base.withMessage(
-            search.getGroupReplacements(
-                filter.replaceTo.replaceAll("%MATCH%", totalMatch.toString()),
-                true
-            )
-        );
+        RawText toReplace =
+                base.withMessage(
+                        search.getGroupReplacements(
+                                filter.replaceTo.replaceAll("%MATCH%", totalMatch.toString()),
+                                true));
         return Optional.of(new FluidText(toReplace));
     }
 }

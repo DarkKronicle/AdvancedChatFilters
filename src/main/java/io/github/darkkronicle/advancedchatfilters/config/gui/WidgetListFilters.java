@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2021 DarkKronicle
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 package io.github.darkkronicle.advancedchatfilters.config.gui;
 
 import fi.dy.masa.malilib.gui.GuiTextFieldGeneric;
@@ -13,11 +20,11 @@ import javax.annotation.Nullable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 
-public class WidgetListFilters
-    extends WidgetListBase<Filter, WidgetFilterEntry> {
+public class WidgetListFilters extends WidgetListBase<Filter, WidgetFilterEntry> {
 
     public Filter filter;
-    protected final List<TextFieldWrapper<? extends GuiTextFieldGeneric>> textFields = new ArrayList<>();
+    protected final List<TextFieldWrapper<? extends GuiTextFieldGeneric>> textFields =
+            new ArrayList<>();
 
     @Override
     protected void reCreateListEntryWidgets() {
@@ -26,33 +33,25 @@ public class WidgetListFilters
     }
 
     public WidgetListFilters(
-        int x,
-        int y,
-        int width,
-        int height,
-        @Nullable ISelectionListener<Filter> selectionListener,
-        Filter filter,
-        Screen parent
-    ) {
+            int x,
+            int y,
+            int width,
+            int height,
+            @Nullable ISelectionListener<Filter> selectionListener,
+            Filter filter,
+            Screen parent) {
         super(x, y, width, height, selectionListener);
         this.browserEntryHeight = 22;
         this.filter = filter;
         this.setParent(parent);
     }
 
-    public void addTextField(
-        TextFieldWrapper<? extends GuiTextFieldGeneric> text
-    ) {
+    public void addTextField(TextFieldWrapper<? extends GuiTextFieldGeneric> text) {
         textFields.add(text);
     }
 
     @Override
-    public void render(
-        MatrixStack matrixStack,
-        int mouseX,
-        int mouseY,
-        float partialTicks
-    ) {
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
@@ -85,22 +84,16 @@ public class WidgetListFilters
 
     @Override
     protected WidgetFilterEntry createListEntryWidget(
-        int x,
-        int y,
-        int listIndex,
-        boolean isOdd,
-        Filter entry
-    ) {
+            int x, int y, int listIndex, boolean isOdd, Filter entry) {
         return new WidgetFilterEntry(
-            x,
-            y,
-            this.browserEntryWidth,
-            this.getBrowserEntryHeightFor(entry),
-            isOdd,
-            entry,
-            listIndex,
-            this
-        );
+                x,
+                y,
+                this.browserEntryWidth,
+                this.getBrowserEntryHeightFor(entry),
+                isOdd,
+                entry,
+                listIndex,
+                this);
     }
 
     @Override

@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2021 DarkKronicle
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 package io.github.darkkronicle.advancedchatfilters.filters;
 
 import io.github.darkkronicle.advancedchatcore.interfaces.IMatchProcessor;
@@ -21,20 +28,14 @@ public class ForwardFilter implements IFilter {
 
     @Override
     public Optional<FluidText> filter(
-        ParentFilter filter,
-        FluidText text,
-        FluidText unfiltered,
-        SearchResult search
-    ) {
+            ParentFilter filter, FluidText text, FluidText unfiltered, SearchResult search) {
         IMatchProcessor.Result result = null;
         for (MatchProcessorRegistry.MatchProcessorOption p : registry.getAll()) {
             if (!p.isActive()) {
                 continue;
             }
             IMatchProcessor.Result r = null;
-            if (
-                !p.getOption().matchesOnly() && !search.getMatches().isEmpty()
-            ) {
+            if (!p.getOption().matchesOnly() && !search.getMatches().isEmpty()) {
                 r = p.getOption().processMatches(text, unfiltered, null);
             } else if (!search.getMatches().isEmpty()) {
                 r = p.getOption().processMatches(text, unfiltered, search);

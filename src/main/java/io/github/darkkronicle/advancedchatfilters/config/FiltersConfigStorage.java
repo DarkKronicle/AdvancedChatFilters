@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2021 DarkKronicle
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 package io.github.darkkronicle.advancedchatfilters.config;
 
 import com.google.gson.JsonArray;
@@ -14,17 +21,14 @@ import io.github.darkkronicle.advancedchatfilters.FiltersHandler;
 import io.github.darkkronicle.advancedchatfilters.scripting.ScriptManager;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 @Environment(EnvType.CLIENT)
 public class FiltersConfigStorage implements IConfigHandler {
 
-    public static final String CONFIG_FILE_NAME =
-        AdvancedChatFilters.MOD_ID + ".json";
+    public static final String CONFIG_FILE_NAME = AdvancedChatFilters.MOD_ID + ".json";
     public static final List<Filter> FILTERS = new ArrayList<>();
     private static final int CONFIG_VERSION = 1;
     private static final String FILTER_KEY = "filters";
@@ -32,22 +36,20 @@ public class FiltersConfigStorage implements IConfigHandler {
     public static final List<String> IMPORTED_FILTERS = new ArrayList<>();
     private static final String IMPORTED_KEY = "importedfilters";
 
-    public static final ConfigStorage.SaveableConfig<ConfigBoolean> ADVANCED_ON = ConfigStorage.SaveableConfig.fromConfig(
-        "advanced_filters_on",
-        new ConfigBoolean("advanced_filters_on", false, "advanced_filters_on")
-    );
+    public static final ConfigStorage.SaveableConfig<ConfigBoolean> ADVANCED_ON =
+            ConfigStorage.SaveableConfig.fromConfig(
+                    "advanced_filters_on",
+                    new ConfigBoolean("advanced_filters_on", false, "advanced_filters_on"));
 
     public static void loadFromFile() {
-        File configFile = FileUtils
-            .getConfigDirectory()
-            .toPath()
-            .resolve("advancedchat")
-            .resolve(CONFIG_FILE_NAME)
-            .toFile();
+        File configFile =
+                FileUtils.getConfigDirectory()
+                        .toPath()
+                        .resolve("advancedchat")
+                        .resolve(CONFIG_FILE_NAME)
+                        .toFile();
 
-        if (
-            configFile.exists() && configFile.isFile() && configFile.canRead()
-        ) {
+        if (configFile.exists() && configFile.isFile() && configFile.canRead()) {
             JsonElement element = ConfigStorage.parseJsonFile(configFile);
             Filter.FilterJsonSave filterSave = new Filter.FilterJsonSave();
 
@@ -83,22 +85,14 @@ public class FiltersConfigStorage implements IConfigHandler {
                     ScriptManager.getInstance().applyJson(adv.getAsJsonArray());
                 }
 
-                int version = JsonUtils.getIntegerOrDefault(
-                    root,
-                    "configVersion",
-                    0
-                );
+                int version = JsonUtils.getIntegerOrDefault(root, "configVersion", 0);
             }
         }
         FiltersHandler.getInstance().loadFilters();
     }
 
     public static void saveFromFile() {
-        File dir = FileUtils
-            .getConfigDirectory()
-            .toPath()
-            .resolve("advancedchat")
-            .toFile();
+        File dir = FileUtils.getConfigDirectory().toPath().resolve("advancedchat").toFile();
 
         if ((dir.exists() && dir.isDirectory()) || dir.mkdirs()) {
             JsonObject root = new JsonObject();
@@ -115,17 +109,11 @@ public class FiltersConfigStorage implements IConfigHandler {
                 imported.add(s);
             }
             root.add(FILTER_KEY, arr);
-            root.add(
-                ADVANCED_FILTER_KEY,
-                ScriptManager.getInstance().getJson()
-            );
+            root.add(ADVANCED_FILTER_KEY, ScriptManager.getInstance().getJson());
             root.add(IMPORTED_KEY, imported);
             root.add("config_version", new JsonPrimitive(CONFIG_VERSION));
 
-            ConfigStorage.writeJsonToFile(
-                root,
-                new File(dir, CONFIG_FILE_NAME)
-            );
+            ConfigStorage.writeJsonToFile(root, new File(dir, CONFIG_FILE_NAME));
         }
     }
 

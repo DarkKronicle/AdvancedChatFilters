@@ -20,7 +20,6 @@
     ]
   },
   "mixins": [
-    "advancedchatfilters.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.8.9+build.204",

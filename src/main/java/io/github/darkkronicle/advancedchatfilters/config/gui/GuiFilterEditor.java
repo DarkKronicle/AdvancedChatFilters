@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2021 DarkKronicle
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 package io.github.darkkronicle.advancedchatfilters.config.gui;
 
 import com.google.common.collect.ImmutableList;
@@ -58,12 +65,7 @@ public class GuiFilterEditor extends GuiBase {
     }
 
     @Override
-    public void render(
-        MatrixStack matrixStack,
-        int mouseX,
-        int mouseY,
-        float partialTicks
-    ) {
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
@@ -89,13 +91,7 @@ public class GuiFilterEditor extends GuiBase {
     }
 
     private int createButton(int x, int y, int width, FilterTab tab) {
-        ButtonGeneric button = new ButtonGeneric(
-            x,
-            y,
-            width,
-            20,
-            tab.getDisplayName()
-        );
+        ButtonGeneric button = new ButtonGeneric(x, y, width, 20, tab.getDisplayName());
         button.setEnabled(this.tab != tab);
         this.addButton(button, new ButtonListenerFilterTabs(tab, this));
 
@@ -109,85 +105,48 @@ public class GuiFilterEditor extends GuiBase {
     public void save() {
         filter.getName().config.setValueFromString(name.getText());
         filter.getFindString().config.setValueFromString(findString.getText());
-        filter
-            .getReplaceTo()
-            .config.setValueFromString(replaceString.getText());
-        filter
-            .getTextColor()
-            .config.setIntegerValue(textColor.getAndRefreshColor().color());
-        filter
-            .getReplaceTextColor()
-            .config.setBooleanValue(setTextColor.isCurrentlyOn());
-        filter
-            .getReplaceType()
-            .config.setOptionListValue(replaceTypeWidget.getSelectedEntry());
-        filter
-            .getBackgroundColor()
-            .config.setIntegerValue(
-                backgroundColor.getAndRefreshColor().color()
-            );
-        filter
-            .getReplaceBackgroundColor()
-            .config.setBooleanValue(setBackgroundColor.isCurrentlyOn());
-        filter
-            .getStripColors()
-            .config.setBooleanValue(stripColors.isCurrentlyOn());
+        filter.getReplaceTo().config.setValueFromString(replaceString.getText());
+        filter.getTextColor().config.setIntegerValue(textColor.getAndRefreshColor().color());
+        filter.getReplaceTextColor().config.setBooleanValue(setTextColor.isCurrentlyOn());
+        filter.getReplaceType().config.setOptionListValue(replaceTypeWidget.getSelectedEntry());
+        filter.getBackgroundColor()
+                .config
+                .setIntegerValue(backgroundColor.getAndRefreshColor().color());
+        filter.getReplaceBackgroundColor()
+                .config
+                .setBooleanValue(setBackgroundColor.isCurrentlyOn());
+        filter.getStripColors().config.setBooleanValue(stripColors.isCurrentlyOn());
         FiltersHandler.getInstance().loadFilters();
     }
 
     private void createButtons(int x, int y) {
         String backText = ButtonListener.Type.BACK.getDisplayName();
         int backWidth = StringUtils.getStringWidth(backText) + 10;
-        ButtonGeneric back = new ButtonGeneric(
-            x + backWidth,
-            y,
-            backWidth,
-            true,
-            backText
-        );
-        this.addButton(
-                back,
-                new ButtonListener(ButtonListener.Type.BACK, this)
-            );
+        ButtonGeneric back = new ButtonGeneric(x + backWidth, y, backWidth, true, backText);
+        this.addButton(back, new ButtonListener(ButtonListener.Type.BACK, this));
         int topx = x;
         topx += back.getWidth() + 2;
 
         String exportText = ButtonListener.Type.EXPORT.getDisplayName();
         int exportWidth = StringUtils.getStringWidth(exportText) + 10;
-        ButtonGeneric export = new ButtonGeneric(
-            topx + exportWidth,
-            y,
-            exportWidth,
-            true,
-            exportText
-        );
-        this.addButton(
-                export,
-                new ButtonListener(ButtonListener.Type.EXPORT, this)
-            );
+        ButtonGeneric export =
+                new ButtonGeneric(topx + exportWidth, y, exportWidth, true, exportText);
+        this.addButton(export, new ButtonListener(ButtonListener.Type.EXPORT, this));
         y += back.getHeight() + 2;
         y += this.addLabel(x, y, filter.getName().config) + 1;
-        name =
-            this.addStringConfigButton(
-                    x,
-                    y,
-                    getWidth(),
-                    10,
-                    filter.getName().config
-                );
+        name = this.addStringConfigButton(x, y, getWidth(), 10, filter.getName().config);
         y += name.getHeight() + 4;
 
         // Strip colors
         y += this.addLabel(x, y, filter.getStripColors().config);
         stripColors =
-            new WidgetToggle(
-                x,
-                y,
-                getWidth(),
-                false,
-                "advancedchatfilters.config.filter.textcoloractive",
-                filter.getStripColors().config.getBooleanValue()
-            );
+                new WidgetToggle(
+                        x,
+                        y,
+                        getWidth(),
+                        false,
+                        "advancedchatfilters.config.filter.textcoloractive",
+                        filter.getStripColors().config.getBooleanValue());
         this.addButton(stripColors, null);
         y += stripColors.getHeight() + 2;
 
@@ -195,90 +154,69 @@ public class GuiFilterEditor extends GuiBase {
         this.addLabel(x + getWidth() / 2, y, filter.getFindType().config);
         y += this.addLabel(x, y, filter.getFindString().config) + 1;
         findString =
-            this.addStringConfigButton(
-                    x,
-                    y,
-                    getWidth() / 2 - 1,
-                    18,
-                    filter.getFindString().config
-                );
+                this.addStringConfigButton(
+                        x, y, getWidth() / 2 - 1, 18, filter.getFindString().config);
         findString.setMaxLength(64000);
         findString.setText(filter.getFindString().config.getStringValue());
-        ConfigButtonOptionList findType = new ConfigButtonOptionList(
-            x + getWidth() / 2 + 1,
-            y,
-            getWidth() / 2 - 1,
-            20,
-            filter.getFindType().config
-        );
+        ConfigButtonOptionList findType =
+                new ConfigButtonOptionList(
+                        x + getWidth() / 2 + 1,
+                        y,
+                        getWidth() / 2 - 1,
+                        20,
+                        filter.getFindType().config);
         this.addButton(findType, null);
         y += findType.getHeight() + 2;
 
         // Text color
         this.addLabel(x, y, filter.getTextColor().config);
-        y +=
-            this.addLabel(
-                    x + getWidth() / 2,
-                    y,
-                    filter.getReplaceTextColor().config
-                ) +
-            1;
+        y += this.addLabel(x + getWidth() / 2, y, filter.getReplaceTextColor().config) + 1;
         textColor =
-            new WidgetColor(
-                x,
-                y,
-                getWidth() / 2 - 1,
-                18,
-                filter.getTextColor().config.getSimpleColor(),
-                textRenderer
-            );
+                new WidgetColor(
+                        x,
+                        y,
+                        getWidth() / 2 - 1,
+                        18,
+                        filter.getTextColor().config.getSimpleColor(),
+                        textRenderer);
         this.addTextField(textColor, null);
         setTextColor =
-            new WidgetToggle(
-                x + getWidth() / 2 + 1,
-                y,
-                getWidth() / 2 - 1,
-                false,
-                "advancedchatfilters.config.filter.textcoloractive",
-                filter.getReplaceTextColor().config.getBooleanValue()
-            );
+                new WidgetToggle(
+                        x + getWidth() / 2 + 1,
+                        y,
+                        getWidth() / 2 - 1,
+                        false,
+                        "advancedchatfilters.config.filter.textcoloractive",
+                        filter.getReplaceTextColor().config.getBooleanValue());
         this.addButton(setTextColor, null);
         y += findType.getHeight() + 2;
 
         // Background color
         // If the HUD module isn't active, changing this will do nothing
-        boolean enableBackgroundColor = ModuleHandler
-            .getInstance()
-            .fromId("advancedchathud")
-            .isPresent();
+        boolean enableBackgroundColor =
+                ModuleHandler.getInstance().fromId("advancedchathud").isPresent();
         if (enableBackgroundColor) {
             this.addLabel(x, y, filter.getBackgroundColor().config);
             y +=
-                this.addLabel(
-                        x + getWidth() / 2,
-                        y,
-                        filter.getReplaceBackgroundColor().config
-                    ) +
-                1;
+                    this.addLabel(x + getWidth() / 2, y, filter.getReplaceBackgroundColor().config)
+                            + 1;
         }
         backgroundColor =
-            new WidgetColor(
-                x,
-                y,
-                getWidth() / 2 - 1,
-                18,
-                filter.getBackgroundColor().config.getSimpleColor(),
-                textRenderer
-            );
+                new WidgetColor(
+                        x,
+                        y,
+                        getWidth() / 2 - 1,
+                        18,
+                        filter.getBackgroundColor().config.getSimpleColor(),
+                        textRenderer);
         setBackgroundColor =
-            new WidgetToggle(
-                x + getWidth() / 2 + 1,
-                y,
-                getWidth() / 2 - 1,
-                false,
-                "advancedchatfilters.config.filter.backgroundcoloractive",
-                filter.getReplaceBackgroundColor().config.getBooleanValue()
-            );
+                new WidgetToggle(
+                        x + getWidth() / 2 + 1,
+                        y,
+                        getWidth() / 2 - 1,
+                        false,
+                        "advancedchatfilters.config.filter.backgroundcoloractive",
+                        filter.getReplaceBackgroundColor().config.getBooleanValue());
         if (enableBackgroundColor) {
             this.addTextField(backgroundColor, null);
             this.addButton(setBackgroundColor, null);
@@ -290,90 +228,51 @@ public class GuiFilterEditor extends GuiBase {
         this.addLabel(x + getWidth() / 2, y, filter.getReplaceType().config);
         y += this.addLabel(x, y, filter.getReplaceTo().config) + 1;
         replaceString =
-            this.addStringConfigButton(
-                    x,
-                    y,
-                    getWidth() / 2 - 1,
-                    18,
-                    filter.getReplaceTo().config
-                );
+                this.addStringConfigButton(
+                        x, y, getWidth() / 2 - 1, 18, filter.getReplaceTo().config);
         replaceString.setMaxLength(64000);
         replaceString.setText(filter.getReplaceTo().config.getStringValue());
         replaceTypeWidget =
-            new WidgetDropDownList<>(
-                x + getWidth() / 2 + 1,
-                y,
-                getWidth() / 2 - 1,
-                20,
-                200,
-                10,
-                ImmutableList.copyOf(
-                    MatchReplaceRegistry.getInstance().getAll()
-                ),
-                MatchReplaceRegistry.MatchReplaceOption::getDisplayName
-            );
+                new WidgetDropDownList<>(
+                        x + getWidth() / 2 + 1,
+                        y,
+                        getWidth() / 2 - 1,
+                        20,
+                        200,
+                        10,
+                        ImmutableList.copyOf(MatchReplaceRegistry.getInstance().getAll()),
+                        MatchReplaceRegistry.MatchReplaceOption::getDisplayName);
         replaceTypeWidget.setZLevel(getZOffset() + 100);
         replaceTypeWidget.setSelectedEntry(
-            (MatchReplaceRegistry.MatchReplaceOption) filter
-                .getReplaceType()
-                .config.getOptionListValue()
-        );
+                (MatchReplaceRegistry.MatchReplaceOption)
+                        filter.getReplaceType().config.getOptionListValue());
         this.addWidget(replaceTypeWidget);
         y += findType.getHeight() + 2;
     }
 
     private int addLabel(int x, int y, IConfigBase config) {
-        int width = StringUtils.getStringWidth(
-            config.getConfigGuiDisplayName()
-        );
-        WidgetLabelHoverable label = new WidgetLabelHoverable(
-            x,
-            y,
-            width,
-            8,
-            ColorUtil.WHITE.color(),
-            config.getConfigGuiDisplayName()
-        );
+        int width = StringUtils.getStringWidth(config.getConfigGuiDisplayName());
+        WidgetLabelHoverable label =
+                new WidgetLabelHoverable(
+                        x, y, width, 8, ColorUtil.WHITE.color(), config.getConfigGuiDisplayName());
         label.setHoverLines(StringUtils.translate(config.getComment()));
         this.addWidget(label);
         return 8;
     }
 
-    private int addLabel(
-        int x,
-        int y,
-        String nameTranslation,
-        String hoverTranslation
-    ) {
+    private int addLabel(int x, int y, String nameTranslation, String hoverTranslation) {
         String display = StringUtils.translate(nameTranslation);
         int width = StringUtils.getStringWidth(display);
-        WidgetLabelHoverable label = new WidgetLabelHoverable(
-            x,
-            y,
-            width,
-            8,
-            ColorUtil.WHITE.color(),
-            display
-        );
+        WidgetLabelHoverable label =
+                new WidgetLabelHoverable(x, y, width, 8, ColorUtil.WHITE.color(), display);
         label.setHoverLines(StringUtils.translate(hoverTranslation));
         this.addWidget(label);
         return 8;
     }
 
     private GuiTextFieldGeneric addStringConfigButton(
-        int x,
-        int y,
-        int width,
-        int height,
-        ConfigString conf
-    ) {
-        GuiTextFieldGeneric name = new GuiTextFieldGeneric(
-            x,
-            y,
-            width,
-            height,
-            this.textRenderer
-        );
+            int x, int y, int width, int height, ConfigString conf) {
+        GuiTextFieldGeneric name = new GuiTextFieldGeneric(x, y, width, height, this.textRenderer);
         name.setMaxLength(128);
         name.setText(conf.getStringValue());
         this.addTextField(name, null);
@@ -395,17 +294,12 @@ public class GuiFilterEditor extends GuiBase {
         }
 
         @Override
-        public void actionPerformedWithButton(
-            ButtonBase button,
-            int mouseButton
-        ) {
+        public void actionPerformedWithButton(ButtonBase button, int mouseButton) {
             if (this.type == Type.BACK) {
                 parent.back();
             } else if (this.type == Type.EXPORT) {
                 parent.save();
-                GuiBase.openGui(
-                    SharingScreen.fromFilter(parent.filter, parent)
-                );
+                GuiBase.openGui(SharingScreen.fromFilter(parent.filter, parent));
             }
         }
 
@@ -448,30 +342,21 @@ public class GuiFilterEditor extends GuiBase {
         }
     }
 
-    public static class ButtonListenerFilterTabs
-        implements IButtonActionListener {
+    public static class ButtonListenerFilterTabs implements IButtonActionListener {
 
         private final FilterTab tab;
         private final GuiFilterEditor parent;
 
-        public ButtonListenerFilterTabs(
-            FilterTab type,
-            GuiFilterEditor parent
-        ) {
+        public ButtonListenerFilterTabs(FilterTab type, GuiFilterEditor parent) {
             this.parent = parent;
             this.tab = type;
         }
 
         @Override
-        public void actionPerformedWithButton(
-            ButtonBase button,
-            int mouseButton
-        ) {
+        public void actionPerformedWithButton(ButtonBase button, int mouseButton) {
             parent.tab = tab;
             if (tab == FilterTab.CONFIG) {
-                GuiBase.openGui(
-                    new GuiFilterEditor(parent.filter, parent.getParent())
-                );
+                GuiBase.openGui(new GuiFilterEditor(parent.filter, parent.getParent()));
             } else if (tab == FilterTab.PROCESSORS) {
                 GuiBase.openGui(new GuiFilterProcessors(this.parent));
             }

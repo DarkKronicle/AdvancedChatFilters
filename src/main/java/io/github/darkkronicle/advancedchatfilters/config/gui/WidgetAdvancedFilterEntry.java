@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2021 DarkKronicle
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 package io.github.darkkronicle.advancedchatfilters.config.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -24,12 +31,10 @@ import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 
 @Environment(EnvType.CLIENT)
-public class WidgetAdvancedFilterEntry
-    extends WidgetListEntryBase<ScriptFilter> {
+public class WidgetAdvancedFilterEntry extends WidgetListEntryBase<ScriptFilter> {
 
     private final WidgetListAdvancedFilters parent;
     private final boolean isOdd;
@@ -38,15 +43,14 @@ public class WidgetAdvancedFilterEntry
     private final TextFieldWrapper<WidgetIntBox> num;
 
     public WidgetAdvancedFilterEntry(
-        int x,
-        int y,
-        int width,
-        int height,
-        boolean isOdd,
-        ScriptFilter filter,
-        int listIndex,
-        WidgetListAdvancedFilters parent
-    ) {
+            int x,
+            int y,
+            int width,
+            int height,
+            boolean isOdd,
+            ScriptFilter filter,
+            int listIndex,
+            WidgetListAdvancedFilters parent) {
         super(x, y, width, height, filter, listIndex);
         this.parent = parent;
         this.isOdd = isOdd;
@@ -55,70 +59,51 @@ public class WidgetAdvancedFilterEntry
         y += 1;
 
         int pos = x + width - 2;
-        WidgetIntBox num = new WidgetIntBox(
-            pos - 40,
-            y,
-            40,
-            20,
-            MinecraftClient.getInstance().textRenderer
-        );
+        WidgetIntBox num =
+                new WidgetIntBox(pos - 40, y, 40, 20, MinecraftClient.getInstance().textRenderer);
         num.setText(filter.getOrder().toString());
-        num.setApply(() -> {
-            Integer order = num.getInt();
-            if (order == null) {
-                order = 0;
-            }
-            this.filter.setOrder(order);
-            Collections.sort(ScriptManager.getInstance().getFilters());
-            FiltersHandler.getInstance().loadFilters();
-            this.parent.refreshEntries();
-        });
+        num.setApply(
+                () -> {
+                    Integer order = num.getInt();
+                    if (order == null) {
+                        order = 0;
+                    }
+                    this.filter.setOrder(order);
+                    Collections.sort(ScriptManager.getInstance().getFilters());
+                    FiltersHandler.getInstance().loadFilters();
+                    this.parent.refreshEntries();
+                });
         this.num =
-            new TextFieldWrapper<>(
-                num,
-                new ITextFieldListener<WidgetIntBox>() {
-                    @Override
-                    public boolean onTextChange(WidgetIntBox textField) {
-                        return false;
-                    }
+                new TextFieldWrapper<>(
+                        num,
+                        new ITextFieldListener<WidgetIntBox>() {
+                            @Override
+                            public boolean onTextChange(WidgetIntBox textField) {
+                                return false;
+                            }
 
-                    @Override
-                    public boolean onGuiClosed(WidgetIntBox textField) {
-                        Integer order = num.getInt();
-                        if (order == null) {
-                            order = 0;
-                        }
-                        filter.setOrder(order);
-                        Collections.sort(
-                            ScriptManager.getInstance().getFilters()
-                        );
-                        return false;
-                    }
-                }
-            );
+                            @Override
+                            public boolean onGuiClosed(WidgetIntBox textField) {
+                                Integer order = num.getInt();
+                                if (order == null) {
+                                    order = 0;
+                                }
+                                filter.setOrder(order);
+                                Collections.sort(ScriptManager.getInstance().getFilters());
+                                return false;
+                            }
+                        });
         this.parent.addTextField(this.num);
         pos -= num.getWidth() + 2;
-        ButtonOnOff active = addOnOffButton(
-            pos,
-            y,
-            ButtonListener.Type.ACTIVE,
-            filter.getActive().getBooleanValue()
-        );
+        ButtonOnOff active =
+                addOnOffButton(
+                        pos, y, ButtonListener.Type.ACTIVE, filter.getActive().getBooleanValue());
         pos -= active.getWidth() + 1;
         if (!filter.isImported()) {
             String importName = ButtonListener.Type.IMPORT.getDisplayName();
             int importWidth = StringUtils.getStringWidth(importName) + 2;
-            ButtonGeneric importButton = new ButtonGeneric(
-                pos,
-                y,
-                importWidth,
-                true,
-                importName
-            );
-            this.addButton(
-                    importButton,
-                    new ButtonListener(ButtonListener.Type.IMPORT, this)
-                );
+            ButtonGeneric importButton = new ButtonGeneric(pos, y, importWidth, true, importName);
+            this.addButton(importButton, new ButtonListener(ButtonListener.Type.IMPORT, this));
             active.setEnabled(false);
             num.setEditable(false);
             pos -= importButton.getWidth() + 1;
@@ -128,67 +113,34 @@ public class WidgetAdvancedFilterEntry
     }
 
     private ButtonOnOff addOnOffButton(
-        int xRight,
-        int y,
-        ButtonListener.Type type,
-        boolean isCurrentlyOn
-    ) {
-        ButtonOnOff button = new ButtonOnOff(
-            xRight,
-            y,
-            -1,
-            true,
-            type.translate,
-            isCurrentlyOn
-        );
+            int xRight, int y, ButtonListener.Type type, boolean isCurrentlyOn) {
+        ButtonOnOff button = new ButtonOnOff(xRight, y, -1, true, type.translate, isCurrentlyOn);
         this.addButton(button, new ButtonListener(type, this));
 
         return button;
     }
 
     @Override
-    public void render(
-        int mouseX,
-        int mouseY,
-        boolean selected,
-        MatrixStack matrixStack
-    ) {
+    public void render(int mouseX, int mouseY, boolean selected, MatrixStack matrixStack) {
         RenderUtils.color(1f, 1f, 1f, 1f);
 
         // Draw a lighter background for the hovered and the selected entry
         if (selected || this.isMouseOver(mouseX, mouseY)) {
             RenderUtils.drawRect(
-                this.x,
-                this.y,
-                this.width,
-                this.height,
-                ColorUtil.WHITE.withAlpha(150).color()
-            );
+                    this.x,
+                    this.y,
+                    this.width,
+                    this.height,
+                    ColorUtil.WHITE.withAlpha(150).color());
         } else if (this.isOdd) {
             RenderUtils.drawRect(
-                this.x,
-                this.y,
-                this.width,
-                this.height,
-                ColorUtil.WHITE.withAlpha(70).color()
-            );
+                    this.x, this.y, this.width, this.height, ColorUtil.WHITE.withAlpha(70).color());
         } else {
             RenderUtils.drawRect(
-                this.x,
-                this.y,
-                this.width,
-                this.height,
-                ColorUtil.WHITE.withAlpha(50).color()
-            );
+                    this.x, this.y, this.width, this.height, ColorUtil.WHITE.withAlpha(50).color());
         }
         String name = this.filter.getDisplayName();
-        this.drawString(
-                this.x + 4,
-                this.y + 7,
-                ColorUtil.WHITE.color(),
-                name,
-                matrixStack
-            );
+        this.drawString(this.x + 4, this.y + 7, ColorUtil.WHITE.color(), name, matrixStack);
 
         RenderUtils.color(1f, 1f, 1f, 1f);
         RenderSystem.disableBlend();
@@ -211,21 +163,16 @@ public class WidgetAdvancedFilterEntry
         }
 
         @Override
-        public void actionPerformedWithButton(
-            ButtonBase button,
-            int mouseButton
-        ) {
+        public void actionPerformedWithButton(ButtonBase button, int mouseButton) {
             if (type == Type.ACTIVE) {
-                this.parent.filter.getActive()
-                    .setBooleanValue(
-                        !this.parent.filter.getActive().getBooleanValue()
-                    );
+                this.parent
+                        .filter
+                        .getActive()
+                        .setBooleanValue(!this.parent.filter.getActive().getBooleanValue());
                 FiltersHandler.getInstance().loadFilters();
                 parent.parent.refreshEntries();
             } else if (type == Type.IMPORT) {
-                FiltersConfigStorage.IMPORTED_FILTERS.add(
-                    parent.filter.getId()
-                );
+                FiltersConfigStorage.IMPORTED_FILTERS.add(parent.filter.getId());
                 ScriptManager.getInstance().init();
                 parent.parent.refreshEntries();
             }
@@ -275,11 +222,7 @@ public class WidgetAdvancedFilterEntry
     }
 
     @Override
-    protected boolean onMouseClickedImpl(
-        int mouseX,
-        int mouseY,
-        int mouseButton
-    ) {
+    protected boolean onMouseClickedImpl(int mouseX, int mouseY, int mouseButton) {
         if (super.onMouseClickedImpl(mouseX, mouseY, mouseButton)) {
             return true;
         }
@@ -287,27 +230,21 @@ public class WidgetAdvancedFilterEntry
         boolean ret = false;
 
         if (this.num != null) {
-            ret =
-                this.num.getTextField()
-                    .mouseClicked(mouseX, mouseY, mouseButton);
+            ret = this.num.getTextField().mouseClicked(mouseX, mouseY, mouseButton);
         }
 
         if (!this.subWidgets.isEmpty()) {
             for (WidgetBase widget : this.subWidgets) {
                 ret |=
-                    widget.isMouseOver(mouseX, mouseY) &&
-                    widget.onMouseClicked(mouseX, mouseY, mouseButton);
+                        widget.isMouseOver(mouseX, mouseY)
+                                && widget.onMouseClicked(mouseX, mouseY, mouseButton);
             }
         }
 
         return ret;
     }
 
-    protected void drawTextFields(
-        int mouseX,
-        int mouseY,
-        MatrixStack matrixStack
-    ) {
+    protected void drawTextFields(int mouseX, int mouseY, MatrixStack matrixStack) {
         if (this.num != null) {
             this.num.getTextField().render(matrixStack, mouseX, mouseY, 0f);
         }
@@ -315,11 +252,7 @@ public class WidgetAdvancedFilterEntry
 
     @Override
     public void postRenderHovered(
-        int mouseX,
-        int mouseY,
-        boolean selected,
-        MatrixStack matrixStack
-    ) {
+            int mouseX, int mouseY, boolean selected, MatrixStack matrixStack) {
         super.postRenderHovered(mouseX, mouseY, selected, matrixStack);
 
         List<String> hoverLines;
@@ -328,28 +261,18 @@ public class WidgetAdvancedFilterEntry
             hoverLines = this.filter.getHoverLines();
         } else {
             hoverLines =
-                Arrays.asList(
-                    StringUtils
-                        .translate(
-                            "advancedchatfilters.config.filtermenu.info.import"
-                        )
-                        .split("\n")
-                );
+                    Arrays.asList(
+                            StringUtils.translate(
+                                            "advancedchatfilters.config.filtermenu.info.import")
+                                    .split("\n"));
         }
 
         if (hoverLines != null && hoverLines.size() > 0) {
-            if (
-                mouseX >= this.x &&
-                mouseX < this.buttonStartX &&
-                mouseY >= this.y &&
-                mouseY <= this.y + this.height
-            ) {
-                RenderUtils.drawHoverText(
-                    mouseX,
-                    mouseY,
-                    hoverLines,
-                    matrixStack
-                );
+            if (mouseX >= this.x
+                    && mouseX < this.buttonStartX
+                    && mouseY >= this.y
+                    && mouseY <= this.y + this.height) {
+                RenderUtils.drawHoverText(mouseX, mouseY, hoverLines, matrixStack);
             }
         }
     }

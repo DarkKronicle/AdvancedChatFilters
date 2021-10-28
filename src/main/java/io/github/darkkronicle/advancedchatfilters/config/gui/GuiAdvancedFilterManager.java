@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2021 DarkKronicle
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 package io.github.darkkronicle.advancedchatfilters.config.gui;
 
 import fi.dy.masa.malilib.gui.GuiBase;
@@ -15,26 +22,19 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.Util;
 
 public class GuiAdvancedFilterManager
-    extends GuiListBase<ScriptFilter, WidgetAdvancedFilterEntry, WidgetListAdvancedFilters>
-    implements ISelectionListener<ScriptFilter> {
+        extends GuiListBase<ScriptFilter, WidgetAdvancedFilterEntry, WidgetListAdvancedFilters>
+        implements ISelectionListener<ScriptFilter> {
 
     public GuiAdvancedFilterManager(Screen parent) {
         super(10, 60);
         this.setParent(parent);
-        this.title =
-            StringUtils.translate("advancedchatfilters.screen.advancedfilters");
+        this.title = StringUtils.translate("advancedchatfilters.screen.advancedfilters");
     }
 
     @Override
     protected WidgetListAdvancedFilters createListWidget(int listX, int listY) {
         return new WidgetListAdvancedFilters(
-            listX,
-            listY,
-            this.getBrowserWidth(),
-            this.getBrowserHeight(),
-            this,
-            this
-        );
+                listX, listY, this.getBrowserWidth(), this.getBrowserHeight(), this, this);
     }
 
     @Override
@@ -55,32 +55,14 @@ public class GuiAdvancedFilterManager
 
         String backText = ButtonListener.Type.BACK.getDisplayName();
         int backWidth = StringUtils.getStringWidth(backText) + 10;
-        ButtonGeneric back = new ButtonGeneric(
-            x + backWidth,
-            y,
-            backWidth,
-            true,
-            backText
-        );
-        this.addButton(
-                back,
-                new ButtonListener(ButtonListener.Type.BACK, this)
-            );
+        ButtonGeneric back = new ButtonGeneric(x + backWidth, y, backWidth, true, backText);
+        this.addButton(back, new ButtonListener(ButtonListener.Type.BACK, this));
         x += back.getWidth() + 2;
 
         String folderText = ButtonListener.Type.OPEN_FOLDER.getDisplayName();
         int folderWidth = StringUtils.getStringWidth(folderText) + 10;
-        ButtonGeneric folder = new ButtonGeneric(
-            x + folderWidth,
-            y,
-            folderWidth,
-            true,
-            folderText
-        );
-        this.addButton(
-                folder,
-                new ButtonListener(ButtonListener.Type.OPEN_FOLDER, this)
-            );
+        ButtonGeneric folder = new ButtonGeneric(x + folderWidth, y, folderWidth, true, folderText);
+        this.addButton(folder, new ButtonListener(ButtonListener.Type.OPEN_FOLDER, this));
 
         this.setListPosition(this.getListX(), 68);
         this.reCreateListWidget();
@@ -125,32 +107,23 @@ public class GuiAdvancedFilterManager
         private final GuiAdvancedFilterManager parent;
         private final ButtonListener.Type type;
 
-        public ButtonListener(
-            ButtonListener.Type type,
-            GuiAdvancedFilterManager parent
-        ) {
+        public ButtonListener(ButtonListener.Type type, GuiAdvancedFilterManager parent) {
             this.type = type;
             this.parent = parent;
         }
 
         @Override
-        public void actionPerformedWithButton(
-            ButtonBase button,
-            int mouseButton
-        ) {
+        public void actionPerformedWithButton(ButtonBase button, int mouseButton) {
             if (this.type == ButtonListener.Type.BACK) {
                 parent.back();
             } else if (this.type == Type.OPEN_FOLDER) {
-                Util
-                    .getOperatingSystem()
-                    .open(
-                        FileUtils
-                            .getConfigDirectory()
-                            .toPath()
-                            .resolve("advancedchat")
-                            .resolve("filters")
-                            .toFile()
-                    );
+                Util.getOperatingSystem()
+                        .open(
+                                FileUtils.getConfigDirectory()
+                                        .toPath()
+                                        .resolve("advancedchat")
+                                        .resolve("filters")
+                                        .toFile());
             }
         }
 

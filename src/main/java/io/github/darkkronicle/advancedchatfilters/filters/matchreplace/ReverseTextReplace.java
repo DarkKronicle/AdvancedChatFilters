@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2021 DarkKronicle
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 package io.github.darkkronicle.advancedchatfilters.filters.matchreplace;
 
 import io.github.darkkronicle.advancedchatcore.util.FluidText;
@@ -14,11 +21,7 @@ import net.fabricmc.api.Environment;
 public class ReverseTextReplace implements IMatchReplace {
 
     @Override
-    public Optional<FluidText> filter(
-        ReplaceFilter filter,
-        FluidText text,
-        SearchResult search
-    ) {
+    public Optional<FluidText> filter(ReplaceFilter filter, FluidText text, SearchResult search) {
         HashMap<StringMatch, FluidText.StringInsert> replaceMatches = new HashMap<>();
         for (StringMatch match : search.getMatches()) {
             if (match.match.length() <= 1) {
@@ -26,14 +29,11 @@ public class ReverseTextReplace implements IMatchReplace {
                 continue;
             }
             replaceMatches.put(
-                match,
-                (current, match1) ->
-                    new FluidText(
-                        current.withMessage(
-                            new StringBuilder(match.match).reverse().toString()
-                        )
-                    )
-            );
+                    match,
+                    (current, match1) ->
+                            new FluidText(
+                                    current.withMessage(
+                                            new StringBuilder(match.match).reverse().toString())));
         }
         if (replaceMatches.size() == 0) {
             return Optional.empty();

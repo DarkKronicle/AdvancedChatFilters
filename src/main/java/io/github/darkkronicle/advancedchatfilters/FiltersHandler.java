@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2021 DarkKronicle
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 package io.github.darkkronicle.advancedchatfilters;
 
 import io.github.darkkronicle.advancedchatcore.interfaces.IMessageFilter;
@@ -32,8 +39,7 @@ public class FiltersHandler implements IMessageFilter {
         return INSTANCE;
     }
 
-    @Getter
-    private ArrayList<ColorFilter> colorFilters = new ArrayList<>();
+    @Getter private ArrayList<ColorFilter> colorFilters = new ArrayList<>();
 
     private ArrayList<ParentFilter> filters = new ArrayList<>();
 
@@ -76,42 +82,28 @@ public class FiltersHandler implements IMessageFilter {
         if (!filter.getActive().config.getBooleanValue()) {
             return null;
         }
-        ParentFilter filt = new ParentFilter(
-            filter.getFind(),
-            filter.getFindString().config.getStringValue().replace("&", "§"),
-            filter.getStripColors().config.getBooleanValue()
-        );
+        ParentFilter filt =
+                new ParentFilter(
+                        filter.getFind(),
+                        filter.getFindString().config.getStringValue().replace("&", "§"),
+                        filter.getStripColors().config.getBooleanValue());
         if (filter.getReplace() != null) {
             if (filter.getReplaceTextColor().config.getBooleanValue()) {
                 filt.addFilter(
-                    new ReplaceFilter(
-                        filter
-                            .getReplaceTo()
-                            .config.getStringValue()
-                            .replaceAll("&", "§"),
-                        filter.getReplace(),
-                        filter.getTextColor().config.getSimpleColor()
-                    )
-                );
+                        new ReplaceFilter(
+                                filter.getReplaceTo().config.getStringValue().replaceAll("&", "§"),
+                                filter.getReplace(),
+                                filter.getTextColor().config.getSimpleColor()));
             } else {
                 filt.addFilter(
-                    new ReplaceFilter(
-                        filter
-                            .getReplaceTo()
-                            .config.getStringValue()
-                            .replaceAll("&", "§"),
-                        filter.getReplace(),
-                        null
-                    )
-                );
+                        new ReplaceFilter(
+                                filter.getReplaceTo().config.getStringValue().replaceAll("&", "§"),
+                                filter.getReplace(),
+                                null));
             }
         }
         if (filter.getReplaceBackgroundColor().config.getBooleanValue()) {
-            filt.addFilter(
-                new ColorFilter(
-                    filter.getBackgroundColor().config.getSimpleColor()
-                )
-            );
+            filt.addFilter(new ColorFilter(filter.getBackgroundColor().config.getSimpleColor()));
         }
         if (filter.getProcessors().activeAmount() > 0) {
             if (filter.getProcessors().activeAmount() == 1) {
@@ -120,9 +112,7 @@ public class FiltersHandler implements IMessageFilter {
                     filt.addFilter(new ForwardFilter(filter.getProcessors()));
                 }
             } else {
-                filt.addForwardFilter(
-                    new ForwardFilter(filter.getProcessors())
-                );
+                filt.addForwardFilter(new ForwardFilter(filter.getProcessors()));
             }
         }
         return filt;

@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2021 DarkKronicle
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 package io.github.darkkronicle.advancedchatfilters.filters.matchreplace;
 
 import io.github.darkkronicle.advancedchatcore.util.FindType;
@@ -17,36 +24,28 @@ import net.fabricmc.api.Environment;
 public class RomanNumeralTextReplace implements IMatchReplace {
 
     @Override
-    public Optional<FluidText> filter(
-        ReplaceFilter filter,
-        FluidText text,
-        SearchResult search
-    ) {
+    public Optional<FluidText> filter(ReplaceFilter filter, FluidText text, SearchResult search) {
         HashMap<StringMatch, FluidText.StringInsert> replaceMatches = new HashMap<>();
         for (StringMatch match : search.getMatches()) {
-            List<StringMatch> matches = SearchUtils
-                .findMatches(match.match, "[0-9]+", FindType.REGEX)
-                .orElse(null);
+            List<StringMatch> matches =
+                    SearchUtils.findMatches(match.match, "[0-9]+", FindType.REGEX).orElse(null);
             if (matches == null) {
                 continue;
             }
-            matches.forEach(stringMatch -> {
-                stringMatch.start += match.start;
-                stringMatch.end += match.start;
-            });
+            matches.forEach(
+                    stringMatch -> {
+                        stringMatch.start += match.start;
+                        stringMatch.end += match.start;
+                    });
             for (StringMatch m : matches) {
                 try {
                     replaceMatches.put(
-                        m,
-                        (current, match1) ->
-                            new FluidText(
-                                current.withMessage(
-                                    SearchUtils.toRoman(
-                                        Integer.parseInt(m.match)
-                                    )
-                                )
-                            )
-                    );
+                            m,
+                            (current, match1) ->
+                                    new FluidText(
+                                            current.withMessage(
+                                                    SearchUtils.toRoman(
+                                                            Integer.parseInt(m.match)))));
                 } catch (Exception e) {
                     // Not an integer
                 }

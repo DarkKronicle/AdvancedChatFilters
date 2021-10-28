@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2021 DarkKronicle
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 package io.github.darkkronicle.advancedchatfilters.registry;
 
 import fi.dy.masa.malilib.config.IConfigOptionListEntry;
@@ -14,12 +21,10 @@ import java.util.function.Supplier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-/**
- * Match processor registry
- */
+/** Match processor registry */
 @Environment(EnvType.CLIENT)
 public class MatchProcessorRegistry
-    extends AbstractRegistry<IMatchProcessor, MatchProcessorRegistry.MatchProcessorOption> {
+        extends AbstractRegistry<IMatchProcessor, MatchProcessorRegistry.MatchProcessorOption> {
 
     public static final String NAME = "processors";
 
@@ -61,27 +66,19 @@ public class MatchProcessorRegistry
 
     @Override
     public MatchProcessorOption constructOption(
-        Supplier<IMatchProcessor> iMatchProcessor,
-        String saveString,
-        String translation,
-        String infoTranslation,
-        boolean active,
-        boolean hidden,
-        boolean setDefault
-    ) {
+            Supplier<IMatchProcessor> iMatchProcessor,
+            String saveString,
+            String translation,
+            String infoTranslation,
+            boolean active,
+            boolean hidden,
+            boolean setDefault) {
         return new MatchProcessorOption(
-            iMatchProcessor,
-            saveString,
-            translation,
-            infoTranslation,
-            active,
-            hidden,
-            this
-        );
+                iMatchProcessor, saveString, translation, infoTranslation, active, hidden, this);
     }
 
     public static class MatchProcessorOption
-        implements Translatable, ConfigRegistryOption<IMatchProcessor> {
+            implements Translatable, ConfigRegistryOption<IMatchProcessor> {
 
         private final Supplier<IMatchProcessor> processor;
         private IMatchProcessor process;
@@ -94,14 +91,13 @@ public class MatchProcessorRegistry
 
         // Only register
         protected MatchProcessorOption(
-            Supplier<IMatchProcessor> processor,
-            String saveString,
-            String translation,
-            String infoTranslation,
-            boolean active,
-            boolean hidden,
-            MatchProcessorRegistry registry
-        ) {
+                Supplier<IMatchProcessor> processor,
+                String saveString,
+                String translation,
+                String infoTranslation,
+                boolean active,
+                boolean hidden,
+                MatchProcessorRegistry registry) {
             this.processor = processor;
             this.process = processor.get();
             this.saveString = saveString;
@@ -110,17 +106,13 @@ public class MatchProcessorRegistry
             this.infoTranslation = infoTranslation;
             this.hidden = hidden;
             this.active =
-                ConfigStorage.SaveableConfig.fromConfig(
-                    "active",
-                    new ConfigBoolean(translation, active, infoTranslation)
-                );
+                    ConfigStorage.SaveableConfig.fromConfig(
+                            "active", new ConfigBoolean(translation, active, infoTranslation));
         }
 
         @Override
         public List<String> getHoverLines() {
-            return Arrays.asList(
-                StringUtils.translate(infoTranslation).split("\n")
-            );
+            return Arrays.asList(StringUtils.translate(infoTranslation).split("\n"));
         }
 
         @Override
@@ -169,20 +161,15 @@ public class MatchProcessorRegistry
         }
 
         @Override
-        public MatchProcessorOption copy(
-            AbstractRegistry<IMatchProcessor, ?> registry
-        ) {
+        public MatchProcessorOption copy(AbstractRegistry<IMatchProcessor, ?> registry) {
             return new MatchProcessorOption(
-                processor,
-                saveString,
-                translation,
-                infoTranslation,
-                isActive(),
-                isHidden(),
-                registry == null
-                    ? this.registry
-                    : (MatchProcessorRegistry) registry
-            );
+                    processor,
+                    saveString,
+                    translation,
+                    infoTranslation,
+                    isActive(),
+                    isHidden(),
+                    registry == null ? this.registry : (MatchProcessorRegistry) registry);
         }
     }
 }

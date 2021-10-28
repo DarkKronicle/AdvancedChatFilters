@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2021 DarkKronicle
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 package io.github.darkkronicle.advancedchatfilters.filters;
 
 import io.github.darkkronicle.advancedchatcore.util.ColorUtil;
@@ -9,15 +16,11 @@ import lombok.NonNull;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-/**
- * Filter used to change the background color of a message.
- */
+/** Filter used to change the background color of a message. */
 @Environment(EnvType.CLIENT)
 public class ColorFilter implements IFilter {
 
-    /**
-     * {@link ColorUtil.SimpleColor} that will change the background color.
-     */
+    /** {@link ColorUtil.SimpleColor} that will change the background color. */
     private final ColorUtil.SimpleColor color;
 
     public ColorFilter(@NonNull ColorUtil.SimpleColor color) {
@@ -26,11 +29,7 @@ public class ColorFilter implements IFilter {
 
     @Override
     public Optional<FluidText> filter(
-        ParentFilter filter,
-        FluidText text,
-        FluidText unfiltered,
-        SearchResult search
-    ) {
+            ParentFilter filter, FluidText text, FluidText unfiltered, SearchResult search) {
         return Optional.empty();
     }
 

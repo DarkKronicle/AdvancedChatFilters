@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2021 DarkKronicle
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 package io.github.darkkronicle.advancedchatfilters.scripting.util;
 
 import io.github.darkkronicle.advancedchatcore.util.FluidText;
@@ -11,23 +18,20 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-/**
- * Utility class to make creating {@link Text} easier for scripts.
- */
+/** Utility class to make creating {@link Text} easier for scripts. */
 @Environment(EnvType.CLIENT)
 public class TextBuilder {
 
     private final FluidText text;
 
-    /**
-     * Create's a new instance with the only text being an empty string.
-     */
+    /** Create's a new instance with the only text being an empty string. */
     public TextBuilder() {
         this("");
     }
 
     /**
      * Create's a new instance with empty style
+     *
      * @param content Content of the text
      */
     public TextBuilder(String content) {
@@ -36,6 +40,7 @@ public class TextBuilder {
 
     /**
      * Get the {@link FluidText}
+     *
      * @return Text that was created
      */
     public FluidText build() {
@@ -49,8 +54,9 @@ public class TextBuilder {
     }
 
     /**
-     * Set's the color based off of an integer. Set's it through *all parts*
-     *   - Color should be hexadecimal
+     * Set's the color based off of an integer. Set's it through *all parts* - Color should be
+     * hexadecimal
+     *
      * @param color Color to set the style to
      */
     public TextBuilder setColor(int color) {
@@ -60,6 +66,7 @@ public class TextBuilder {
 
     /**
      * Set's a style from another one to *all parts*
+     *
      * @param style Style to set
      */
     public TextBuilder setStyle(Style style) {
@@ -69,6 +76,7 @@ public class TextBuilder {
 
     /**
      * Enforces bold or unbold on *all parts*
+     *
      * @param bold If bold or unbold
      */
     public TextBuilder setBold(boolean bold) {
@@ -78,6 +86,7 @@ public class TextBuilder {
 
     /**
      * Enforces italic or not on *all parts*
+     *
      * @param italic If italic or not
      */
     public TextBuilder setItalic(boolean italic) {
@@ -87,6 +96,7 @@ public class TextBuilder {
 
     /**
      * Set's an insertion string that will trigger on click. Will apply to the textbox.
+     *
      * @param insertion The insertion that will get placed
      */
     public TextBuilder setInsertion(String insertion) {
@@ -96,6 +106,7 @@ public class TextBuilder {
 
     /**
      * Enforces underlined or not on *all parts*
+     *
      * @param underline If underlined or not
      */
     public TextBuilder setUnderline(boolean underline) {
@@ -105,6 +116,7 @@ public class TextBuilder {
 
     /**
      * Enforces strikethrough or not on *all parts*
+     *
      * @param strikethrough If strikethrough or not
      */
     public TextBuilder setStrikethrough(boolean strikethrough) {
@@ -115,7 +127,8 @@ public class TextBuilder {
     /**
      * Set's the font using a namespace.
      *
-     * namespace:name
+     * <p>namespace:name
+     *
      * @param namespace Namespace of the identifier
      * @param name Name of the identifier
      */
@@ -127,6 +140,7 @@ public class TextBuilder {
 
     /**
      * Add's a string to the last piece of text. Will inherit the style of the last one.
+     *
      * @param content Content to add
      */
     public TextBuilder concatenate(String content) {
@@ -137,12 +151,8 @@ public class TextBuilder {
     /**
      * Set's the ClickEvent of the text to *all parts*
      *
-     * Possible actions are:
-     * - open_url
-     * - run_command
-     * - suggest_command
-     * - change_page
-     * - copy_to_clipboard
+     * <p>Possible actions are: - open_url - run_command - suggest_command - change_page -
+     * copy_to_clipboard
      *
      * @param action Action that will be set
      * @param value Content of that action
@@ -159,13 +169,11 @@ public class TextBuilder {
 
     /**
      * Set's the {@link Text} that will be shown on hover.
+     *
      * @param hoverText Text for hover
      */
     public TextBuilder setHoverText(Text hoverText) {
-        HoverEvent hover = new HoverEvent(
-            HoverEvent.Action.SHOW_TEXT,
-            hoverText
-        );
+        HoverEvent hover = new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverText);
         applyStyle(style -> style.withHoverEvent(hover));
         return this;
     }

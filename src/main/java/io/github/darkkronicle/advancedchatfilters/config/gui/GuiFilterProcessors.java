@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2021 DarkKronicle
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 package io.github.darkkronicle.advancedchatfilters.config.gui;
 
 import fi.dy.masa.malilib.gui.GuiListBase;
@@ -10,7 +17,10 @@ import io.github.darkkronicle.advancedchatcore.config.gui.widgets.WidgetRegistry
 import io.github.darkkronicle.advancedchatfilters.registry.MatchProcessorRegistry;
 
 public class GuiFilterProcessors
-    extends GuiListBase<MatchProcessorRegistry.MatchProcessorOption, WidgetRegistryOptionEntry<MatchProcessorRegistry.MatchProcessorOption>, WidgetListRegistryOption<MatchProcessorRegistry.MatchProcessorOption>> {
+        extends GuiListBase<
+                MatchProcessorRegistry.MatchProcessorOption,
+                WidgetRegistryOptionEntry<MatchProcessorRegistry.MatchProcessorOption>,
+                WidgetListRegistryOption<MatchProcessorRegistry.MatchProcessorOption>> {
 
     private final GuiFilterEditor parent;
 
@@ -52,42 +62,17 @@ public class GuiFilterProcessors
         this.getListWidget().refreshEntries();
     }
 
-    protected int addButton(
-        int x,
-        int y,
-        ButtonListener.Type type,
-        boolean rightAlign
-    ) {
-        ButtonGeneric button = new ButtonGeneric(
-            x,
-            y,
-            -1,
-            rightAlign,
-            type.getDisplayName()
-        );
+    protected int addButton(int x, int y, ButtonListener.Type type, boolean rightAlign) {
+        ButtonGeneric button = new ButtonGeneric(x, y, -1, rightAlign, type.getDisplayName());
         this.addButton(button, new ButtonListener(type, this));
 
         return button.getWidth();
     }
 
-    private int createTabButton(
-        int x,
-        int y,
-        int width,
-        GuiFilterEditor.FilterTab tab
-    ) {
-        ButtonGeneric button = new ButtonGeneric(
-            x,
-            y,
-            width,
-            20,
-            tab.getDisplayName()
-        );
+    private int createTabButton(int x, int y, int width, GuiFilterEditor.FilterTab tab) {
+        ButtonGeneric button = new ButtonGeneric(x, y, width, 20, tab.getDisplayName());
         button.setEnabled(this.parent.tab != tab);
-        this.addButton(
-                button,
-                new GuiFilterEditor.ButtonListenerFilterTabs(tab, this.parent)
-            );
+        this.addButton(button, new GuiFilterEditor.ButtonListenerFilterTabs(tab, this.parent));
 
         return button.getWidth() + 2;
     }
@@ -97,19 +82,16 @@ public class GuiFilterProcessors
     }
 
     @Override
-    protected WidgetListRegistryOption<MatchProcessorRegistry.MatchProcessorOption> createListWidget(
-        int listX,
-        int listY
-    ) {
+    protected WidgetListRegistryOption<MatchProcessorRegistry.MatchProcessorOption>
+            createListWidget(int listX, int listY) {
         return new WidgetListRegistryOption<>(
-            listX,
-            listY,
-            this.getBrowserWidth(),
-            this.getBrowserHeight(),
-            null,
-            parent.filter.getProcessors(),
-            this
-        );
+                listX,
+                listY,
+                this.getBrowserWidth(),
+                this.getBrowserHeight(),
+                null,
+                parent.filter.getProcessors(),
+                this);
     }
 
     @Override
@@ -133,10 +115,7 @@ public class GuiFilterProcessors
         }
 
         @Override
-        public void actionPerformedWithButton(
-            ButtonBase button,
-            int mouseButton
-        ) {
+        public void actionPerformedWithButton(ButtonBase button, int mouseButton) {
             if (this.type == Type.BACK) {
                 this.gui.back();
             }

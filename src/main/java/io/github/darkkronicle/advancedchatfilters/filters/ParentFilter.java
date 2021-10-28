@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2021 DarkKronicle
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 package io.github.darkkronicle.advancedchatfilters.filters;
 
 import io.github.darkkronicle.advancedchatcore.util.ColorUtil;
@@ -27,10 +34,7 @@ public class ParentFilter {
         Optional<FluidText> text;
         Optional<ColorUtil.SimpleColor> color;
 
-        public static FilterResult EMPTY = new FilterResult(
-            Optional.empty(),
-            Optional.empty()
-        );
+        public static FilterResult EMPTY = new FilterResult(Optional.empty(), Optional.empty());
     }
 
     private List<IFilter> filters;
@@ -39,11 +43,7 @@ public class ParentFilter {
     private final String findString;
     private final boolean stripColors;
 
-    public ParentFilter(
-        FindType findType,
-        String findString,
-        boolean stripColors
-    ) {
+    public ParentFilter(FindType findType, String findString, boolean stripColors) {
         filters = new ArrayList<>();
         forwardFilters = new ArrayList<>();
         this.findString = findString;
@@ -69,17 +69,11 @@ public class ParentFilter {
         StringBuilder builder = new StringBuilder("§[ffffff]");
         Style previous = Style.EMPTY;
         for (RawText t : text.getRawTexts()) {
-            if (
-                (
-                    previous.getColor() != null &&
-                    !previous.equals(Style.EMPTY) &&
-                    t.getStyle().equals(Style.EMPTY)
-                ) ||
-                (
-                    t.getStyle().getColor() != null &&
-                    !t.getStyle().getColor().equals(previous.getColor())
-                )
-            ) {
+            if ((previous.getColor() != null
+                            && !previous.equals(Style.EMPTY)
+                            && t.getStyle().equals(Style.EMPTY))
+                    || (t.getStyle().getColor() != null
+                            && !t.getStyle().getColor().equals(previous.getColor()))) {
                 previous = t.getStyle();
                 int iColor;
                 if (previous.getColor() != null) {
@@ -88,12 +82,8 @@ public class ParentFilter {
                     iColor = ColorUtil.WHITE.color();
                 }
                 ColorUtil.SimpleColor color = new ColorUtil.SimpleColor(iColor);
-                String hex = String.format(
-                    "%02x%02x%02x",
-                    color.red(),
-                    color.green(),
-                    color.blue()
-                );
+                String hex =
+                        String.format("%02x%02x%02x", color.red(), color.green(), color.blue());
                 builder.append("§[").append(hex).append(']');
             }
             builder.append(t.getMessage());
@@ -102,15 +92,9 @@ public class ParentFilter {
         return builder.toString();
     }
 
-    public static SearchResult getOffsetMatch(
-        SearchResult result,
-        String original
-    ) {
-        SearchResult hex = SearchResult.searchOf(
-            result.getInput(),
-            "§\\[[a-fA-F0-9]{6}\\]",
-            FindType.REGEX
-        );
+    public static SearchResult getOffsetMatch(SearchResult result, String original) {
+        SearchResult hex =
+                SearchResult.searchOf(result.getInput(), "§\\[[a-fA-F0-9]{6}\\]", FindType.REGEX);
         List<StringMatch> matches = new ArrayList<>();
         for (StringMatch match : result.getMatches()) {
             int depth = 0;
@@ -140,16 +124,9 @@ public class ParentFilter {
             if (start == -1) {
                 start = match.start - depth;
             }
-            matches.add(
-                new StringMatch(original.substring(start, end), start, end)
-            );
+            matches.add(new StringMatch(original.substring(start, end), start, end));
         }
-        return new SearchResult(
-            original,
-            result.getSearch(),
-            result.getMatcher(),
-            matches
-        );
+        return new SearchResult(original, result.getSearch(), result.getMatcher(), matches);
     }
 
     public FilterResult filter(FluidText text, FluidText unfiltered) {
@@ -160,11 +137,7 @@ public class ParentFilter {
         } else {
             searchString = original;
         }
-        SearchResult search = SearchResult.searchOf(
-            searchString,
-            findString,
-            findType
-        );
+        SearchResult search = SearchResult.searchOf(searchString, findString, findType);
         if (search.size() == 0) {
             return FilterResult.EMPTY;
         }
@@ -174,12 +147,7 @@ public class ParentFilter {
         }
         ColorUtil.SimpleColor color = null;
         for (IFilter filter : filters) {
-            Optional<FluidText> newtext = filter.filter(
-                this,
-                text,
-                unfiltered,
-                search
-            );
+            Optional<FluidText> newtext = filter.filter(this, text, unfiltered, search);
             if (newtext.isPresent()) {
                 text = newtext.get();
                 if (color != null) {
@@ -200,10 +168,7 @@ public class ParentFilter {
             }
         }
         if (!forward) {
-            return new FilterResult(
-                Optional.of(FiltersHandler.TERMINATE),
-                Optional.empty()
-            );
+            return new FilterResult(Optional.of(FiltersHandler.TERMINATE), Optional.empty());
         }
         return new FilterResult(Optional.of(text), Optional.ofNullable(color));
     }
