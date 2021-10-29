@@ -19,8 +19,6 @@
       "io.github.darkkronicle.advancedchatfilters.AdvancedChatFilters"
     ]
   },
-  "mixins": [
-  ],
   "depends": {
     "fabricloader": ">=0.8.9+build.204",
     "fabric": "*",

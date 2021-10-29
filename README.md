@@ -32,7 +32,7 @@ To learn more about these filters, you can view the [example filters](https://gi
 
 ## Development
 
-To develop all dependencies should automatically be processed through gradle. To ensure code consistency the hook pre-commit.sh can be used. To install the pre-hook run:
+To develop, all dependencies should automatically be processed through gradle. To ensure code consistency the hook pre-commit.sh can be used. To install the pre-commit hook run:
 
 `ln -s ../../pre-commit.sh .git/hooks/pre-commit`
 
