@@ -7,6 +7,9 @@
  */
 package io.github.darkkronicle.advancedchatfilters.filters.matchreplace;
 
+import dev.maow.owo.api.OwO;
+import dev.maow.owo.api.OwOProvider;
+import dev.maow.owo.util.OwOFactory;
 import io.github.darkkronicle.advancedchatcore.util.FindType;
 import io.github.darkkronicle.advancedchatcore.util.FluidText;
 import io.github.darkkronicle.advancedchatcore.util.RawText;
@@ -18,14 +21,18 @@ import io.github.darkkronicle.advancedchatfilters.interfaces.IMatchReplace;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import maow.owo.OwO;
-import maow.owo.util.ParsingUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.text.Style;
 
 @Environment(EnvType.CLIENT)
 public class OwOTextReplace implements IMatchReplace {
+
+    private final OwO owo;
+
+    public OwOTextReplace() {
+        this.owo = OwOFactory.INSTANCE.create();
+    }
 
     @Override
     public Optional<FluidText> filter(ReplaceFilter filter, FluidText text, SearchResult search) {
@@ -47,17 +54,10 @@ public class OwOTextReplace implements IMatchReplace {
                         m,
                         (current, match1) ->
                                 new FluidText(
-                                        current.withMessage(OwO.INSTANCE.translate(match1.match))));
+                                        current.withMessage(owo.translate(OwO.TranslateMode.PLAIN, match1.match))));
             }
         }
         text.replaceStrings(replaceMatches);
-        text.append(
-                new RawText(
-                        " "
-                                + ParsingUtil.parseRandomizedLetters(
-                                        ParsingUtil.getRandomElement(OwO.INSTANCE.getSuffixes())),
-                        Style.EMPTY),
-                true);
         return Optional.of(text);
     }
 }
