@@ -27,7 +27,6 @@ import io.github.darkkronicle.advancedchatcore.util.ColorUtil;
 import io.github.darkkronicle.advancedchatcore.util.FluidText;
 import io.github.darkkronicle.advancedchatcore.util.SearchResult;
 import java.util.function.Supplier;
-import javax.annotation.Nullable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -46,8 +45,7 @@ public class NarratorProcessor implements IMatchProcessor, IScreenSupplier, IJso
                     new ConfigString(translate("message"), "$1", translate("info.message")));
 
     @Override
-    public Result processMatches(
-            FluidText text, @Nullable FluidText unfiltered, @Nullable SearchResult search) {
+    public Result processMatches(FluidText text, FluidText unfiltered, SearchResult search) {
         String content = search.getGroupReplacements(message.config.getStringValue(), true);
         Narrator.getNarrator().say(content, false);
         return Result.getFromBool(true);
@@ -70,7 +68,7 @@ public class NarratorProcessor implements IMatchProcessor, IScreenSupplier, IJso
     }
 
     @Override
-    public Supplier<Screen> getScreen(@Nullable Screen parent) {
+    public Supplier<Screen> getScreen(Screen parent) {
         return () -> new SenderScreen(parent);
     }
 

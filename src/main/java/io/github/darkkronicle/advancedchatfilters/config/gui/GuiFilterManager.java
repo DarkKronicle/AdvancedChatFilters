@@ -19,7 +19,6 @@ import io.github.darkkronicle.advancedchatfilters.config.Filter;
 import io.github.darkkronicle.advancedchatfilters.config.FiltersConfigStorage;
 import java.util.Collections;
 import java.util.List;
-import javax.annotation.Nullable;
 
 public class GuiFilterManager extends GuiListBase<Filter, WidgetFilterEntry, WidgetListFilters>
         implements ISelectionListener<Filter> {
@@ -134,7 +133,7 @@ public class GuiFilterManager extends GuiListBase<Filter, WidgetFilterEntry, Wid
     }
 
     @Override
-    public void onSelectionChange(@Nullable Filter entry) {}
+    public void onSelectionChange(Filter entry) {}
 
     private static class ButtonListenerConfigTabs implements IButtonActionListener {
 

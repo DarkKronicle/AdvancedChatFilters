@@ -17,7 +17,6 @@ import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.StringUtils;
 import io.github.darkkronicle.advancedchatfilters.config.FiltersConfigStorage;
 import io.github.darkkronicle.advancedchatfilters.scripting.ScriptFilter;
-import javax.annotation.Nullable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.Util;
 
@@ -79,7 +78,7 @@ public class GuiAdvancedFilterManager
     }
 
     @Override
-    public void onSelectionChange(@Nullable ScriptFilter entry) {}
+    public void onSelectionChange(ScriptFilter entry) {}
 
     public void save() {
         FiltersConfigStorage.saveFromFile();

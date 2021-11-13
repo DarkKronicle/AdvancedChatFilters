@@ -30,7 +30,7 @@ dependencies {
 	modImplementation "com.github.DarkKronicle:AdvancedChatCore:${project.advancedchat_version}"
 
 	implementation "io.github.maowimpl:owo:${project.owo_version}"
-	include "com.github.maowcraft:owo:${project.owo_version}"
+	include "io.github.maowimpl:owo:${project.owo_version}"
 
 	implementation 'org.openjdk.nashorn:nashorn-core:15.3'
 	implementation 'org.javadelight:delight-nashorn-sandbox:0.2.5'

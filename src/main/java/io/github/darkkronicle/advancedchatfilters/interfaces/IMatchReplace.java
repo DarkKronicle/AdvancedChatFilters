@@ -12,7 +12,6 @@ import io.github.darkkronicle.advancedchatcore.util.FluidText;
 import io.github.darkkronicle.advancedchatcore.util.SearchResult;
 import io.github.darkkronicle.advancedchatfilters.filters.ReplaceFilter;
 import java.util.Optional;
-import javax.annotation.Nullable;
 
 /**
  * An interface to replace message content from a {@link ReplaceFilter}
@@ -32,7 +31,7 @@ public interface IMatchReplace extends IMessageFilter {
      * @param search Matches
      * @return Optional of new text. If returned empty the text will not be replaced
      */
-    Optional<FluidText> filter(ReplaceFilter filter, FluidText text, @Nullable SearchResult search);
+    Optional<FluidText> filter(ReplaceFilter filter, FluidText text, SearchResult search);
 
     @Override
     default Optional<FluidText> filter(FluidText text) {

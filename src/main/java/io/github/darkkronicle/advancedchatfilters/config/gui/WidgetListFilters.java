@@ -16,7 +16,6 @@ import io.github.darkkronicle.advancedchatfilters.config.FiltersConfigStorage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import javax.annotation.Nullable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 
@@ -37,7 +36,7 @@ public class WidgetListFilters extends WidgetListBase<Filter, WidgetFilterEntry>
             int y,
             int width,
             int height,
-            @Nullable ISelectionListener<Filter> selectionListener,
+            ISelectionListener<Filter> selectionListener,
             Filter filter,
             Screen parent) {
         super(x, y, width, height, selectionListener);

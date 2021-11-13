@@ -126,7 +126,7 @@ public class ParentFilter {
             }
             matches.add(new StringMatch(original.substring(start, end), start, end));
         }
-        return new SearchResult(original, result.getSearch(), result.getMatcher(), matches);
+        return new SearchResult(original, result.getSearch(), result.getFinder(), matches);
     }
 
     public FilterResult filter(FluidText text, FluidText unfiltered) {

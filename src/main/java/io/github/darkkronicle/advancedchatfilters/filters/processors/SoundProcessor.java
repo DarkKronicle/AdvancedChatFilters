@@ -32,7 +32,6 @@ import io.github.darkkronicle.advancedchatcore.util.FluidText;
 import io.github.darkkronicle.advancedchatcore.util.SearchResult;
 import io.github.darkkronicle.advancedchatfilters.config.Filter;
 import java.util.function.Supplier;
-import javax.annotation.Nullable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -74,8 +73,7 @@ public class SoundProcessor implements IMatchProcessor, IJsonApplier, IScreenSup
                             translate("soundvolume"), 1, 0.5, 3, translate("info.soundvolume")));
 
     @Override
-    public Result processMatches(
-            FluidText text, @Nullable FluidText unfiltered, SearchResult search) {
+    public Result processMatches(FluidText text, FluidText unfiltered, SearchResult search) {
         if (getSound() != Filter.NotifySound.NONE) {
             MinecraftClient.getInstance()
                     .getSoundManager()
@@ -110,7 +108,7 @@ public class SoundProcessor implements IMatchProcessor, IJsonApplier, IScreenSup
     }
 
     @Override
-    public Supplier<Screen> getScreen(@Nullable Screen parent) {
+    public Supplier<Screen> getScreen(Screen parent) {
         return () -> new SoundScreen(parent);
     }
 
