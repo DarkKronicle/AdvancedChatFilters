@@ -16,6 +16,7 @@ import fi.dy.masa.malilib.config.options.ConfigBoolean;
 import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.JsonUtils;
 import io.github.darkkronicle.advancedchatcore.config.ConfigStorage;
+import io.github.darkkronicle.advancedchatcore.config.SaveableConfig;
 import io.github.darkkronicle.advancedchatfilters.AdvancedChatFilters;
 import io.github.darkkronicle.advancedchatfilters.FiltersHandler;
 import io.github.darkkronicle.advancedchatfilters.scripting.ScriptManager;
@@ -36,8 +37,8 @@ public class FiltersConfigStorage implements IConfigHandler {
     public static final List<String> IMPORTED_FILTERS = new ArrayList<>();
     private static final String IMPORTED_KEY = "importedfilters";
 
-    public static final ConfigStorage.SaveableConfig<ConfigBoolean> ADVANCED_ON =
-            ConfigStorage.SaveableConfig.fromConfig(
+    public static final SaveableConfig<ConfigBoolean> ADVANCED_ON =
+            SaveableConfig.fromConfig(
                     "advanced_filters_on",
                     new ConfigBoolean("advanced_filters_on", false, "advanced_filters_on"));
 

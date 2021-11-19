@@ -21,7 +21,7 @@ import fi.dy.masa.malilib.render.RenderUtils;
 import fi.dy.masa.malilib.util.KeyCodes;
 import fi.dy.masa.malilib.util.StringUtils;
 import io.github.darkkronicle.advancedchatcore.config.gui.widgets.WidgetIntBox;
-import io.github.darkkronicle.advancedchatcore.util.ColorUtil;
+import io.github.darkkronicle.advancedchatcore.util.Colors;
 import io.github.darkkronicle.advancedchatfilters.FiltersHandler;
 import io.github.darkkronicle.advancedchatfilters.config.Filter;
 import io.github.darkkronicle.advancedchatfilters.config.FiltersConfigStorage;
@@ -140,16 +140,29 @@ public class WidgetFilterEntry extends WidgetListEntryBase<Filter> {
                     this.y,
                     this.width,
                     this.height,
-                    ColorUtil.WHITE.withAlpha(150).color());
+                    Colors.getInstance().getColorOrWhite("listhover").color());
         } else if (this.isOdd) {
             RenderUtils.drawRect(
-                    this.x, this.y, this.width, this.height, ColorUtil.WHITE.withAlpha(70).color());
+                    this.x,
+                    this.y,
+                    this.width,
+                    this.height,
+                    Colors.getInstance().getColorOrWhite("list1").color());
         } else {
             RenderUtils.drawRect(
-                    this.x, this.y, this.width, this.height, ColorUtil.WHITE.withAlpha(50).color());
+                    this.x,
+                    this.y,
+                    this.width,
+                    this.height,
+                    Colors.getInstance().getColorOrWhite("list2").color());
         }
         String name = this.filter.getName().config.getStringValue();
-        this.drawString(this.x + 4, this.y + 7, ColorUtil.WHITE.color(), name, matrixStack);
+        this.drawString(
+                this.x + 4,
+                this.y + 7,
+                Colors.getInstance().getColorOrWhite("white").color(),
+                name,
+                matrixStack);
 
         RenderUtils.color(1f, 1f, 1f, 1f);
         RenderSystem.disableBlend();

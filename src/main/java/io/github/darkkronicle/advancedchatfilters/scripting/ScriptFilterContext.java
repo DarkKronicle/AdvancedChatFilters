@@ -7,7 +7,7 @@
  */
 package io.github.darkkronicle.advancedchatfilters.scripting;
 
-import io.github.darkkronicle.advancedchatcore.util.ColorUtil;
+import io.github.darkkronicle.advancedchatcore.util.Color;
 import io.github.darkkronicle.advancedchatcore.util.FindType;
 import io.github.darkkronicle.advancedchatcore.util.FluidText;
 import io.github.darkkronicle.advancedchatcore.util.RawText;
@@ -183,16 +183,15 @@ public class ScriptFilterContext {
     }
 
     /**
-     * Get's the {@link io.github.darkkronicle.advancedchatcore.util.ColorUtil.SimpleColor} of a
-     * color
+     * Get's the {@link io.github.darkkronicle.advancedchatcore.util.Color} of a color
      *
      * @param style Style to grab color from
      * @return Color if it exists, null if there is no color
      */
-    public ColorUtil.SimpleColor getColor(Style style) {
+    public Color getColor(Style style) {
         if (style.getColor() == null) {
             return null;
         }
-        return new ColorUtil.SimpleColor(style.getColor().getRgb());
+        return new Color(style.getColor().getRgb());
     }
 }

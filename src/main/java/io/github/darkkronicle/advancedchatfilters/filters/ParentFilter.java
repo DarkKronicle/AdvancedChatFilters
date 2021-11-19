@@ -7,7 +7,7 @@
  */
 package io.github.darkkronicle.advancedchatfilters.filters;
 
-import io.github.darkkronicle.advancedchatcore.util.ColorUtil;
+import io.github.darkkronicle.advancedchatcore.util.Color;
 import io.github.darkkronicle.advancedchatcore.util.FindType;
 import io.github.darkkronicle.advancedchatcore.util.FluidText;
 import io.github.darkkronicle.advancedchatcore.util.RawText;
@@ -32,7 +32,7 @@ public class ParentFilter {
     public static class FilterResult {
 
         Optional<FluidText> text;
-        Optional<ColorUtil.SimpleColor> color;
+        Optional<Color> color;
 
         public static FilterResult EMPTY = new FilterResult(Optional.empty(), Optional.empty());
     }
@@ -79,9 +79,9 @@ public class ParentFilter {
                 if (previous.getColor() != null) {
                     iColor = previous.getColor().getRgb();
                 } else {
-                    iColor = ColorUtil.WHITE.color();
+                    iColor = new Color(255, 255, 255, 255).color();
                 }
-                ColorUtil.SimpleColor color = new ColorUtil.SimpleColor(iColor);
+                Color color = new Color(iColor);
                 String hex =
                         String.format("%02x%02x%02x", color.red(), color.green(), color.blue());
                 builder.append("§[").append(hex).append(']');
@@ -145,20 +145,20 @@ public class ParentFilter {
             // Offset the search results based off of colors
             search = getOffsetMatch(search, original);
         }
-        ColorUtil.SimpleColor color = null;
+        Color color = null;
         for (IFilter filter : filters) {
             Optional<FluidText> newtext = filter.filter(this, text, unfiltered, search);
             if (newtext.isPresent()) {
                 text = newtext.get();
                 if (color != null) {
                     // Make sure forward filter gets the correct background color
-                    text.setBackgroundColor(color);
+                    text.setBackground(color);
                 }
             }
-            Optional<ColorUtil.SimpleColor> c = filter.getColor();
+            Optional<Color> c = filter.getColor();
             if (c.isPresent() && color == null) {
                 color = c.get();
-                text.setBackgroundColor(color);
+                text.setBackground(color);
             }
         }
         boolean forward = true;

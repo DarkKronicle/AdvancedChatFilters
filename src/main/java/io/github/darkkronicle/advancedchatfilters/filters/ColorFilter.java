@@ -7,7 +7,7 @@
  */
 package io.github.darkkronicle.advancedchatfilters.filters;
 
-import io.github.darkkronicle.advancedchatcore.util.ColorUtil;
+import io.github.darkkronicle.advancedchatcore.util.Color;
 import io.github.darkkronicle.advancedchatcore.util.FluidText;
 import io.github.darkkronicle.advancedchatcore.util.SearchResult;
 import io.github.darkkronicle.advancedchatfilters.interfaces.IFilter;
@@ -20,10 +20,10 @@ import net.fabricmc.api.Environment;
 @Environment(EnvType.CLIENT)
 public class ColorFilter implements IFilter {
 
-    /** {@link ColorUtil.SimpleColor} that will change the background color. */
-    private final ColorUtil.SimpleColor color;
+    /** {@link Color} that will change the background color. */
+    private final Color color;
 
-    public ColorFilter(@NonNull ColorUtil.SimpleColor color) {
+    public ColorFilter(@NonNull Color color) {
         this.color = color;
     }
 
@@ -35,7 +35,7 @@ public class ColorFilter implements IFilter {
 
     // if returned null it won't do anything, but if not null then it will have the default color.
     @Override
-    public Optional<ColorUtil.SimpleColor> getColor() {
+    public Optional<Color> getColor() {
         return Optional.of(color);
     }
 }

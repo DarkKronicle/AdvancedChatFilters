@@ -18,12 +18,12 @@ import fi.dy.masa.malilib.config.options.ConfigOptionList;
 import fi.dy.masa.malilib.config.options.ConfigString;
 import fi.dy.masa.malilib.util.StringUtils;
 import io.github.darkkronicle.advancedchatcore.AdvancedChatCore;
-import io.github.darkkronicle.advancedchatcore.config.ConfigStorage;
-import io.github.darkkronicle.advancedchatcore.config.options.ConfigSimpleColor;
+import io.github.darkkronicle.advancedchatcore.config.SaveableConfig;
+import io.github.darkkronicle.advancedchatcore.config.options.ConfigColor;
 import io.github.darkkronicle.advancedchatcore.interfaces.ConfigRegistryOption;
 import io.github.darkkronicle.advancedchatcore.interfaces.IJsonSave;
 import io.github.darkkronicle.advancedchatcore.interfaces.IMatchProcessor;
-import io.github.darkkronicle.advancedchatcore.util.ColorUtil;
+import io.github.darkkronicle.advancedchatcore.util.Colors;
 import io.github.darkkronicle.advancedchatcore.util.FindType;
 import io.github.darkkronicle.advancedchatfilters.interfaces.IMatchReplace;
 import io.github.darkkronicle.advancedchatfilters.registry.MatchProcessorRegistry;
@@ -59,26 +59,26 @@ public class Filter implements Comparable<Filter> {
      * Name is only cosmetic. Shows up when editing filters. Way to distinguish filters for the
      * player.
      */
-    private ConfigStorage.SaveableConfig<ConfigString> name =
-            ConfigStorage.SaveableConfig.fromConfig(
+    private SaveableConfig<ConfigString> name =
+            SaveableConfig.fromConfig(
                     "name", new ConfigString(translate("name"), "Default", translate("info.name")));
 
     /** Whether or not it should be used to filter chat messages currently. */
-    private ConfigStorage.SaveableConfig<ConfigBoolean> active =
-            ConfigStorage.SaveableConfig.fromConfig(
+    private SaveableConfig<ConfigBoolean> active =
+            SaveableConfig.fromConfig(
                     "active",
                     new ConfigBoolean(translate("active"), false, translate("info.active")));
 
     /** Whether or not it should be used to filter chat messages currently. */
-    private ConfigStorage.SaveableConfig<ConfigBoolean> stripColors =
-            ConfigStorage.SaveableConfig.fromConfig(
+    private SaveableConfig<ConfigBoolean> stripColors =
+            SaveableConfig.fromConfig(
                     "stripColors",
                     new ConfigBoolean(
                             translate("stripcolors"), true, translate("info.stripcolors")));
 
     /** The Expression to find a match. The way it is interpreted is defined by findType. */
-    private ConfigStorage.SaveableConfig<ConfigString> findString =
-            ConfigStorage.SaveableConfig.fromConfig(
+    private SaveableConfig<ConfigString> findString =
+            SaveableConfig.fromConfig(
                     "findString",
                     new ConfigString(
                             translate("findstring"), "Hello", translate("info.findstring")));
@@ -87,8 +87,8 @@ public class Filter implements Comparable<Filter> {
      * How findString is used. LITERAL checks just for a match character to character. UPPERLOWER is
      * like literal, but ignore case. REGEX interprets findString as a regular expression.
      */
-    private ConfigStorage.SaveableConfig<ConfigOptionList> findType =
-            ConfigStorage.SaveableConfig.fromConfig(
+    private SaveableConfig<ConfigOptionList> findType =
+            SaveableConfig.fromConfig(
                     "findType",
                     new ConfigOptionList(
                             translate("findtype"), FindType.LITERAL, translate("info.findtype")));
@@ -101,8 +101,8 @@ public class Filter implements Comparable<Filter> {
      * How the found string is modified. ONLYMATCH replaces only what was matched. FULLLINE replaces
      * the full message.
      */
-    private ConfigStorage.SaveableConfig<ConfigOptionList> replaceType =
-            ConfigStorage.SaveableConfig.fromConfig(
+    private SaveableConfig<ConfigOptionList> replaceType =
+            SaveableConfig.fromConfig(
                     "replaceType",
                     new ConfigOptionList(
                             translate("replacetype"),
@@ -118,45 +118,47 @@ public class Filter implements Comparable<Filter> {
      * What the found string replaces to. (ex. If replaceType is FULLLINE this will replace the
      * message with this)
      */
-    private ConfigStorage.SaveableConfig<ConfigString> replaceTo =
-            ConfigStorage.SaveableConfig.fromConfig(
+    private SaveableConfig<ConfigString> replaceTo =
+            SaveableConfig.fromConfig(
                     "replaceTo",
                     new ConfigString(
                             translate("replaceto"), "Welcome", translate("info.replaceto")));
 
-    private ConfigStorage.SaveableConfig<ConfigBoolean> replaceTextColor =
-            ConfigStorage.SaveableConfig.fromConfig(
+    private SaveableConfig<ConfigBoolean> replaceTextColor =
+            SaveableConfig.fromConfig(
                     "replaceTextColor",
                     new ConfigBoolean(
                             translate("replacetextcolor"),
                             false,
                             translate("info.replacetextcolor")));
 
-    private ConfigStorage.SaveableConfig<ConfigSimpleColor> textColor =
-            ConfigStorage.SaveableConfig.fromConfig(
+    private SaveableConfig<ConfigColor> textColor =
+            SaveableConfig.fromConfig(
                     "textColor",
-                    new ConfigSimpleColor(
-                            translate("textcolor"), ColorUtil.WHITE, translate("info.textcolor")));
+                    new ConfigColor(
+                            translate("textcolor"),
+                            Colors.getInstance().getColorOrWhite("white"),
+                            translate("info.textcolor")));
 
-    private ConfigStorage.SaveableConfig<ConfigBoolean> replaceBackgroundColor =
-            ConfigStorage.SaveableConfig.fromConfig(
+    private SaveableConfig<ConfigBoolean> replaceBackgroundColor =
+            SaveableConfig.fromConfig(
                     "replaceBackgroundColor",
                     new ConfigBoolean(
                             translate("replacebackgroundcolor"),
                             false,
                             translate("info.replacebackgroundcolor")));
 
-    private ConfigStorage.SaveableConfig<ConfigSimpleColor> backgroundColor =
-            ConfigStorage.SaveableConfig.fromConfig(
+    private SaveableConfig<ConfigColor> backgroundColor =
+            SaveableConfig.fromConfig(
                     "backgroundColor",
-                    new ConfigSimpleColor(
+                    new ConfigColor(
                             translate("backgroundcolor"),
-                            ColorUtil.WHITE,
+                            Colors.getInstance().getColorOrWhite("white"),
                             translate("info.backgroundcolor")));
 
     private MatchProcessorRegistry processors = MatchProcessorRegistry.getInstance().clone();
 
-    private final ImmutableList<ConfigStorage.SaveableConfig<?>> options =
+    private final ImmutableList<SaveableConfig<?>> options =
             ImmutableList.of(
                     name,
                     active,
@@ -203,7 +205,7 @@ public class Filter implements Comparable<Filter> {
                     f.setOrder(0);
                 }
             }
-            for (ConfigStorage.SaveableConfig<?> conf : f.getOptions()) {
+            for (SaveableConfig<?> conf : f.getOptions()) {
                 IConfigBase option = conf.config;
                 if (obj.has(conf.key)) {
                     option.setValueFromJsonElement(obj.get(conf.key));
@@ -224,7 +226,7 @@ public class Filter implements Comparable<Filter> {
         @Override
         public JsonObject save(Filter filter) {
             JsonObject obj = new JsonObject();
-            for (ConfigStorage.SaveableConfig<?> option : filter.getOptions()) {
+            for (SaveableConfig<?> option : filter.getOptions()) {
                 obj.add(option.key, option.config.getAsJsonElement());
             }
 
@@ -329,7 +331,7 @@ public class Filter implements Comparable<Filter> {
 
     public static Filter getRandomFilter() {
         Filter filter = new Filter();
-        for (ConfigStorage.SaveableConfig<?> c : filter.getOptions()) {
+        for (SaveableConfig<?> c : filter.getOptions()) {
             if (c.config.getType() == ConfigType.STRING) {
                 ((ConfigString) c.config).setValueFromString(AdvancedChatCore.getRandomString());
             }

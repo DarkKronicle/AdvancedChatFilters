@@ -22,12 +22,12 @@ import fi.dy.masa.malilib.gui.interfaces.ISliderCallback;
 import fi.dy.masa.malilib.gui.widgets.WidgetDropDownList;
 import fi.dy.masa.malilib.gui.widgets.WidgetSlider;
 import fi.dy.masa.malilib.util.StringUtils;
-import io.github.darkkronicle.advancedchatcore.config.ConfigStorage;
+import io.github.darkkronicle.advancedchatcore.config.SaveableConfig;
 import io.github.darkkronicle.advancedchatcore.config.gui.widgets.WidgetLabelHoverable;
 import io.github.darkkronicle.advancedchatcore.interfaces.IJsonApplier;
 import io.github.darkkronicle.advancedchatcore.interfaces.IMatchProcessor;
 import io.github.darkkronicle.advancedchatcore.interfaces.IScreenSupplier;
-import io.github.darkkronicle.advancedchatcore.util.ColorUtil;
+import io.github.darkkronicle.advancedchatcore.util.Colors;
 import io.github.darkkronicle.advancedchatcore.util.FluidText;
 import io.github.darkkronicle.advancedchatcore.util.SearchResult;
 import io.github.darkkronicle.advancedchatfilters.config.Filter;
@@ -48,8 +48,8 @@ public class SoundProcessor implements IMatchProcessor, IJsonApplier, IScreenSup
         return "advancedchatfilters.config.sound." + string;
     }
 
-    private final ConfigStorage.SaveableConfig<ConfigOptionList> notifySound =
-            ConfigStorage.SaveableConfig.fromConfig(
+    private final SaveableConfig<ConfigOptionList> notifySound =
+            SaveableConfig.fromConfig(
                     "notifySound",
                     new ConfigOptionList(
                             translate("notifysound"),
@@ -60,14 +60,14 @@ public class SoundProcessor implements IMatchProcessor, IJsonApplier, IScreenSup
         return Filter.NotifySound.fromNotifySoundString(notifySound.config.getStringValue());
     }
 
-    private final ConfigStorage.SaveableConfig<ConfigDouble> soundPitch =
-            ConfigStorage.SaveableConfig.fromConfig(
+    private final SaveableConfig<ConfigDouble> soundPitch =
+            SaveableConfig.fromConfig(
                     "soundPitch",
                     new ConfigDouble(
                             translate("soundpitch"), 1, 0.5, 3, translate("info.soundpitch")));
 
-    private final ConfigStorage.SaveableConfig<ConfigDouble> soundVolume =
-            ConfigStorage.SaveableConfig.fromConfig(
+    private final SaveableConfig<ConfigDouble> soundVolume =
+            SaveableConfig.fromConfig(
                     "soundVolume",
                     new ConfigDouble(
                             translate("soundvolume"), 1, 0.5, 3, translate("info.soundvolume")));
@@ -188,7 +188,7 @@ public class SoundProcessor implements IMatchProcessor, IJsonApplier, IScreenSup
                             y,
                             width,
                             8,
-                            ColorUtil.WHITE.color(),
+                            Colors.getInstance().getColorOrWhite("white").color(),
                             config.getConfigGuiDisplayName());
             label.setHoverLines(StringUtils.translate(config.getComment()));
             this.addWidget(label);

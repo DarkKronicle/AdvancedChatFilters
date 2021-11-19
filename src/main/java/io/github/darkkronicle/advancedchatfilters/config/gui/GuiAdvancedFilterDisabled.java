@@ -12,7 +12,7 @@ import fi.dy.masa.malilib.gui.button.ButtonBase;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.button.IButtonActionListener;
 import fi.dy.masa.malilib.util.StringUtils;
-import io.github.darkkronicle.advancedchatcore.util.ColorUtil;
+import io.github.darkkronicle.advancedchatcore.util.Colors;
 import io.github.darkkronicle.advancedchatcore.util.FluidText;
 import io.github.darkkronicle.advancedchatcore.util.RawText;
 import io.github.darkkronicle.advancedchatcore.util.StyleFormatter;
@@ -73,7 +73,12 @@ public class GuiAdvancedFilterDisabled extends GuiBase {
         int y = 100;
         for (OrderedText warn : warning) {
             drawCenteredTextWithShadow(
-                    matrixStack, client.textRenderer, warn, width / 2, y, ColorUtil.WHITE.color());
+                    matrixStack,
+                    client.textRenderer,
+                    warn,
+                    width / 2,
+                    y,
+                    Colors.getInstance().getColorOrWhite("white").color());
             y += client.textRenderer.fontHeight + 2;
         }
     }

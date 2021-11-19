@@ -8,7 +8,7 @@
 package io.github.darkkronicle.advancedchatfilters;
 
 import io.github.darkkronicle.advancedchatcore.interfaces.IMessageFilter;
-import io.github.darkkronicle.advancedchatcore.util.ColorUtil;
+import io.github.darkkronicle.advancedchatcore.util.Color;
 import io.github.darkkronicle.advancedchatcore.util.FluidText;
 import io.github.darkkronicle.advancedchatfilters.config.Filter;
 import io.github.darkkronicle.advancedchatfilters.config.FiltersConfigStorage;
@@ -47,7 +47,7 @@ public class FiltersHandler implements IMessageFilter {
     public Optional<FluidText> filter(FluidText text) {
         FluidText unfiltered = text;
 
-        ColorUtil.SimpleColor backgroundColor = null;
+        Color backgroundColor = null;
         // Filter text
         for (ParentFilter filter : filters) {
             ParentFilter.FilterResult result = filter.filter(text, unfiltered);
@@ -58,7 +58,7 @@ public class FiltersHandler implements IMessageFilter {
                 text = result.getText().get();
             }
         }
-        text.setBackgroundColor(backgroundColor);
+        text.setBackground(backgroundColor);
 
         if (text.getString().length() != 0) {
             return Optional.of(text);
@@ -93,7 +93,7 @@ public class FiltersHandler implements IMessageFilter {
                         new ReplaceFilter(
                                 filter.getReplaceTo().config.getStringValue().replaceAll("&", "§"),
                                 filter.getReplace(),
-                                filter.getTextColor().config.getSimpleColor()));
+                                filter.getTextColor().config.get()));
             } else {
                 filt.addFilter(
                         new ReplaceFilter(
@@ -103,7 +103,7 @@ public class FiltersHandler implements IMessageFilter {
             }
         }
         if (filter.getReplaceBackgroundColor().config.getBooleanValue()) {
-            filt.addFilter(new ColorFilter(filter.getBackgroundColor().config.getSimpleColor()));
+            filt.addFilter(new ColorFilter(filter.getBackgroundColor().config.get()));
         }
         if (filter.getProcessors().activeAmount() > 0) {
             if (filter.getProcessors().activeAmount() == 1) {

@@ -7,7 +7,7 @@
  */
 package io.github.darkkronicle.advancedchatfilters.filters.matchreplace;
 
-import io.github.darkkronicle.advancedchatcore.util.ColorUtil;
+import io.github.darkkronicle.advancedchatcore.util.Color;
 import io.github.darkkronicle.advancedchatcore.util.FluidText;
 import io.github.darkkronicle.advancedchatcore.util.RawText;
 import io.github.darkkronicle.advancedchatcore.util.SearchResult;
@@ -30,7 +30,7 @@ public class FullMessageTextReplace implements IMatchReplace {
             totalMatch.append(m.match);
         }
         RawText base = new RawText("None", Style.EMPTY);
-        ColorUtil.SimpleColor c = filter.color;
+        Color c = filter.color;
         if (c == null) {
             base = text.truncate(search.getMatches().get(0)).getRawTexts().get(0);
         } else {
@@ -42,8 +42,7 @@ public class FullMessageTextReplace implements IMatchReplace {
         RawText toReplace =
                 base.withMessage(
                         search.getGroupReplacements(
-                                filter.replaceTo.replaceAll("%MATCH%", totalMatch.toString()),
-                                true));
+                                filter.replaceTo.replaceAll("%MATCH%", totalMatch.toString()), 0));
         return Optional.of(new FluidText(toReplace));
     }
 }

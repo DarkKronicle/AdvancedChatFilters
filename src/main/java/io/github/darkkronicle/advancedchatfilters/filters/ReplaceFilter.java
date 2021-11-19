@@ -7,7 +7,7 @@
  */
 package io.github.darkkronicle.advancedchatfilters.filters;
 
-import io.github.darkkronicle.advancedchatcore.util.ColorUtil;
+import io.github.darkkronicle.advancedchatcore.util.Color;
 import io.github.darkkronicle.advancedchatcore.util.FluidText;
 import io.github.darkkronicle.advancedchatcore.util.SearchResult;
 import io.github.darkkronicle.advancedchatfilters.interfaces.IFilter;
@@ -22,9 +22,9 @@ public class ReplaceFilter implements IFilter {
 
     public final String replaceTo;
     public final IMatchReplace type;
-    public final ColorUtil.SimpleColor color;
+    public final Color color;
 
-    public ReplaceFilter(String replaceTo, IMatchReplace type, ColorUtil.SimpleColor color) {
+    public ReplaceFilter(String replaceTo, IMatchReplace type, Color color) {
         this.replaceTo = replaceTo;
         this.type = type;
         this.color = color;

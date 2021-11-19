@@ -21,6 +21,15 @@ import net.fabricmc.api.Environment;
 @Environment(EnvType.CLIENT)
 public class OnlyMatchTextReplace implements IMatchReplace {
 
+    private static int getMatchIndex(SearchResult result, StringMatch match) {
+        for (int i = 0; i < result.size(); i++) {
+            if (match.equals(result.getMatches().get(i))) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     @Override
     public Optional<FluidText> filter(ReplaceFilter filter, FluidText text, SearchResult search) {
         HashMap<StringMatch, FluidText.StringInsert> toReplace = new HashMap<>();
@@ -34,7 +43,7 @@ public class OnlyMatchTextReplace implements IMatchReplace {
                                                 search.getGroupReplacements(
                                                         filter.replaceTo.replaceAll(
                                                                 "%MATCH%", match.match),
-                                                        true))));
+                                                        getMatchIndex(search, match)))));
             } else {
                 toReplace.put(
                         m,
@@ -44,7 +53,7 @@ public class OnlyMatchTextReplace implements IMatchReplace {
                                                 search.getGroupReplacements(
                                                         filter.replaceTo.replaceAll(
                                                                 "%MATCH%", match.match),
-                                                        true),
+                                                        getMatchIndex(search, match)),
                                                 filter.color)));
             }
         }

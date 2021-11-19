@@ -8,7 +8,7 @@
 package io.github.darkkronicle.advancedchatfilters.interfaces;
 
 import io.github.darkkronicle.advancedchatcore.interfaces.IMessageFilter;
-import io.github.darkkronicle.advancedchatcore.util.ColorUtil;
+import io.github.darkkronicle.advancedchatcore.util.Color;
 import io.github.darkkronicle.advancedchatcore.util.FluidText;
 import io.github.darkkronicle.advancedchatcore.util.SearchResult;
 import io.github.darkkronicle.advancedchatfilters.filters.ParentFilter;
@@ -34,7 +34,7 @@ public interface IFilter extends IMessageFilter {
      *
      * @return SimpleColor that the background should be. If empty it won't change the color
      */
-    default Optional<ColorUtil.SimpleColor> getColor() {
+    default Optional<Color> getColor() {
         return Optional.empty();
     }
 

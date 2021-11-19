@@ -10,7 +10,7 @@ package io.github.darkkronicle.advancedchatfilters.registry;
 import fi.dy.masa.malilib.config.IConfigOptionListEntry;
 import fi.dy.masa.malilib.config.options.ConfigBoolean;
 import fi.dy.masa.malilib.util.StringUtils;
-import io.github.darkkronicle.advancedchatcore.config.ConfigStorage;
+import io.github.darkkronicle.advancedchatcore.config.SaveableConfig;
 import io.github.darkkronicle.advancedchatcore.interfaces.ConfigRegistryOption;
 import io.github.darkkronicle.advancedchatcore.interfaces.IMatchProcessor;
 import io.github.darkkronicle.advancedchatcore.interfaces.Translatable;
@@ -86,7 +86,7 @@ public class MatchProcessorRegistry
         private final String translation;
         private final MatchProcessorRegistry registry;
         private final String infoTranslation;
-        private final ConfigStorage.SaveableConfig<ConfigBoolean> active;
+        private final SaveableConfig<ConfigBoolean> active;
         private final boolean hidden;
 
         // Only register
@@ -106,7 +106,7 @@ public class MatchProcessorRegistry
             this.infoTranslation = infoTranslation;
             this.hidden = hidden;
             this.active =
-                    ConfigStorage.SaveableConfig.fromConfig(
+                    SaveableConfig.fromConfig(
                             "active", new ConfigBoolean(translation, active, infoTranslation));
         }
 
@@ -116,7 +116,7 @@ public class MatchProcessorRegistry
         }
 
         @Override
-        public ConfigStorage.SaveableConfig<ConfigBoolean> getActive() {
+        public SaveableConfig<ConfigBoolean> getActive() {
             return active;
         }
 

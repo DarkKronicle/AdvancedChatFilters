@@ -22,7 +22,7 @@ import io.github.darkkronicle.advancedchatcore.ModuleHandler;
 import io.github.darkkronicle.advancedchatcore.config.gui.widgets.WidgetColor;
 import io.github.darkkronicle.advancedchatcore.config.gui.widgets.WidgetLabelHoverable;
 import io.github.darkkronicle.advancedchatcore.config.gui.widgets.WidgetToggle;
-import io.github.darkkronicle.advancedchatcore.util.ColorUtil;
+import io.github.darkkronicle.advancedchatcore.util.Colors;
 import io.github.darkkronicle.advancedchatfilters.FiltersHandler;
 import io.github.darkkronicle.advancedchatfilters.config.Filter;
 import io.github.darkkronicle.advancedchatfilters.registry.MatchReplaceRegistry;
@@ -106,12 +106,12 @@ public class GuiFilterEditor extends GuiBase {
         filter.getName().config.setValueFromString(name.getText());
         filter.getFindString().config.setValueFromString(findString.getText());
         filter.getReplaceTo().config.setValueFromString(replaceString.getText());
-        filter.getTextColor().config.setIntegerValue(textColor.getAndRefreshColor().color());
+        filter.getTextColor().config.setIntegerValue(textColor.getAndRefreshColor4f().color());
         filter.getReplaceTextColor().config.setBooleanValue(setTextColor.isCurrentlyOn());
         filter.getReplaceType().config.setOptionListValue(replaceTypeWidget.getSelectedEntry());
         filter.getBackgroundColor()
                 .config
-                .setIntegerValue(backgroundColor.getAndRefreshColor().color());
+                .setIntegerValue(backgroundColor.getAndRefreshColor4f().color());
         filter.getReplaceBackgroundColor()
                 .config
                 .setBooleanValue(setBackgroundColor.isCurrentlyOn());
@@ -177,7 +177,7 @@ public class GuiFilterEditor extends GuiBase {
                         y,
                         getWidth() / 2 - 1,
                         18,
-                        filter.getTextColor().config.getSimpleColor(),
+                        filter.getTextColor().config.get(),
                         textRenderer);
         this.addTextField(textColor, null);
         setTextColor =
@@ -207,7 +207,7 @@ public class GuiFilterEditor extends GuiBase {
                         y,
                         getWidth() / 2 - 1,
                         18,
-                        filter.getBackgroundColor().config.getSimpleColor(),
+                        filter.getBackgroundColor().config.get(),
                         textRenderer);
         setBackgroundColor =
                 new WidgetToggle(
@@ -254,7 +254,12 @@ public class GuiFilterEditor extends GuiBase {
         int width = StringUtils.getStringWidth(config.getConfigGuiDisplayName());
         WidgetLabelHoverable label =
                 new WidgetLabelHoverable(
-                        x, y, width, 8, ColorUtil.WHITE.color(), config.getConfigGuiDisplayName());
+                        x,
+                        y,
+                        width,
+                        8,
+                        Colors.getInstance().getColorOrWhite("white").color(),
+                        config.getConfigGuiDisplayName());
         label.setHoverLines(StringUtils.translate(config.getComment()));
         this.addWidget(label);
         return 8;
@@ -264,7 +269,13 @@ public class GuiFilterEditor extends GuiBase {
         String display = StringUtils.translate(nameTranslation);
         int width = StringUtils.getStringWidth(display);
         WidgetLabelHoverable label =
-                new WidgetLabelHoverable(x, y, width, 8, ColorUtil.WHITE.color(), display);
+                new WidgetLabelHoverable(
+                        x,
+                        y,
+                        width,
+                        8,
+                        Colors.getInstance().getColorOrWhite("white").color(),
+                        display);
         label.setHoverLines(StringUtils.translate(hoverTranslation));
         this.addWidget(label);
         return 8;

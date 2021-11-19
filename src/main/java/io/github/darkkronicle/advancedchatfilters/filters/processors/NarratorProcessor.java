@@ -18,12 +18,12 @@ import fi.dy.masa.malilib.gui.button.ButtonBase;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.button.IButtonActionListener;
 import fi.dy.masa.malilib.util.StringUtils;
-import io.github.darkkronicle.advancedchatcore.config.ConfigStorage;
+import io.github.darkkronicle.advancedchatcore.config.SaveableConfig;
 import io.github.darkkronicle.advancedchatcore.config.gui.widgets.WidgetLabelHoverable;
 import io.github.darkkronicle.advancedchatcore.interfaces.IJsonApplier;
 import io.github.darkkronicle.advancedchatcore.interfaces.IMatchProcessor;
 import io.github.darkkronicle.advancedchatcore.interfaces.IScreenSupplier;
-import io.github.darkkronicle.advancedchatcore.util.ColorUtil;
+import io.github.darkkronicle.advancedchatcore.util.Colors;
 import io.github.darkkronicle.advancedchatcore.util.FluidText;
 import io.github.darkkronicle.advancedchatcore.util.SearchResult;
 import java.util.function.Supplier;
@@ -39,14 +39,14 @@ public class NarratorProcessor implements IMatchProcessor, IScreenSupplier, IJso
         return "advancedchatfilters.config.processor.narrator." + key;
     }
 
-    private final ConfigStorage.SaveableConfig<ConfigString> message =
-            ConfigStorage.SaveableConfig.fromConfig(
+    private final SaveableConfig<ConfigString> message =
+            SaveableConfig.fromConfig(
                     "message",
                     new ConfigString(translate("message"), "$1", translate("info.message")));
 
     @Override
     public Result processMatches(FluidText text, FluidText unfiltered, SearchResult search) {
-        String content = search.getGroupReplacements(message.config.getStringValue(), true);
+        String content = search.getGroupReplacements(message.config.getStringValue(), 0);
         Narrator.getNarrator().say(content, false);
         return Result.getFromBool(true);
     }
@@ -129,7 +129,7 @@ public class NarratorProcessor implements IMatchProcessor, IScreenSupplier, IJso
                             y,
                             width,
                             8,
-                            ColorUtil.WHITE.color(),
+                            Colors.getInstance().getColorOrWhite("white").color(),
                             config.getConfigGuiDisplayName());
             label.setHoverLines(StringUtils.translate(config.getComment()));
             this.addWidget(label);
