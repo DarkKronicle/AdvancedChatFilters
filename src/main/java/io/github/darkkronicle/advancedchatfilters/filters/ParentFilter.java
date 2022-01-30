@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.Value;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -39,8 +40,14 @@ public class ParentFilter {
 
     private List<IFilter> filters;
     private List<ForwardFilter> forwardFilters;
+
+    @Getter
     private final FindType findType;
+
+    @Getter
     private final String findString;
+
+    @Getter
     private final boolean stripColors;
 
     public ParentFilter(FindType findType, String findString, boolean stripColors) {

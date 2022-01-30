@@ -18,6 +18,12 @@ import fi.dy.masa.malilib.gui.button.ButtonBase;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.button.IButtonActionListener;
 import fi.dy.masa.malilib.util.StringUtils;
+import io.github.darkkronicle.Konstruct.functions.Function;
+import io.github.darkkronicle.Konstruct.functions.NamedFunction;
+import io.github.darkkronicle.Konstruct.nodes.Node;
+import io.github.darkkronicle.Konstruct.parser.IntRange;
+import io.github.darkkronicle.Konstruct.parser.ParseContext;
+import io.github.darkkronicle.Konstruct.type.NullObject;
 import io.github.darkkronicle.advancedchatcore.config.SaveableConfig;
 import io.github.darkkronicle.advancedchatcore.config.gui.widgets.WidgetLabelHoverable;
 import io.github.darkkronicle.advancedchatcore.interfaces.IJsonApplier;
@@ -25,15 +31,40 @@ import io.github.darkkronicle.advancedchatcore.interfaces.IMatchProcessor;
 import io.github.darkkronicle.advancedchatcore.interfaces.IScreenSupplier;
 import io.github.darkkronicle.advancedchatcore.util.Colors;
 import io.github.darkkronicle.advancedchatcore.util.FluidText;
+import io.github.darkkronicle.advancedchatcore.util.RawText;
 import io.github.darkkronicle.advancedchatcore.util.SearchResult;
+
+import java.util.List;
 import java.util.function.Supplier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.network.MessageType;
+import net.minecraft.text.Style;
 
 @Environment(EnvType.CLIENT)
 public class NarratorProcessor implements IMatchProcessor, IScreenSupplier, IJsonApplier {
+
+    public static class NarratorFunction implements NamedFunction {
+
+        @Override
+        public String getName() {
+            return "toNarrator";
+        }
+
+        @Override
+        public io.github.darkkronicle.Konstruct.parser.Result parse(ParseContext context, List<Node> input) {
+            io.github.darkkronicle.Konstruct.parser.Result r1 = Function.parseArgument(context, input, 0);
+            Narrator.getNarrator().say(r1.getContent().getString(), false);
+            return io.github.darkkronicle.Konstruct.parser.Result.success(new NullObject());
+        }
+
+        @Override
+        public IntRange getArgumentCount() {
+            return IntRange.of(1);
+        }
+    }
 
     private static String translate(String key) {
         return "advancedchatfilters.config.processor.narrator." + key;

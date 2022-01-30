@@ -7,25 +7,38 @@
  */
 package io.github.darkkronicle.advancedchatfilters.filters;
 
+import io.github.darkkronicle.Konstruct.NodeException;
+import io.github.darkkronicle.Konstruct.nodes.LiteralNode;
+import io.github.darkkronicle.Konstruct.nodes.Node;
+import io.github.darkkronicle.Konstruct.reader.builder.InputNodeBuilder;
 import io.github.darkkronicle.advancedchatcore.util.Color;
 import io.github.darkkronicle.advancedchatcore.util.FluidText;
 import io.github.darkkronicle.advancedchatcore.util.SearchResult;
+import io.github.darkkronicle.advancedchatfilters.AdvancedChatFilters;
 import io.github.darkkronicle.advancedchatfilters.interfaces.IFilter;
 import io.github.darkkronicle.advancedchatfilters.interfaces.IMatchReplace;
 import java.util.Optional;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import org.apache.logging.log4j.Level;
 
 /** Filter used for replacing matches in a Text */
 @Environment(EnvType.CLIENT)
 public class ReplaceFilter implements IFilter {
 
-    public final String replaceTo;
+    public final Node replaceTo;
     public final IMatchReplace type;
     public final Color color;
 
     public ReplaceFilter(String replaceTo, IMatchReplace type, Color color) {
-        this.replaceTo = replaceTo;
+        Node node;
+        try {
+            node = new InputNodeBuilder(replaceTo).build();
+        } catch (NodeException e) {
+            AdvancedChatFilters.LOGGER.log(Level.WARN, "Error setting up replace filter.", e);
+            node = new LiteralNode(replaceTo);
+        }
+        this.replaceTo = node;
         this.type = type;
         this.color = color;
     }

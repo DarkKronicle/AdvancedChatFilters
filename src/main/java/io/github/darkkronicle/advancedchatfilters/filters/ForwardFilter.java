@@ -27,8 +27,7 @@ public class ForwardFilter implements IFilter {
     }
 
     @Override
-    public Optional<FluidText> filter(
-            ParentFilter filter, FluidText text, FluidText unfiltered, SearchResult search) {
+    public Optional<FluidText> filter(ParentFilter filter, FluidText text, FluidText unfiltered, SearchResult search) {
         IMatchProcessor.Result result = null;
         for (MatchProcessorRegistry.MatchProcessorOption p : registry.getAll()) {
             if (!p.isActive()) {

@@ -14,6 +14,7 @@ import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.button.IButtonActionListener;
 import fi.dy.masa.malilib.gui.interfaces.ISelectionListener;
 import fi.dy.masa.malilib.util.StringUtils;
+import io.github.darkkronicle.advancedchatcore.config.gui.GuiConfig;
 import io.github.darkkronicle.advancedchatcore.config.gui.GuiConfigHandler;
 import io.github.darkkronicle.advancedchatfilters.config.Filter;
 import io.github.darkkronicle.advancedchatfilters.config.FiltersConfigStorage;
@@ -23,12 +24,10 @@ import java.util.List;
 public class GuiFilterManager extends GuiListBase<Filter, WidgetFilterEntry, WidgetListFilters>
         implements ISelectionListener<Filter> {
 
-    private List<GuiConfigHandler.TabButton> tabButtons;
 
-    public GuiFilterManager(List<GuiConfigHandler.TabButton> tabButtons) {
+    public GuiFilterManager() {
         super(10, 60);
         this.title = StringUtils.translate("advancedchat.screen.main");
-        this.tabButtons = tabButtons;
     }
 
     @Override
@@ -46,21 +45,15 @@ public class GuiFilterManager extends GuiListBase<Filter, WidgetFilterEntry, Wid
     public void initGui() {
         super.initGui();
 
-        int x = 10;
-        int y = 26;
+        int x;
+        int y;
 
-        int rows = 1;
-
-        for (GuiConfigHandler.TabButton tab : tabButtons) {
-            int newY = this.createButton(tab, y);
-            if (newY != y) {
-                rows++;
-                y = newY;
-            }
-        }
+        int rows = GuiConfig.addTabButtons(this, 10, 26);
 
         this.setListPosition(this.getListX(), 68 + (rows - 1) * 22);
         this.reCreateListWidget();
+
+        y = 68 + (rows - 3) * 22;
 
         this.getListWidget().refreshEntries();
 
@@ -69,11 +62,6 @@ public class GuiFilterManager extends GuiListBase<Filter, WidgetFilterEntry, Wid
         x -= this.addButton(x, y, ButtonListener.Type.ADD_FILTER) + 2;
         x -= this.addButton(x, y, ButtonListener.Type.ADVANCED) + 2;
         x -= this.addButton(x, y, ButtonListener.Type.IMPORT) + 2;
-    }
-
-    private int createButton(GuiConfigHandler.TabButton button, int y) {
-        this.addButton(button.getButton(), new ButtonListenerConfigTabs(button));
-        return button.getButton().getY();
     }
 
     protected int addButton(int x, int y, ButtonListener.Type type) {
@@ -135,19 +123,4 @@ public class GuiFilterManager extends GuiListBase<Filter, WidgetFilterEntry, Wid
     @Override
     public void onSelectionChange(Filter entry) {}
 
-    private static class ButtonListenerConfigTabs implements IButtonActionListener {
-
-        private final GuiConfigHandler.TabButton tabButton;
-
-        public ButtonListenerConfigTabs(GuiConfigHandler.TabButton tabButton) {
-            this.tabButton = tabButton;
-        }
-
-        @Override
-        public void actionPerformedWithButton(ButtonBase button, int mouseButton) {
-            GuiConfigHandler.getInstance().activeTab = this.tabButton.getTab().getName();
-            GuiBase.openGui(
-                    this.tabButton.getTab().getScreen(GuiConfigHandler.getInstance().getButtons()));
-        }
-    }
 }

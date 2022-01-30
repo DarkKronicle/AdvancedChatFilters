@@ -10,6 +10,7 @@ package io.github.darkkronicle.advancedchatfilters.filters.processors;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.text2speech.Narrator;
 import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.gui.SliderCallbackDouble;
 import fi.dy.masa.malilib.config.options.ConfigDouble;
@@ -22,6 +23,14 @@ import fi.dy.masa.malilib.gui.interfaces.ISliderCallback;
 import fi.dy.masa.malilib.gui.widgets.WidgetDropDownList;
 import fi.dy.masa.malilib.gui.widgets.WidgetSlider;
 import fi.dy.masa.malilib.util.StringUtils;
+import io.github.darkkronicle.Konstruct.functions.Function;
+import io.github.darkkronicle.Konstruct.functions.NamedFunction;
+import io.github.darkkronicle.Konstruct.nodes.Node;
+import io.github.darkkronicle.Konstruct.parser.IntRange;
+import io.github.darkkronicle.Konstruct.parser.ParseContext;
+import io.github.darkkronicle.Konstruct.type.DoubleObject;
+import io.github.darkkronicle.Konstruct.type.IntegerObject;
+import io.github.darkkronicle.Konstruct.type.NullObject;
 import io.github.darkkronicle.advancedchatcore.config.SaveableConfig;
 import io.github.darkkronicle.advancedchatcore.config.gui.widgets.WidgetLabelHoverable;
 import io.github.darkkronicle.advancedchatcore.interfaces.IJsonApplier;
@@ -31,15 +40,63 @@ import io.github.darkkronicle.advancedchatcore.util.Colors;
 import io.github.darkkronicle.advancedchatcore.util.FluidText;
 import io.github.darkkronicle.advancedchatcore.util.SearchResult;
 import io.github.darkkronicle.advancedchatfilters.config.Filter;
+
+import java.util.List;
 import java.util.function.Supplier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
 public class SoundProcessor implements IMatchProcessor, IJsonApplier, IScreenSupplier {
+
+    public static class SoundFunction implements NamedFunction {
+
+        @Override
+        public String getName() {
+            return "toSound";
+        }
+
+        @Override
+        public io.github.darkkronicle.Konstruct.parser.Result parse(ParseContext context, List<Node> input) {
+            io.github.darkkronicle.Konstruct.parser.Result r1 = Function.parseArgument(context, input, 0);
+            SoundEvent event = getEvent(r1.getContent().getString());
+            io.github.darkkronicle.Konstruct.parser.Result r2 = Function.parseArgument(context, input, 1);
+            io.github.darkkronicle.Konstruct.parser.Result r3 = Function.parseArgument(context, input, 2);
+
+            float pitch = 1;
+            float volume = 1;
+            if (r2.getContent().getTypeName().equals(DoubleObject.TYPE_NAME)) {
+                pitch = (float) ((DoubleObject) r2.getContent()).getValue();
+            } else if (r2.getContent().getTypeName().equals(IntegerObject.TYPE_NAME)) {
+                pitch = (float) ((IntegerObject) r2.getContent()).getValue();
+            }
+            if (r3.getContent().getTypeName().equals(DoubleObject.TYPE_NAME)) {
+                volume = (float) ((DoubleObject) r3.getContent()).getValue();
+            } else if (r3.getContent().getTypeName().equals(IntegerObject.TYPE_NAME)) {
+                volume = (float) ((IntegerObject) r3.getContent()).getValue();
+            }
+
+            MinecraftClient.getInstance()
+                    .getSoundManager()
+                    .play(PositionedSoundInstance.master(event, pitch, volume));
+            return io.github.darkkronicle.Konstruct.parser.Result.success(new NullObject());
+        }
+
+        @Override
+        public IntRange getArgumentCount() {
+            return IntRange.of(3);
+        }
+    }
+
+    public static SoundEvent getEvent(String name) {
+        return new SoundEvent(new Identifier(name));
+    }
 
     /* How the filter notifies the client of a found string.
     SOUND plays a sound when the filter is triggered.

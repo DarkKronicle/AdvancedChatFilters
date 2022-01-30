@@ -7,9 +7,13 @@
  */
 package io.github.darkkronicle.advancedchatfilters;
 
+import io.github.darkkronicle.Konstruct.parser.NodeProcessor;
+import io.github.darkkronicle.Konstruct.parser.ParseContext;
 import io.github.darkkronicle.advancedchatcore.interfaces.IMessageFilter;
+import io.github.darkkronicle.advancedchatcore.konstruct.AdvancedChatKonstruct;
 import io.github.darkkronicle.advancedchatcore.util.Color;
 import io.github.darkkronicle.advancedchatcore.util.FluidText;
+import io.github.darkkronicle.advancedchatcore.util.SearchResult;
 import io.github.darkkronicle.advancedchatfilters.config.Filter;
 import io.github.darkkronicle.advancedchatfilters.config.FiltersConfigStorage;
 import io.github.darkkronicle.advancedchatfilters.filters.ColorFilter;
@@ -18,6 +22,11 @@ import io.github.darkkronicle.advancedchatfilters.filters.ParentFilter;
 import io.github.darkkronicle.advancedchatfilters.filters.ReplaceFilter;
 import java.util.ArrayList;
 import java.util.Optional;
+
+import io.github.darkkronicle.advancedchatfilters.filters.processors.ActionBarProcessor;
+import io.github.darkkronicle.advancedchatfilters.filters.processors.ForwardProcessor;
+import io.github.darkkronicle.advancedchatfilters.filters.processors.NarratorProcessor;
+import io.github.darkkronicle.advancedchatfilters.filters.processors.SoundProcessor;
 import lombok.Getter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -43,6 +52,9 @@ public class FiltersHandler implements IMessageFilter {
 
     private ArrayList<ParentFilter> filters = new ArrayList<>();
 
+    @Getter
+    private NodeProcessor processor;
+
     @Override
     public Optional<FluidText> filter(FluidText text) {
         FluidText unfiltered = text;
@@ -67,6 +79,7 @@ public class FiltersHandler implements IMessageFilter {
     }
 
     public void loadFilters() {
+        setupProcessor();
         filters = new ArrayList<>();
         colorFilters = new ArrayList<>();
         for (Filter filter : FiltersConfigStorage.FILTERS) {
@@ -76,6 +89,14 @@ public class FiltersHandler implements IMessageFilter {
                 filters.add(filt);
             }
         }
+    }
+
+    public void setupProcessor() {
+        processor = AdvancedChatKonstruct.getInstance().copy();
+        processor.addFunction(new ForwardProcessor.ForwardFunction());
+        processor.addFunction(new ActionBarProcessor.ActionBarFunction());
+        processor.addFunction(new SoundProcessor.SoundFunction());
+        processor.addFunction(new NarratorProcessor.NarratorFunction());
     }
 
     public static ParentFilter createFilter(Filter filter) {
@@ -116,5 +137,14 @@ public class FiltersHandler implements IMessageFilter {
             }
         }
         return filt;
+    }
+
+    public ParseContext createFilterContext(ReplaceFilter filter, FluidText text, SearchResult result) {
+        ParseContext context = processor.createContext();
+        return context;
+    }
+
+    public ParseContext createTextContext(FluidText text, SearchResult search) {
+        return processor.createContext();
     }
 }

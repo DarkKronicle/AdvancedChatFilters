@@ -7,10 +7,9 @@
  */
 package io.github.darkkronicle.advancedchatfilters.filters.matchreplace;
 
-import io.github.darkkronicle.advancedchatcore.util.FluidText;
-import io.github.darkkronicle.advancedchatcore.util.RawText;
-import io.github.darkkronicle.advancedchatcore.util.SearchResult;
-import io.github.darkkronicle.advancedchatcore.util.StringMatch;
+import io.github.darkkronicle.Konstruct.parser.ParseContext;
+import io.github.darkkronicle.advancedchatcore.util.*;
+import io.github.darkkronicle.advancedchatfilters.FiltersHandler;
 import io.github.darkkronicle.advancedchatfilters.filters.ReplaceFilter;
 import io.github.darkkronicle.advancedchatfilters.interfaces.IMatchReplace;
 import java.util.HashMap;
@@ -35,29 +34,27 @@ public class OnlyMatchTextReplace implements IMatchReplace {
         HashMap<StringMatch, FluidText.StringInsert> toReplace = new HashMap<>();
         for (StringMatch m : search.getMatches()) {
             if (filter.color == null) {
-                toReplace.put(
-                        m,
-                        (current, match) ->
-                                new FluidText(
-                                        current.withMessage(
-                                                search.getGroupReplacements(
-                                                        filter.replaceTo.replaceAll(
-                                                                "%MATCH%", match.match),
-                                                        getMatchIndex(search, match)))));
+                toReplace.put(m, getReplacement(filter, text, search));
             } else {
-                toReplace.put(
-                        m,
-                        (current, match) ->
-                                new FluidText(
-                                        RawText.withColor(
-                                                search.getGroupReplacements(
-                                                        filter.replaceTo.replaceAll(
-                                                                "%MATCH%", match.match),
-                                                        getMatchIndex(search, match)),
-                                                filter.color)));
+                toReplace.put(m, getReplacement(filter, text, search, filter.color));
             }
         }
         text.replaceStrings(toReplace);
         return Optional.of(text);
     }
+
+    public static FluidText.StringInsert getReplacement(ReplaceFilter filter, FluidText text, SearchResult result) {
+        return (current, match) -> formatMessage(current, filter, text, result, match);
+    }
+
+    public static FluidText formatMessage(RawText current, ReplaceFilter filter, FluidText text, SearchResult result, StringMatch match) {
+        ParseContext context = FiltersHandler.getInstance().createFilterContext(filter, text, result);
+        String message = filter.replaceTo.parse(context).getContent().getString();
+        return new FluidText(current.withMessage(message));
+    }
+
+    private static FluidText.StringInsert getReplacement(ReplaceFilter filter, FluidText text, SearchResult result, Color color) {
+        return (current, match) -> formatMessage(RawText.withColor("", color), filter, text, result, match);
+    }
+
 }

@@ -39,10 +39,6 @@ public class FullMessageTextReplace implements IMatchReplace {
             original = original.withColor(textColor);
             base = base.withStyle(original);
         }
-        RawText toReplace =
-                base.withMessage(
-                        search.getGroupReplacements(
-                                filter.replaceTo.replaceAll("%MATCH%", totalMatch.toString()), 0));
-        return Optional.of(new FluidText(toReplace));
+        return Optional.of(OnlyMatchTextReplace.formatMessage(base, filter, text, search, search.getMatches().get(0)));
     }
 }
