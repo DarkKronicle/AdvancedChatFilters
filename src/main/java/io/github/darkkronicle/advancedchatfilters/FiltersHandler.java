@@ -7,13 +7,18 @@
  */
 package io.github.darkkronicle.advancedchatfilters;
 
+import io.github.darkkronicle.Konstruct.functions.Variable;
 import io.github.darkkronicle.Konstruct.parser.NodeProcessor;
 import io.github.darkkronicle.Konstruct.parser.ParseContext;
+import io.github.darkkronicle.Konstruct.type.KonstructObject;
+import io.github.darkkronicle.Konstruct.type.ListObject;
 import io.github.darkkronicle.advancedchatcore.interfaces.IMessageFilter;
 import io.github.darkkronicle.advancedchatcore.konstruct.AdvancedChatKonstruct;
+import io.github.darkkronicle.advancedchatcore.konstruct.StringMatchObject;
 import io.github.darkkronicle.advancedchatcore.util.Color;
 import io.github.darkkronicle.advancedchatcore.util.FluidText;
 import io.github.darkkronicle.advancedchatcore.util.SearchResult;
+import io.github.darkkronicle.advancedchatcore.util.StringMatch;
 import io.github.darkkronicle.advancedchatfilters.config.Filter;
 import io.github.darkkronicle.advancedchatfilters.config.FiltersConfigStorage;
 import io.github.darkkronicle.advancedchatfilters.filters.ColorFilter;
@@ -21,6 +26,7 @@ import io.github.darkkronicle.advancedchatfilters.filters.ForwardFilter;
 import io.github.darkkronicle.advancedchatfilters.filters.ParentFilter;
 import io.github.darkkronicle.advancedchatfilters.filters.ReplaceFilter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import io.github.darkkronicle.advancedchatfilters.filters.processors.ActionBarProcessor;
@@ -139,12 +145,30 @@ public class FiltersHandler implements IMessageFilter {
         return filt;
     }
 
-    public ParseContext createFilterContext(ReplaceFilter filter, FluidText text, SearchResult result) {
+    public ParseContext createFilterContext(ReplaceFilter filter, FluidText text, SearchResult result, StringMatch match) {
         ParseContext context = processor.createContext();
+        context.addLocalVariable("input", Variable.of(text.getString()));
+        context.addLocalVariable("match", Variable.of(new StringMatchObject(match)));
+        List<KonstructObject<?>> list = new ArrayList<>();
+        for (StringMatch m : result.getMatches()) {
+            list.add(new StringMatchObject(m));
+        }
+        context.addLocalVariable("matches", Variable.of(
+                new ListObject(list)
+        ));
         return context;
     }
 
     public ParseContext createTextContext(FluidText text, SearchResult search) {
-        return processor.createContext();
+        ParseContext context = processor.createContext();
+        context.addLocalVariable("input", Variable.of(text.getString()));
+        List<KonstructObject<?>> list = new ArrayList<>();
+        for (StringMatch match : search.getMatches()) {
+            list.add(new StringMatchObject(match));
+        }
+        context.addLocalVariable("matches", Variable.of(
+                new ListObject(list)
+        ));
+        return context;
     }
 }

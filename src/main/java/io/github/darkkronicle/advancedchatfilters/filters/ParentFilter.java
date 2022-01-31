@@ -7,12 +7,7 @@
  */
 package io.github.darkkronicle.advancedchatfilters.filters;
 
-import io.github.darkkronicle.advancedchatcore.util.Color;
-import io.github.darkkronicle.advancedchatcore.util.FindType;
-import io.github.darkkronicle.advancedchatcore.util.FluidText;
-import io.github.darkkronicle.advancedchatcore.util.RawText;
-import io.github.darkkronicle.advancedchatcore.util.SearchResult;
-import io.github.darkkronicle.advancedchatcore.util.StringMatch;
+import io.github.darkkronicle.advancedchatcore.util.*;
 import io.github.darkkronicle.advancedchatfilters.FiltersHandler;
 import io.github.darkkronicle.advancedchatfilters.interfaces.IFilter;
 import java.util.ArrayList;
@@ -156,7 +151,7 @@ public class ParentFilter {
         for (IFilter filter : filters) {
             Optional<FluidText> newtext = filter.filter(this, text, unfiltered, search);
             if (newtext.isPresent()) {
-                text = newtext.get();
+                text = StyleFormatter.formatText(newtext.get());
                 if (color != null) {
                     // Make sure forward filter gets the correct background color
                     text.setBackground(color);

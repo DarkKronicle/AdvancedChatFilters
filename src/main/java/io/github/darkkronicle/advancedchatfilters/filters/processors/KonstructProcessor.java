@@ -38,7 +38,6 @@ public class KonstructProcessor implements IMatchProcessor, IJsonApplier, IScree
         return Result.PROCESSED;
     }
 
-
     @Override
     public JsonObject save() {
         JsonObject obj = new JsonObject();

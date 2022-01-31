@@ -48,8 +48,9 @@ public class OnlyMatchTextReplace implements IMatchReplace {
     }
 
     public static FluidText formatMessage(RawText current, ReplaceFilter filter, FluidText text, SearchResult result, StringMatch match) {
-        ParseContext context = FiltersHandler.getInstance().createFilterContext(filter, text, result);
+        ParseContext context = FiltersHandler.getInstance().createFilterContext(filter, text, result, match);
         String message = filter.replaceTo.parse(context).getContent().getString();
+        message = result.getGroupReplacements(message, getMatchIndex(result, match));
         return new FluidText(current.withMessage(message));
     }
 
