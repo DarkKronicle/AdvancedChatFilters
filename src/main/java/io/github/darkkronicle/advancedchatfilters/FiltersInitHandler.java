@@ -63,7 +63,7 @@ public class FiltersInitHandler implements IInitializationHandler {
                 "advancedchatfilters.config.replacetype.onlymatch",
                 "advancedchatfilters.config.replacetype.info.onlymatch",
                 true,
-                false);
+                true);
 
         // Initiate processors
         MatchProcessorRegistry processorRegistry = MatchProcessorRegistry.getInstance();

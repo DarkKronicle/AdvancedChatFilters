@@ -126,12 +126,12 @@ public class GuiFilterEditor extends GuiBase {
         filter.getName().config.setValueFromString(name.getText());
         filter.getFindString().config.setValueFromString(findString.getText());
         filter.getReplaceTo().config.setValueFromString(replaceString.getText());
-        filter.getTextColor().config.setIntegerValue(textColor.getAndRefreshColor4f().color());
+        filter.getTextColor().config.setValueFromString(textColor.getText());
         filter.getReplaceTextColor().config.setBooleanValue(setTextColor.isCurrentlyOn());
         filter.getReplaceType().config.setOptionListValue(replaceTypeWidget.getSelectedEntry());
         filter.getBackgroundColor()
                 .config
-                .setIntegerValue(backgroundColor.getAndRefreshColor4f().color());
+                .setValueFromString(backgroundColor.getText());
         filter.getReplaceBackgroundColor()
                 .config
                 .setBooleanValue(setBackgroundColor.isCurrentlyOn());
