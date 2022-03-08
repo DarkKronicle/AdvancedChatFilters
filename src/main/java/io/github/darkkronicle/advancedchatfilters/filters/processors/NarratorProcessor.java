@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 DarkKronicle
+ * Copyright (C) 2021-2022 DarkKronicle
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -108,9 +108,9 @@ public class NarratorProcessor implements IMatchProcessor, IScreenSupplier, IJso
         private GuiTextFieldGeneric textField;
 
         @Override
-        public void onClose() {
+        public void close() {
             save();
-            super.onClose();
+            super.close();
         }
 
         public SenderScreen(Screen parent) {
