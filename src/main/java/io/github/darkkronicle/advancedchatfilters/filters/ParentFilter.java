@@ -134,12 +134,13 @@ public class ParentFilter {
     public FilterResult filter(FluidText text, FluidText unfiltered) {
         String searchString;
         String original = text.getString();
+        SearchResult search;
         if (!stripColors) {
             searchString = getWithColors(text);
+            search = SearchResult.searchOf(searchString, findString, findType);
         } else {
-            searchString = original;
+            search = SearchResult.searchOf(text, findString, findType);
         }
-        SearchResult search = SearchResult.searchOf(searchString, findString, findType);
         if (search.size() == 0) {
             return FilterResult.EMPTY;
         }
