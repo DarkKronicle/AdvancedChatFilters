@@ -29,10 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import io.github.darkkronicle.advancedchatfilters.filters.processors.ActionBarProcessor;
-import io.github.darkkronicle.advancedchatfilters.filters.processors.ForwardProcessor;
-import io.github.darkkronicle.advancedchatfilters.filters.processors.NarratorProcessor;
-import io.github.darkkronicle.advancedchatfilters.filters.processors.SoundProcessor;
+import io.github.darkkronicle.advancedchatfilters.filters.processors.*;
 import lombok.Getter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -103,6 +100,7 @@ public class FiltersHandler implements IMessageFilter {
         processor.addFunction(new ActionBarProcessor.ActionBarFunction());
         processor.addFunction(new SoundProcessor.SoundFunction());
         processor.addFunction(new NarratorProcessor.NarratorFunction());
+        processor.addFunction(new ToastProcessor.ToastFunction());
     }
 
     public static ParentFilter createFilter(Filter filter) {

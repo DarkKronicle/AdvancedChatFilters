@@ -9,7 +9,6 @@ package io.github.darkkronicle.advancedchatfilters;
 
 import fi.dy.masa.malilib.config.ConfigManager;
 import fi.dy.masa.malilib.interfaces.IInitializationHandler;
-import fi.dy.masa.malilib.util.StringUtils;
 import io.github.darkkronicle.advancedchatcore.chat.MessageDispatcher;
 import io.github.darkkronicle.advancedchatcore.config.gui.GuiConfigHandler;
 import io.github.darkkronicle.advancedchatfilters.config.FiltersConfigStorage;
@@ -20,10 +19,8 @@ import io.github.darkkronicle.advancedchatfilters.filters.processors.*;
 import io.github.darkkronicle.advancedchatfilters.registry.MatchProcessorRegistry;
 import io.github.darkkronicle.advancedchatfilters.registry.MatchReplaceRegistry;
 import io.github.darkkronicle.advancedchatfilters.scripting.ScriptManager;
-import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.Screen;
 
 @Environment(EnvType.CLIENT)
 public class FiltersInitHandler implements IInitializationHandler {
@@ -93,6 +90,13 @@ public class FiltersInitHandler implements IInitializationHandler {
                 "narrator",
                 "advancedchatfilters.config.processor.narrator",
                 "advancedchatfilters.config.processor.info.narrator",
+                false,
+                false);
+        processorRegistry.register(
+                ToastProcessor::new,
+                "toast",
+                "advancedchatfilters.config.processor.toast",
+                "advancedchatfilters.config.processor.info.toast",
                 false,
                 false);
         processorRegistry.register(
