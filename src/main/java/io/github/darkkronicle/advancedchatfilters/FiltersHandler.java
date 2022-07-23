@@ -16,7 +16,6 @@ import io.github.darkkronicle.advancedchatcore.interfaces.IMessageFilter;
 import io.github.darkkronicle.advancedchatcore.konstruct.AdvancedChatKonstruct;
 import io.github.darkkronicle.advancedchatcore.konstruct.StringMatchObject;
 import io.github.darkkronicle.advancedchatcore.util.Color;
-import io.github.darkkronicle.advancedchatcore.util.FluidText;
 import io.github.darkkronicle.advancedchatcore.util.SearchResult;
 import io.github.darkkronicle.advancedchatcore.util.StringMatch;
 import io.github.darkkronicle.advancedchatfilters.config.Filter;
@@ -33,6 +32,7 @@ import io.github.darkkronicle.advancedchatfilters.filters.processors.*;
 import lombok.Getter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
 public class FiltersHandler implements IMessageFilter {
@@ -43,7 +43,7 @@ public class FiltersHandler implements IMessageFilter {
      * The "Terminate" text. It has a length of zero and is non-null so it will stop the process if
      * returned by the main filter.
      */
-    public static final FluidText TERMINATE = new FluidText();
+    public static final Text TERMINATE = Text.empty();
 
     private FiltersHandler() {}
 
@@ -59,8 +59,8 @@ public class FiltersHandler implements IMessageFilter {
     private NodeProcessor processor;
 
     @Override
-    public Optional<FluidText> filter(FluidText text) {
-        FluidText unfiltered = text;
+    public Optional<Text> filter(Text text) {
+        Text unfiltered = text;
 
         Color backgroundColor = null;
         // Filter text
@@ -73,7 +73,8 @@ public class FiltersHandler implements IMessageFilter {
                 text = result.getText().get();
             }
         }
-        text.setBackground(backgroundColor);
+        // TODO restore this
+        // text.setBackground(backgroundColor);
 
         if (text.getString().length() != 0) {
             return Optional.of(text);
@@ -143,7 +144,7 @@ public class FiltersHandler implements IMessageFilter {
         return filt;
     }
 
-    public ParseContext createFilterContext(ReplaceFilter filter, FluidText text, SearchResult result, StringMatch match) {
+    public ParseContext createFilterContext(ReplaceFilter filter, Text text, SearchResult result, StringMatch match) {
         ParseContext context = processor.createContext();
         context.addLocalVariable("input", Variable.of(text.getString()));
         context.addLocalVariable("match", Variable.of(new StringMatchObject(match)));
@@ -157,7 +158,7 @@ public class FiltersHandler implements IMessageFilter {
         return context;
     }
 
-    public ParseContext createTextContext(FluidText text, SearchResult search) {
+    public ParseContext createTextContext(Text text, SearchResult search) {
         ParseContext context = processor.createContext();
         context.addLocalVariable("input", Variable.of(text.getString()));
         List<KonstructObject<?>> list = new ArrayList<>();

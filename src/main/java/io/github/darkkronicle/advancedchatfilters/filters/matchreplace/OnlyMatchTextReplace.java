@@ -16,6 +16,9 @@ import java.util.HashMap;
 import java.util.Optional;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
 public class OnlyMatchTextReplace implements IMatchReplace {
@@ -30,8 +33,8 @@ public class OnlyMatchTextReplace implements IMatchReplace {
     }
 
     @Override
-    public Optional<FluidText> filter(ReplaceFilter filter, FluidText text, SearchResult search) {
-        HashMap<StringMatch, FluidText.StringInsert> toReplace = new HashMap<>();
+    public Optional<Text> filter(ReplaceFilter filter, Text text, SearchResult search) {
+        HashMap<StringMatch, StringInsert> toReplace = new HashMap<>();
         for (StringMatch m : search.getMatches()) {
             if (filter.color == null) {
                 toReplace.put(m, getReplacement(filter, text, search));
@@ -39,23 +42,23 @@ public class OnlyMatchTextReplace implements IMatchReplace {
                 toReplace.put(m, getReplacement(filter, text, search, filter.color));
             }
         }
-        text.replaceStrings(toReplace);
+        TextUtil.replaceStrings(text, toReplace);
         return Optional.of(text);
     }
 
-    public static FluidText.StringInsert getReplacement(ReplaceFilter filter, FluidText text, SearchResult result) {
+    public static StringInsert getReplacement(ReplaceFilter filter, Text text, SearchResult result) {
         return (current, match) -> formatMessage(current, filter, text, result, match);
     }
 
-    public static FluidText formatMessage(RawText current, ReplaceFilter filter, FluidText text, SearchResult result, StringMatch match) {
+    public static MutableText formatMessage(Text current, ReplaceFilter filter, Text text, SearchResult result, StringMatch match) {
         ParseContext context = FiltersHandler.getInstance().createFilterContext(filter, text, result, match);
         String message = filter.replaceTo.parse(context).getContent().getString();
         message = result.getGroupReplacements(message, getMatchIndex(result, match));
-        return new FluidText(current.withMessage(message));
+        return Text.literal(message).fillStyle(current.getStyle());
     }
 
-    private static FluidText.StringInsert getReplacement(ReplaceFilter filter, FluidText text, SearchResult result, Color color) {
-        return (current, match) -> formatMessage(RawText.withColor("", color), filter, text, result, match);
+    private static StringInsert getReplacement(ReplaceFilter filter, Text text, SearchResult result, Color color) {
+        return (current, match) -> formatMessage(Text.empty().setStyle(Style.EMPTY.withColor(color.color())), filter, text, result, match);
     }
 
 }

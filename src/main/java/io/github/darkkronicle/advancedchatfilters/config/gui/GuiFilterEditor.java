@@ -31,6 +31,7 @@ import io.github.darkkronicle.advancedchatfilters.filters.ReplaceFilter;
 import io.github.darkkronicle.advancedchatfilters.registry.MatchReplaceRegistry;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -263,36 +264,39 @@ public class GuiFilterEditor extends GuiBase {
             );
 
         outputMessage = new ArrayList<>();
-        FluidText inputText = new FluidText(RawText.withFormatting("Input Message: ", Formatting.BOLD, Formatting.GRAY));
+        MutableText inputText = Text.literal("Input Message: ").formatted(Formatting.BOLD, Formatting.GRAY);
         String testString = test.getText().replaceAll("&", "§");
         if (testString.isEmpty()) {
-            outputMessage.add(inputText.append(RawText.withFormatting("None", Formatting.RED)));
+            outputMessage.add(inputText.append(Text.literal("None").formatted(Formatting.RED)));
         } else {
-            outputMessage.add(inputText.append(new RawText(testString, Style.EMPTY)));
+            outputMessage.add(inputText.append(Text.literal(testString).formatted(Formatting.RED)));
         }
         SearchResult result;
         try {
             result = SearchResult.searchOf(testString, parent.getFindString(), parent.getFindType());
         } catch (Exception e) {
             outputMessage = new ArrayList<>();
-            outputMessage.add(new FluidText(RawText.withFormatting("RegEx parsing error! " + e.getMessage(), Formatting.RED)));
+            outputMessage.add(Text.literal("RegEx parsing error! " + e.getMessage()).formatted(Formatting.RED));
             return;
         }
         boolean searchSuccess = result.size() > 0;
-        outputMessage.add(new FluidText(RawText.withFormatting("Matched: ", Formatting.BOLD, Formatting.GRAY))
+        outputMessage.add(Text.literal("Matched: ").formatted(Formatting.BOLD, Formatting.GRAY)
                 .append(
-                        RawText.withFormatting(String.valueOf(searchSuccess), searchSuccess ? Formatting.GREEN : Formatting.RED)
+                        Text.literal(String.valueOf(searchSuccess)).formatted(searchSuccess ? Formatting.GREEN : Formatting.RED)
                 )
         );
-        FluidText input = StyleFormatter.formatText(new FluidText(new RawText(testString, Style.EMPTY)));
+        MutableText input = StyleFormatter.formatText(Text.literal(testString));
         try {
-            FluidText output = StyleFormatter.formatText(testFilter.filter(parent, input, input, result).orElse(input));
-            FluidText outputText = new FluidText(RawText.withFormatting("Output Message: ", Formatting.BOLD, Formatting.GRAY));
-            outputText.getRawTexts().addAll(output.getRawTexts());
+            MutableText output = StyleFormatter.formatText(testFilter.filter(parent, input, input, result).orElse(input));
+            MutableText outputText = Text.literal("Output Message: ").formatted(Formatting.BOLD, Formatting.GRAY);
+            outputText.append(output);
+            for (Text t : output.getSiblings()) {
+                outputText.append(t);
+            }
             outputMessage.add(outputText);
         } catch (NodeException e) {
             outputMessage = new ArrayList<>();
-            outputMessage.add(new FluidText(RawText.withFormatting("Konstruct error! " + e.getMessage(), Formatting.RED)));
+            outputMessage.add(Text.literal("Konstruct error! " + e.getMessage()).formatted(Formatting.RED));
         }
     }
 

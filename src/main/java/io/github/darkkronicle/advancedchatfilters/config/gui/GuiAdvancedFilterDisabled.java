@@ -13,16 +13,14 @@ import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.button.IButtonActionListener;
 import fi.dy.masa.malilib.util.StringUtils;
 import io.github.darkkronicle.advancedchatcore.util.Colors;
-import io.github.darkkronicle.advancedchatcore.util.FluidText;
-import io.github.darkkronicle.advancedchatcore.util.RawText;
 import io.github.darkkronicle.advancedchatcore.util.StyleFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
 public class GuiAdvancedFilterDisabled extends GuiBase {
@@ -32,12 +30,7 @@ public class GuiAdvancedFilterDisabled extends GuiBase {
     public GuiAdvancedFilterDisabled(Screen parent) {
         this.title = StringUtils.translate("advancedchatfilters.screen.warning");
         setParent(parent);
-        FluidText text =
-                new FluidText(
-                        RawText.withStyle(
-                                StringUtils.translate(
-                                        "advancedchatfilters.warning.advancedfilters"),
-                                Style.EMPTY));
+        MutableText text = Text.literal(StringUtils.translate("advancedchatfilters.warning.advancedfilters"));
         warning = new ArrayList<>();
         MinecraftClient client = MinecraftClient.getInstance();
         int width = client.getWindow().getScaledWidth();

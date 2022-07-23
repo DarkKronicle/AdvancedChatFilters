@@ -7,22 +7,19 @@
  */
 package io.github.darkkronicle.advancedchatfilters.scripting.util;
 
-import io.github.darkkronicle.advancedchatcore.util.FluidText;
-import io.github.darkkronicle.advancedchatcore.util.RawText;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.HoverEvent;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
+import net.minecraft.text.*;
 import net.minecraft.util.Identifier;
 
 /** Utility class to make creating {@link Text} easier for scripts. */
 @Environment(EnvType.CLIENT)
 public class TextBuilder {
 
-    private final FluidText text;
+    private MutableText text;
 
     /** Create's a new instance with the only text being an empty string. */
     public TextBuilder() {
@@ -35,21 +32,23 @@ public class TextBuilder {
      * @param content Content of the text
      */
     public TextBuilder(String content) {
-        text = new FluidText(new RawText(content, Style.EMPTY));
+        text = Text.literal(content);
     }
 
     /**
-     * Get the {@link FluidText}
      *
      * @return Text that was created
      */
-    public FluidText build() {
+    public MutableText build() {
         return text;
     }
 
     private void applyStyle(Function<Style, Style> styleSupplier) {
-        for (RawText t : text.getRawTexts()) {
-            t.setStyle(styleSupplier.apply(t.getStyle()));
+        text = Text.literal(text.getContent().toString()).setStyle(styleSupplier.apply(text.getStyle()));
+        for (Text t : text.getSiblings()) {
+            for (Text te : t.getWithStyle(styleSupplier.apply(t.getStyle()))) {
+                text.append(te);
+            }
         }
     }
 
@@ -144,7 +143,7 @@ public class TextBuilder {
      * @param content Content to add
      */
     public TextBuilder concatenate(String content) {
-        text.append(new RawText(content, Style.EMPTY), true);
+        text.append(Text.literal(content));
         return this;
     }
 

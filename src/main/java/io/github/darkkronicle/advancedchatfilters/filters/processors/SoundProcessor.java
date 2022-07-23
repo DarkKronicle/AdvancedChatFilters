@@ -10,7 +10,6 @@ package io.github.darkkronicle.advancedchatfilters.filters.processors;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.mojang.text2speech.Narrator;
 import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.gui.SliderCallbackDouble;
 import fi.dy.masa.malilib.config.options.ConfigDouble;
@@ -37,7 +36,6 @@ import io.github.darkkronicle.advancedchatcore.interfaces.IJsonApplier;
 import io.github.darkkronicle.advancedchatcore.interfaces.IMatchProcessor;
 import io.github.darkkronicle.advancedchatcore.interfaces.IScreenSupplier;
 import io.github.darkkronicle.advancedchatcore.util.Colors;
-import io.github.darkkronicle.advancedchatcore.util.FluidText;
 import io.github.darkkronicle.advancedchatcore.util.SearchResult;
 import io.github.darkkronicle.advancedchatfilters.config.Filter;
 
@@ -50,6 +48,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
@@ -130,7 +129,7 @@ public class SoundProcessor implements IMatchProcessor, IJsonApplier, IScreenSup
                             translate("soundvolume"), 1, 0.5, 3, translate("info.soundvolume")));
 
     @Override
-    public Result processMatches(FluidText text, FluidText unfiltered, SearchResult search) {
+    public Result processMatches(Text text, Text unfiltered, SearchResult search) {
         if (getSound() != Filter.NotifySound.NONE) {
             MinecraftClient.getInstance()
                     .getSoundManager()

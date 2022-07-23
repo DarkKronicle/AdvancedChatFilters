@@ -8,7 +8,6 @@
 package io.github.darkkronicle.advancedchatfilters.filters;
 
 import io.github.darkkronicle.advancedchatcore.interfaces.IMatchProcessor;
-import io.github.darkkronicle.advancedchatcore.util.FluidText;
 import io.github.darkkronicle.advancedchatcore.util.SearchResult;
 import io.github.darkkronicle.advancedchatfilters.FiltersHandler;
 import io.github.darkkronicle.advancedchatfilters.interfaces.IFilter;
@@ -16,6 +15,7 @@ import io.github.darkkronicle.advancedchatfilters.registry.MatchProcessorRegistr
 import java.util.Optional;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
 public class ForwardFilter implements IFilter {
@@ -27,7 +27,7 @@ public class ForwardFilter implements IFilter {
     }
 
     @Override
-    public Optional<FluidText> filter(ParentFilter filter, FluidText text, FluidText unfiltered, SearchResult search) {
+    public Optional<Text> filter(ParentFilter filter, Text text, Text unfiltered, SearchResult search) {
         IMatchProcessor.Result result = null;
         for (MatchProcessorRegistry.MatchProcessorOption p : registry.getAll()) {
             if (!p.isActive()) {

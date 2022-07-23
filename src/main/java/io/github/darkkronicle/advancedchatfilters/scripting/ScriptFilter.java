@@ -11,8 +11,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import delight.nashornsandbox.NashornSandbox;
 import fi.dy.masa.malilib.config.options.ConfigBoolean;
-import io.github.darkkronicle.advancedchatcore.util.FluidText;
-import io.github.darkkronicle.advancedchatfilters.interfaces.IScript;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -24,15 +22,18 @@ import javax.script.Invocable;
 import javax.script.ScriptContext;
 import javax.script.ScriptException;
 import javax.script.SimpleScriptContext;
+
+import io.github.darkkronicle.advancedchatfilters.interfaces.IScript;
 import lombok.Getter;
 import lombok.Setter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.text.Text;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
-public class ScriptFilter implements IScript<FluidText>, Comparable<ScriptFilter> {
+public class ScriptFilter implements IScript<Text>, Comparable<ScriptFilter> {
 
     @Getter @Setter private ScriptContext context;
 
@@ -107,7 +108,7 @@ public class ScriptFilter implements IScript<FluidText>, Comparable<ScriptFilter
      * @throws Exception If script error or functions not found
      */
     @Override
-    public FluidText execute(NashornSandbox engine, FluidText input) throws Exception {
+    public Text execute(NashornSandbox engine, Text input) throws Exception {
         engine.eval(script);
         ScriptFilterContext context = new ScriptFilterContext(input);
         Invocable inv = engine.getSandboxedInvocable();

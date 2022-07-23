@@ -12,12 +12,12 @@ import io.github.darkkronicle.advancedchatcore.config.SaveableConfig;
 import io.github.darkkronicle.advancedchatcore.interfaces.IJsonApplier;
 import io.github.darkkronicle.advancedchatcore.interfaces.IMatchProcessor;
 import io.github.darkkronicle.advancedchatcore.interfaces.IScreenSupplier;
-import io.github.darkkronicle.advancedchatcore.util.FluidText;
 import io.github.darkkronicle.advancedchatcore.util.SearchResult;
 import io.github.darkkronicle.advancedchatfilters.AdvancedChatFilters;
 import io.github.darkkronicle.advancedchatfilters.FiltersHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.text.Text;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,7 +31,7 @@ public class KonstructProcessor implements IMatchProcessor, IJsonApplier, IScree
     private Node node;
 
     @Override
-    public Result processMatches(FluidText text, @Nullable FluidText unfiltered, @Nullable SearchResult search) {
+    public Result processMatches(Text text, @Nullable Text unfiltered, @Nullable SearchResult search) {
         if (node != null) {
             node.parse(FiltersHandler.getInstance().createTextContext(text, search));
         }

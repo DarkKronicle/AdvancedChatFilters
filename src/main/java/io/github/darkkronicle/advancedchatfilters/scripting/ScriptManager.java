@@ -14,8 +14,6 @@ import delight.nashornsandbox.NashornSandbox;
 import delight.nashornsandbox.NashornSandboxes;
 import fi.dy.masa.malilib.util.FileUtils;
 import io.github.darkkronicle.advancedchatcore.interfaces.IMessageFilter;
-import io.github.darkkronicle.advancedchatcore.util.FluidText;
-import io.github.darkkronicle.advancedchatcore.util.RawText;
 import io.github.darkkronicle.advancedchatfilters.config.FiltersConfigStorage;
 import java.io.File;
 import java.util.ArrayList;
@@ -26,6 +24,7 @@ import java.util.concurrent.Executors;
 import lombok.Getter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
@@ -52,8 +51,7 @@ public class ScriptManager implements IMessageFilter {
         engine = NashornSandboxes.create();
         // Restrict classes. Text is used for filters.
         engine.allow(Text.class);
-        engine.allow(FluidText.class);
-        engine.allow(RawText.class);
+        engine.allow(MutableText.class);
         engine.allow(Style.class);
 
         // Ensure no massive memory leaks. Stuff really shouldn't take over a second to happen
@@ -150,7 +148,7 @@ public class ScriptManager implements IMessageFilter {
     }
 
     @Override
-    public Optional<FluidText> filter(FluidText text) {
+    public Optional<Text> filter(Text text) {
         if (!FiltersConfigStorage.ADVANCED_ON.config.getBooleanValue()) {
             // Do ***not*** evaluate any code unless this is turned on.
             return Optional.empty();

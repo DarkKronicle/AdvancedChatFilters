@@ -7,13 +7,7 @@
  */
 package io.github.darkkronicle.advancedchatfilters.scripting;
 
-import io.github.darkkronicle.advancedchatcore.util.Color;
-import io.github.darkkronicle.advancedchatcore.util.FindType;
-import io.github.darkkronicle.advancedchatcore.util.FluidText;
-import io.github.darkkronicle.advancedchatcore.util.RawText;
-import io.github.darkkronicle.advancedchatcore.util.SearchResult;
-import io.github.darkkronicle.advancedchatcore.util.SearchUtils;
-import io.github.darkkronicle.advancedchatcore.util.StringMatch;
+import io.github.darkkronicle.advancedchatcore.util.*;
 import io.github.darkkronicle.advancedchatfilters.registry.MatchProcessorRegistry;
 import io.github.darkkronicle.advancedchatfilters.scripting.util.ReplaceBuilder;
 import io.github.darkkronicle.advancedchatfilters.scripting.util.TextBuilder;
@@ -23,22 +17,24 @@ import lombok.Getter;
 import lombok.Setter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
 public class ScriptFilterContext {
 
-    @Getter @Setter private FluidText text;
+    @Getter @Setter private Text text;
 
-    private final FluidText unfiltered;
+    private final Text unfiltered;
 
     public static FindType toFindType(String type) {
         return FindType.fromFindType(type.toLowerCase());
     }
 
-    public ScriptFilterContext(FluidText text) {
+    public ScriptFilterContext(Text text) {
         this.text = text;
-        this.unfiltered = text.copy();
+        this.unfiltered = text;
     }
 
     /**
@@ -91,7 +87,7 @@ public class ScriptFilterContext {
      * @param text Text to set it to.
      */
     public void setTextPlain(String text) {
-        this.text = new FluidText(new RawText(text, Style.EMPTY));
+        this.text = Text.literal(text);
     }
 
     /**
@@ -102,10 +98,10 @@ public class ScriptFilterContext {
      * @param replace What to replace to
      */
     public void replaceTextWithString(int start, int end, String replace) {
-        HashMap<StringMatch, FluidText.StringInsert> toReplace = new HashMap<>();
+        HashMap<StringMatch, StringInsert> toReplace = new HashMap<>();
         StringMatch match = new StringMatch(getString().substring(start, end), start, end);
-        toReplace.put(match, (current, match1) -> new FluidText(current.withMessage(replace)));
-        text.replaceStrings(toReplace);
+        toReplace.put(match, (current, match1) -> Text.literal(replace).setStyle(current.getStyle()));
+        TextUtil.replaceStrings(text, toReplace);
     }
 
     /**
@@ -115,11 +111,11 @@ public class ScriptFilterContext {
      * @param end End position to replace
      * @param replace What to replace to. {@link FluidText}
      */
-    public void replaceTextWithText(int start, int end, FluidText replace) {
-        HashMap<StringMatch, FluidText.StringInsert> toReplace = new HashMap<>();
+    public void replaceTextWithText(int start, int end, MutableText replace) {
+        HashMap<StringMatch, StringInsert> toReplace = new HashMap<>();
         StringMatch match = new StringMatch(getString().substring(start, end), start, end);
         toReplace.put(match, (current, match1) -> replace);
-        text.replaceStrings(toReplace);
+        TextUtil.replaceStrings(text, toReplace);
     }
 
     /**
@@ -127,7 +123,7 @@ public class ScriptFilterContext {
      *
      * @param processor Processor name in {@link MatchProcessorRegistry}
      */
-    public void sendToProcessor(String processor, FluidText text) {
+    public void sendToProcessor(String processor, Text text) {
         for (MatchProcessorRegistry.MatchProcessorOption option :
                 MatchProcessorRegistry.getInstance().getAll()) {
             if (option.getSaveString().equals(processor)) {
@@ -179,7 +175,7 @@ public class ScriptFilterContext {
         if (pos < 0) {
             pos = 0;
         }
-        return text.truncate(new StringMatch("pos", pos, pos + 1)).getStyle();
+        return TextUtil.truncate(text, new StringMatch("pos", pos, pos + 1)).getStyle();
     }
 
     /**

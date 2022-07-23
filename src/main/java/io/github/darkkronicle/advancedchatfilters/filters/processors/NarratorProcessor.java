@@ -30,8 +30,6 @@ import io.github.darkkronicle.advancedchatcore.interfaces.IJsonApplier;
 import io.github.darkkronicle.advancedchatcore.interfaces.IMatchProcessor;
 import io.github.darkkronicle.advancedchatcore.interfaces.IScreenSupplier;
 import io.github.darkkronicle.advancedchatcore.util.Colors;
-import io.github.darkkronicle.advancedchatcore.util.FluidText;
-import io.github.darkkronicle.advancedchatcore.util.RawText;
 import io.github.darkkronicle.advancedchatcore.util.SearchResult;
 
 import java.util.List;
@@ -40,8 +38,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.network.MessageType;
-import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
 public class NarratorProcessor implements IMatchProcessor, IScreenSupplier, IJsonApplier {
@@ -76,7 +73,7 @@ public class NarratorProcessor implements IMatchProcessor, IScreenSupplier, IJso
                     new ConfigString(translate("message"), "$1", translate("info.message")));
 
     @Override
-    public Result processMatches(FluidText text, FluidText unfiltered, SearchResult search) {
+    public Result processMatches(Text text, Text unfiltered, SearchResult search) {
         String content = search.getGroupReplacements(message.config.getStringValue(), 0);
         Narrator.getNarrator().say(content, false);
         return Result.getFromBool(true);

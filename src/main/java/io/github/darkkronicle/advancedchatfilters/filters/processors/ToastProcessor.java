@@ -46,12 +46,12 @@ public class ToastProcessor implements IMatchProcessor, IScreenSupplier, IJsonAp
         @Override
         public io.github.darkkronicle.Konstruct.parser.Result parse(ParseContext context, List<Node> input) {
             io.github.darkkronicle.Konstruct.parser.Result r1 = Function.parseArgument(context, input, 0);
-            Text titleText = StyleFormatter.formatText(new FluidText(new RawText(r1.getContent().getString(), Style.EMPTY)));
+            Text titleText = StyleFormatter.formatText(Text.literal(r1.getContent().getString()));
             Text descriptionText = null;
             boolean instant = false;
             if (input.size() > 1) {
                 io.github.darkkronicle.Konstruct.parser.Result r2 = Function.parseArgument(context, input, 1);
-                descriptionText = StyleFormatter.formatText(new FluidText(new RawText(r2.getContent().getString(), Style.EMPTY)));
+                descriptionText = StyleFormatter.formatText(Text.literal(r2.getContent().getString()));
             }
             if (input.size() > 2) {
                 io.github.darkkronicle.Konstruct.parser.Result r3 = Function.parseArgument(context, input, 2);
@@ -87,16 +87,16 @@ public class ToastProcessor implements IMatchProcessor, IScreenSupplier, IJsonAp
                     new ConfigString(translate("description"), "", translate("info.description")));
 
     @Override
-    public Result processMatches(FluidText text, FluidText unfiltered, SearchResult search) {
+    public Result processMatches(Text text, Text unfiltered, SearchResult search) {
         Text titleText = text;
         if (!title.config.getStringValue().isEmpty()) {
             String content = search.getGroupReplacements(title.config.getStringValue(), 0);
-            titleText = StyleFormatter.formatText(new FluidText(new RawText(content, Style.EMPTY)));
+            titleText = StyleFormatter.formatText(Text.literal(content));
         }
         Text descriptionText = null;
         if (!description.config.getStringValue().isEmpty() && !title.config.getStringValue().isEmpty()) {
             String content = search.getGroupReplacements(description.config.getStringValue(), 0);
-            descriptionText = StyleFormatter.formatText(new FluidText(new RawText(content, Style.EMPTY)));
+            descriptionText = StyleFormatter.formatText(Text.literal(content));
         }
         ToastManager manager = MinecraftClient.getInstance().getToastManager();
         SystemToast.add(manager, SystemToast.Type.PERIODIC_NOTIFICATION, titleText, descriptionText);

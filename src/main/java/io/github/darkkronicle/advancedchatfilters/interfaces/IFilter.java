@@ -9,9 +9,10 @@ package io.github.darkkronicle.advancedchatfilters.interfaces;
 
 import io.github.darkkronicle.advancedchatcore.interfaces.IMessageFilter;
 import io.github.darkkronicle.advancedchatcore.util.Color;
-import io.github.darkkronicle.advancedchatcore.util.FluidText;
 import io.github.darkkronicle.advancedchatcore.util.SearchResult;
 import io.github.darkkronicle.advancedchatfilters.filters.ParentFilter;
+import net.minecraft.text.Text;
+
 import java.util.Optional;
 
 /** An interface for chat filters. Filters can change text content or background color. */
@@ -25,7 +26,7 @@ public interface IFilter extends IMessageFilter {
      */
     @Override
     @Deprecated
-    default Optional<FluidText> filter(FluidText text) {
+    default Optional<Text> filter(Text text) {
         return Optional.empty();
     }
 
@@ -47,6 +48,6 @@ public interface IFilter extends IMessageFilter {
      * @param search Match results
      * @return Modified text. If empty it won't modify the current text.
      */
-    Optional<FluidText> filter(
-            ParentFilter filter, FluidText text, FluidText unfiltered, SearchResult search);
+    Optional<Text> filter(
+            ParentFilter filter, Text text, Text unfiltered, SearchResult search);
 }

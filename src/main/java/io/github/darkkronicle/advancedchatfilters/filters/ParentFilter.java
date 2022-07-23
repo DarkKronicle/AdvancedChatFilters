@@ -19,6 +19,7 @@ import lombok.Value;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
 public class ParentFilter {
@@ -27,7 +28,7 @@ public class ParentFilter {
     @AllArgsConstructor
     public static class FilterResult {
 
-        Optional<FluidText> text;
+        Optional<Text> text;
         Optional<Color> color;
 
         public static FilterResult EMPTY = new FilterResult(Optional.empty(), Optional.empty());
@@ -67,101 +68,30 @@ public class ParentFilter {
         forwardFilters.add(forwardFilter);
     }
 
-    public static String getWithColors(FluidText text) {
-        StringBuilder builder = new StringBuilder("§[ffffff]");
-        Style previous = Style.EMPTY;
-        for (RawText t : text.getRawTexts()) {
-            if ((previous.getColor() != null
-                            && !previous.equals(Style.EMPTY)
-                            && t.getStyle().equals(Style.EMPTY))
-                    || (t.getStyle().getColor() != null
-                            && !t.getStyle().getColor().equals(previous.getColor()))) {
-                previous = t.getStyle();
-                int iColor;
-                if (previous.getColor() != null) {
-                    iColor = previous.getColor().getRgb();
-                } else {
-                    iColor = new Color(255, 255, 255, 255).color();
-                }
-                Color color = new Color(iColor);
-                String hex =
-                        String.format("%02x%02x%02x", color.red(), color.green(), color.blue());
-                builder.append("§[").append(hex).append(']');
-            }
-            builder.append(t.getMessage());
-        }
-        builder.append("§[ffffff]");
-        return builder.toString();
-    }
-
-    public static SearchResult getOffsetMatch(SearchResult result, String original) {
-        SearchResult hex =
-                SearchResult.searchOf(result.getInput(), "§\\[[a-fA-F0-9]{6}\\]", FindType.REGEX);
-        List<StringMatch> matches = new ArrayList<>();
-        for (StringMatch match : result.getMatches()) {
-            int depth = 0;
-            boolean started = false;
-            boolean ended = false;
-            int start = -1;
-            int end = original.length();
-            for (StringMatch hexMatch : hex.getMatches()) {
-                if (started && ended) {
-                    break;
-                }
-                if (!started && match.start <= hexMatch.start) {
-                    start = match.start - depth;
-                    started = true;
-                }
-                if (match.end <= hexMatch.start) {
-                    ended = true;
-                    end = match.end - depth;
-                } else if (match.end <= hexMatch.end) {
-                    ended = true;
-                    end = match.end - depth - 9;
-                } else {
-                    end = match.end - depth - 9;
-                }
-                depth += 9;
-            }
-            if (start == -1) {
-                start = match.start - depth;
-            }
-            matches.add(new StringMatch(original.substring(start, end), start, end));
-        }
-        return new SearchResult(original, result.getSearch(), result.getFinder(), matches);
-    }
-
-    public FilterResult filter(FluidText text, FluidText unfiltered) {
+    public FilterResult filter(Text text, Text unfiltered) {
         String searchString;
         String original = text.getString();
         SearchResult search;
-        if (!stripColors) {
-            searchString = getWithColors(text);
-            search = SearchResult.searchOf(searchString, findString, findType);
-        } else {
-            search = SearchResult.searchOf(text, findString, findType);
-        }
+        search = SearchResult.searchOf(text, findString, findType);
         if (search.size() == 0) {
             return FilterResult.EMPTY;
         }
-        if (!stripColors) {
-            // Offset the search results based off of colors
-            search = getOffsetMatch(search, original);
-        }
         Color color = null;
         for (IFilter filter : filters) {
-            Optional<FluidText> newtext = filter.filter(this, text, unfiltered, search);
+            Optional<Text> newtext = filter.filter(this, text, unfiltered, search);
             if (newtext.isPresent()) {
                 text = StyleFormatter.formatText(newtext.get());
                 if (color != null) {
                     // Make sure forward filter gets the correct background color
-                    text.setBackground(color);
+                    // TODO fix this
+                    // text.setBackground(color);
                 }
             }
             Optional<Color> c = filter.getColor();
             if (c.isPresent() && color == null) {
                 color = c.get();
-                text.setBackground(color);
+                // TODO fix this
+                // text.setBackground(color);
             }
         }
         boolean forward = true;

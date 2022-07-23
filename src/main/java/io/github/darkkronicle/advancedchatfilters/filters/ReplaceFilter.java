@@ -12,7 +12,6 @@ import io.github.darkkronicle.Konstruct.nodes.LiteralNode;
 import io.github.darkkronicle.Konstruct.nodes.Node;
 import io.github.darkkronicle.Konstruct.reader.builder.InputNodeBuilder;
 import io.github.darkkronicle.advancedchatcore.util.Color;
-import io.github.darkkronicle.advancedchatcore.util.FluidText;
 import io.github.darkkronicle.advancedchatcore.util.SearchResult;
 import io.github.darkkronicle.advancedchatfilters.AdvancedChatFilters;
 import io.github.darkkronicle.advancedchatfilters.interfaces.IFilter;
@@ -20,6 +19,7 @@ import io.github.darkkronicle.advancedchatfilters.interfaces.IMatchReplace;
 import java.util.Optional;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.text.Text;
 import org.apache.logging.log4j.Level;
 
 /** Filter used for replacing matches in a Text */
@@ -44,8 +44,7 @@ public class ReplaceFilter implements IFilter {
     }
 
     @Override
-    public Optional<FluidText> filter(
-            ParentFilter filter, FluidText text, FluidText unfiltered, SearchResult search) {
+    public Optional<Text> filter(ParentFilter filter, Text text, Text unfiltered, SearchResult search) {
         // Grabs FluidText for easy mutability.
         if (type == null) {
             return Optional.empty();

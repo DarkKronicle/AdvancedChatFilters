@@ -7,17 +7,21 @@
  */
 package io.github.darkkronicle.advancedchatfilters.scripting.util;
 
-import io.github.darkkronicle.advancedchatcore.util.FluidText;
+import io.github.darkkronicle.advancedchatcore.util.StringInsert;
 import io.github.darkkronicle.advancedchatcore.util.StringMatch;
 import java.util.HashMap;
 import java.util.Map;
+
+import io.github.darkkronicle.advancedchatcore.util.TextUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
 public class ReplaceBuilder {
 
-    private final Map<StringMatch, FluidText.StringInsert> replacements = new HashMap<>();
+    private final Map<StringMatch, StringInsert> replacements = new HashMap<>();
 
     public ReplaceBuilder() {}
 
@@ -27,9 +31,9 @@ public class ReplaceBuilder {
      * @param filter Text to apply it to
      * @return Filtered {@link FluidText}
      */
-    public FluidText build(FluidText filter) {
-        FluidText text = filter.copy();
-        text.replaceStrings(replacements);
+    public Text build(Text filter) {
+        Text text = filter.copy();
+        TextUtil.replaceStrings(text, replacements);
         return text;
     }
 
@@ -43,7 +47,7 @@ public class ReplaceBuilder {
      */
     public ReplaceBuilder addReplacement(StringMatch match, String replacement) {
         replacements.put(
-                match, (current, match1) -> new FluidText(current.withMessage(replacement)));
+                match, (current, match1) -> Text.literal(replacement).setStyle(current.getStyle()));
         return this;
     }
 
@@ -53,8 +57,8 @@ public class ReplaceBuilder {
      * @param match {@link StringMatch} match data
      * @param text Text to replace to
      */
-    public ReplaceBuilder addReplacement(StringMatch match, FluidText text) {
-        replacements.put(match, (current, match1) -> text);
+    public ReplaceBuilder addReplacement(StringMatch match, Text text) {
+        replacements.put(match, (current, match1) -> (MutableText) text);
         return this;
     }
 }
