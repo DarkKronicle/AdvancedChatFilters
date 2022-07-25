@@ -33,7 +33,7 @@ public class ReplaceBuilder {
      */
     public Text build(Text filter) {
         Text text = filter.copy();
-        TextUtil.replaceStrings(text, replacements);
+        text = TextUtil.replaceStrings(text, replacements);
         return text;
     }
 

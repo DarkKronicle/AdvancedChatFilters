@@ -101,7 +101,7 @@ public class ScriptFilterContext {
         HashMap<StringMatch, StringInsert> toReplace = new HashMap<>();
         StringMatch match = new StringMatch(getString().substring(start, end), start, end);
         toReplace.put(match, (current, match1) -> Text.literal(replace).setStyle(current.getStyle()));
-        TextUtil.replaceStrings(text, toReplace);
+        text = TextUtil.replaceStrings(text, toReplace);
     }
 
     /**
@@ -115,7 +115,7 @@ public class ScriptFilterContext {
         HashMap<StringMatch, StringInsert> toReplace = new HashMap<>();
         StringMatch match = new StringMatch(getString().substring(start, end), start, end);
         toReplace.put(match, (current, match1) -> replace);
-        TextUtil.replaceStrings(text, toReplace);
+        text = TextUtil.replaceStrings(text, toReplace);
     }
 
     /**

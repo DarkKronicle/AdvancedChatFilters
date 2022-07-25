@@ -42,7 +42,7 @@ public class OnlyMatchTextReplace implements IMatchReplace {
                 toReplace.put(m, getReplacement(filter, text, search, filter.color));
             }
         }
-        TextUtil.replaceStrings(text, toReplace);
+        text = TextUtil.replaceStrings(text, toReplace);
         return Optional.of(text);
     }
 

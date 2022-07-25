@@ -263,14 +263,17 @@ public class GuiFilterEditor extends GuiBase {
                     filter.getStripColors().config.getBooleanValue()
             );
 
-        outputMessage = new ArrayList<>();
-        MutableText inputText = Text.literal("Input Message: ").formatted(Formatting.BOLD, Formatting.GRAY);
+        List<Text> built = new ArrayList<>();
+        TextBuilder outputMessageBuilder = new TextBuilder();
+        outputMessageBuilder.append("Input Message: ", Style.EMPTY.withFormatting(Formatting.BOLD, Formatting.GRAY));
         String testString = test.getText().replaceAll("&", "§");
         if (testString.isEmpty()) {
-            outputMessage.add(inputText.append(Text.literal("None").formatted(Formatting.RED)));
+            outputMessageBuilder.append("None", Style.EMPTY.withFormatting(Formatting.RED));
         } else {
-            outputMessage.add(inputText.append(Text.literal(testString).formatted(Formatting.RED)));
+            outputMessageBuilder.append(testString);
         }
+        built.add(outputMessageBuilder.build());
+        outputMessageBuilder = new TextBuilder();
         SearchResult result;
         try {
             result = SearchResult.searchOf(testString, parent.getFindString(), parent.getFindType());
@@ -280,24 +283,22 @@ public class GuiFilterEditor extends GuiBase {
             return;
         }
         boolean searchSuccess = result.size() > 0;
-        outputMessage.add(Text.literal("Matched: ").formatted(Formatting.BOLD, Formatting.GRAY)
+        outputMessageBuilder.append("Matched: ", Style.EMPTY.withFormatting(Formatting.BOLD, Formatting.GRAY))
                 .append(
-                        Text.literal(String.valueOf(searchSuccess)).formatted(searchSuccess ? Formatting.GREEN : Formatting.RED)
-                )
-        );
+                        String.valueOf(searchSuccess), Style.EMPTY.withFormatting(searchSuccess ? Formatting.GREEN : Formatting.RED)
+                );
+        built.add(outputMessageBuilder.build());
+        outputMessageBuilder = new TextBuilder();
         MutableText input = StyleFormatter.formatText(Text.literal(testString));
         try {
             MutableText output = StyleFormatter.formatText(testFilter.filter(parent, input, input, result).orElse(input));
-            MutableText outputText = Text.literal("Output Message: ").formatted(Formatting.BOLD, Formatting.GRAY);
-            outputText.append(output);
-            for (Text t : output.getSiblings()) {
-                outputText.append(t);
-            }
-            outputMessage.add(outputText);
+            outputMessageBuilder.append("Output Message: ", Style.EMPTY.withFormatting(Formatting.BOLD, Formatting.GRAY));
+            outputMessageBuilder.append(output);
         } catch (NodeException e) {
-            outputMessage = new ArrayList<>();
-            outputMessage.add(Text.literal("Konstruct error! " + e.getMessage()).formatted(Formatting.RED));
+            outputMessageBuilder.append("Konstruct error! " + e.getMessage(), Style.EMPTY.withFormatting(Formatting.RED));
         }
+        built.add(outputMessageBuilder.build());
+        outputMessage = built;
     }
 
     private int addLabel(int x, int y, IConfigBase config) {
