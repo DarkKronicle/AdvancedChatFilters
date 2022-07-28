@@ -79,7 +79,7 @@ public class FiltersHandler implements IMessageFilter {
         if (text.getString().length() != 0) {
             return Optional.of(text);
         }
-        return Optional.of(TERMINATE);
+        return Optional.of(TERMINATE.copy());
     }
 
     public void loadFilters() {
