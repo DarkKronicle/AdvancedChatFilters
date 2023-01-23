@@ -255,7 +255,7 @@ public class Filter implements Comparable<Filter> {
         ENDERMAN_TELEPORT("enderman_teleport", SoundEvents.ENTITY_ENDERMAN_TELEPORT),
         WOLOLO("wololo", SoundEvents.ENTITY_EVOKER_PREPARE_WOLOLO),
         BELL("bell_use", SoundEvents.BLOCK_BELL_USE),
-        CLICK("button_click", SoundEvents.UI_BUTTON_CLICK),
+        CLICK("button_click", SoundEvents.UI_BUTTON_CLICK.value()),
         HUSK_TO_ZOMBIE("husk_to_zombie", SoundEvents.ENTITY_HUSK_CONVERTED_TO_ZOMBIE),
         GLASS_BREAK("glass_break", SoundEvents.BLOCK_GLASS_BREAK);
 

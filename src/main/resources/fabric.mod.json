@@ -22,7 +22,7 @@
   "depends": {
     "fabricloader": ">=0.13.0",
     "fabric": "*",
-    "minecraft": ">=1.19",
+    "minecraft": ">=1.19.3",
     "malilib": ">=0.13.0",
     "advancedchatcore": ">=1.4.0-1.18"
   },
