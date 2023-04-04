@@ -178,7 +178,7 @@ public class GuiFilterEditor extends GuiBase {
 
         y += this.addLabel(x, y, filter.getReplaceType().config) + 2;
         replaceTypeWidget = new WidgetDropDownList<>(x, y, 100, 20, 200, 10, ImmutableList.copyOf(MatchReplaceRegistry.getInstance().getAll()), MatchReplaceRegistry.MatchReplaceOption::getDisplayName);
-        replaceTypeWidget.setZLevel(getZOffset() + 100);
+        replaceTypeWidget.setZLevel(replaceTypeWidget.getHeight() + 100);
         replaceTypeWidget.setSelectedEntry((MatchReplaceRegistry.MatchReplaceOption) filter.getReplaceType().config.getOptionListValue());
         this.addWidget(replaceTypeWidget);
         y += stripColors.getHeight() + 4;
