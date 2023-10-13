@@ -31,6 +31,7 @@ import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.math.MatrixStack;
 
 @Environment(EnvType.CLIENT)
@@ -121,7 +122,7 @@ public class WidgetAdvancedFilterEntry extends WidgetListEntryBase<ScriptFilter>
     }
 
     @Override
-    public void render(int mouseX, int mouseY, boolean selected, MatrixStack matrixStack) {
+    public void render(int mouseX, int mouseY, boolean selected, DrawContext context) {
         RenderUtils.color(1f, 1f, 1f, 1f);
 
         // Draw a lighter background for the hovered and the selected entry
@@ -153,14 +154,14 @@ public class WidgetAdvancedFilterEntry extends WidgetListEntryBase<ScriptFilter>
                 this.y + 7,
                 Colors.getInstance().getColorOrWhite("white").color(),
                 name,
-                matrixStack);
+                context);
 
         RenderUtils.color(1f, 1f, 1f, 1f);
         RenderSystem.disableBlend();
 
-        this.drawTextFields(mouseX, mouseY, matrixStack);
+        this.drawTextFields(mouseX, mouseY, context);
 
-        super.render(mouseX, mouseY, selected, matrixStack);
+        super.render(mouseX, mouseY, selected, context);
 
         RenderUtils.disableDiffuseLighting();
     }
@@ -257,16 +258,16 @@ public class WidgetAdvancedFilterEntry extends WidgetListEntryBase<ScriptFilter>
         return ret;
     }
 
-    protected void drawTextFields(int mouseX, int mouseY, MatrixStack matrixStack) {
+    protected void drawTextFields(int mouseX, int mouseY, DrawContext context) {
         if (this.num != null) {
-            this.num.getTextField().render(matrixStack, mouseX, mouseY, 0f);
+            this.num.getTextField().render(context, mouseX, mouseY, 0f);
         }
     }
 
     @Override
     public void postRenderHovered(
-            int mouseX, int mouseY, boolean selected, MatrixStack matrixStack) {
-        super.postRenderHovered(mouseX, mouseY, selected, matrixStack);
+            int mouseX, int mouseY, boolean selected, DrawContext context) {
+        super.postRenderHovered(mouseX, mouseY, selected, context);
 
         List<String> hoverLines;
 
@@ -285,7 +286,7 @@ public class WidgetAdvancedFilterEntry extends WidgetListEntryBase<ScriptFilter>
                     && mouseX < this.buttonStartX
                     && mouseY >= this.y
                     && mouseY <= this.y + this.height) {
-                RenderUtils.drawHoverText(mouseX, mouseY, hoverLines, matrixStack);
+                RenderUtils.drawHoverText(mouseX, mouseY, hoverLines, context);
             }
         }
     }
