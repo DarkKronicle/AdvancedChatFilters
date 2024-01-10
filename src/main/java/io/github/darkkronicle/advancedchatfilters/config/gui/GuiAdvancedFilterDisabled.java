@@ -17,6 +17,7 @@ import io.github.darkkronicle.advancedchatcore.util.StyleFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.MutableText;
@@ -60,13 +61,12 @@ public class GuiAdvancedFilterDisabled extends GuiBase {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+    public void render(DrawContext context, int mouseX, int mouseY, float partialTicks) {
+        super.render(context, mouseX, mouseY, partialTicks);
         int width = client.getWindow().getScaledWidth();
         int y = 100;
         for (OrderedText warn : warning) {
-            drawCenteredTextWithShadow(
-                    matrixStack,
+            context.drawCenteredTextWithShadow(
                     client.textRenderer,
                     warn,
                     width / 2,

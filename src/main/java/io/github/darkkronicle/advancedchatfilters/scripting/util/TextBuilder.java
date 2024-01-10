@@ -157,7 +157,7 @@ public class TextBuilder {
      * @param value Content of that action
      */
     public TextBuilder setClickEvent(String action, String value) {
-        ClickEvent.Action clickAction = ClickEvent.Action.byName(action);
+        ClickEvent.Action clickAction = ClickEvent.Action.valueOf(action);
         if (!clickAction.isUserDefinable()) {
             return this;
         }
